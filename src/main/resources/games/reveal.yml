@@ -1,0 +1,43 @@
+reveal:
+  # How long should players have to guess?
+  duration: 180
+
+  duration-per-reveal: 30
+
+  # The chance to generate a word instead of using one from the
+  # 'custom' list at the bottom of the file.
+  # 100 = always generate, 0 = always use custom
+  generation-chance: 95
+
+  # Word generators that use words from the game itself, so you don't need to
+  # add a large amount of minecraft themed words.
+  generators:
+    # generator_type: chance
+    animal: 5
+    # While there are many biomes, it's recommended to keep this number low, due to biome names
+    # that are overly challenging or uncommon, such as "Old Growth Spruce Taiga"
+    biome: 1
+    block: 40
+    enchantment: 3
+    item: 40 # Excludes blocks, even though they're items too.
+    monster: 5
+    potion: 2
+    structure: 1
+
+  # Use the format word:points
+  custom:
+    - Minecraft:1
+
+    - Overworld:2
+    - Nether:2
+    - The End:2
+    - Spectator:2
+
+    - Charged Creeper:4
+    - Spider Jockey:4
+    - Blacksmith Villager:4
+    - Thick Potion:4
+    - Mundane Potion:4
+    - Awkward Potion:4
+    - Giant Mushroom:4
+    - Abandoned Mineshaft:4

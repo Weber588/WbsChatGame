@@ -1,0 +1,132 @@
+# ==================================================================================================================== #
+# In this file, you can configure the specifics about how word generators work, by manually adding or removing words to
+# each category.
+#
+# The categories are pre-configured, as they generate from code itself, and you cannot add new ones.
+#
+# As some generators can't filter properly (since it's somewhat arbitrary and the game doesn't know details),
+# some generators are preconfigured to remove & add certain corrections, such as removing technical blocks that
+# aren't fun to guess. You can edit those here if you want to include it, or remove more that were missed.
+
+# The 'animals' section has commented out examples of how to configure the generators. Remember to remove {}
+# when adding sections to configure a generator.
+# ==================================================================================================================== #
+
+animal: {} # Remove the {} when uncommenting any of the below
+  # ignore-exact will prevent the exact terms listed from being generated (case insensitive). For example,
+  # 'Horse' will prevent only 'Horse' from being generated, but 'Skeleton Horse' and 'Zombie Horse' can still generate.
+#  ignore-exact:
+#    - 'Horse'
+
+  # ignore-contains will prevent any terms containing terms listed from being generated. For example,
+  # 'Horse' will prevent 'Horse', 'Skeleton Horse', and 'Zombie Horse' from being generated.
+#  ignore-contains:
+#    - 'Horse'
+
+  # You can include your own words in generators to be used by all word games that define it.
+  # They don't need to be real animals, they're just words to include for organization.
+#  include:
+#    - 'Duck'
+
+  # If you think one of the generators creates harder or easier words than the others,
+  # you can add a modifier here that gets added to the points calculated.
+  # You can use a negative number to subtract points, but it prevents the result being
+  # less than 1 point.
+#  points-modifier: -1
+
+biome: {} # Remove the {} if uncommenting the below!
+  # Some biomes can be challenging, so this gives a bit of an extra reward!
+  # It does mean that some words get valued higher though, such as easy ones like "River".
+#  points-modifier: 1
+
+block:
+  ignore-contains:
+    # Filtering out colour blocks/items to prevent the majority of words containing colour variations.
+    - 'Banner'
+    - 'Concrete'
+    - 'Shulker Box'
+    - 'Wool'
+    - 'Carpet'
+    - 'Terracotta'
+    - 'Stained Glass'
+    - 'Candle'
+
+    # Filter out shaped blocks to prevent lots of shape variations on a single material
+    # (i.e. slabs, stairs, fences, fence gates, etc. for each of acacia, spruce, birch, stone, cobblestone, etc.)
+    - 'Slab'
+    - 'Fence'
+    - 'Boat'
+    - 'Button'
+    - 'Door'
+    - 'Pressure Plate'
+    - 'Sign'
+    - 'Stairs'
+    - 'Trapdoor' # Caught by door, but here for completeness.
+    - 'Wall'
+
+    # Misc technical blocks that're annoying to guess, are unclear what they are, or are confusing.
+    - ' Plant' # 'Kelp Plant', 'Weeping Vine Plant'
+    - 'Attached ' # 'Attached Melon Stem', 'Attached Pumpkin Stem'
+    - 'Infested' # Removing silverfish blocks
+    - ' Wall ' # 'Redstone Wall Torch', 'Yellow Wall Banner' etc that're needed in the game, but not particularly clear.
+    - 'Carrots' # Refers to the crop, not the item
+    - 'Potatoes'
+    - 'Beetroots'
+    - 'Piston Head'
+    - 'Moving Piston'
+    - 'Potted' # Prevent duplicating plants that can be put in pot plants
+
+  # Including the above as generic words without specific materials ("slab" instead of "Acacia slab" etc)
+  include:
+    - 'Banner'
+    - 'Concrete'
+    - 'Shulker Box'
+    - 'Wool'
+    - 'Carpet'
+    - 'Terracotta'
+    - 'Dye'
+    - 'Stained Glass'
+    - 'Candle'
+
+    - 'Slab'
+    - 'Fence'
+    - 'Boat'
+    - 'Button'
+    - 'Door'
+    - 'Pressure Plate'
+    - 'Sign'
+    - 'Stairs'
+    - 'Trapdoor'
+    - 'Wall'
+
+enchantment: {}
+
+item:
+  ignore-contains:
+    - 'Writable Book'
+    - 'Filled Map'
+
+    # Ignoring the variations on these, but including the generic versions in the 'include' section.
+    - 'Dye'
+    - 'Spawn Egg'
+    - 'Music Disc'
+    - 'Banner Pattern'
+
+  include:
+    - 'Dye'
+    - 'Spawn Egg'
+    - 'Music Disc'
+    - 'Banner Pattern'
+
+monster: {}
+potion: {}
+
+structure:
+  ignore-exact:
+    - 'Endcity' # For some reason the End City structure is stored in-game as "ENDCITY" instead of "END_CITY".
+    - 'Fortress' # Most players know these as "Nether Fortress", so replacing it manually.
+
+  include:
+    - 'End City'
+    - 'Nether Fortress'
+

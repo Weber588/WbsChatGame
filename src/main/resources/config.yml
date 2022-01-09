@@ -1,0 +1,33 @@
+# This will appear before many messages from the plugin.
+message-prefix: '&7[&bChatGame&7]'
+
+# Use a minecraft colour code here to pick the message colour
+message-colour: 'a'
+
+# The highlight colour (to complement the above colour)
+highlight-colour: 'b'
+
+# Errors will be this colour.
+error-colour: 'c'
+
+# Error highlights
+error-highlight: '7'
+
+settings:
+  # Whether or not to require /guess (/g) for players to guess. Enable this to reduce spam.
+  require-guess-command: false
+
+  # The number of seconds between the end of one round and the start of the next.
+  seconds-between-rounds: 180
+
+  # Should players be listening to the game by default?
+  listen-by-default: true
+
+  # Choose how frequently a given category comes up.
+  # To disable a game, set the percentage to 0.
+  rates:
+    unscramble: 20
+    math: 20
+    trivia: 20
+    quicktype: 20
+    reveal: 20

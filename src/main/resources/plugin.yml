@@ -1,0 +1,18 @@
+main: wbs.chatgame.WbsChatGame
+name: WbsChatGame
+version: 0.0.1
+api-version: 1.16
+author: Weber588
+description: Various chat-based games
+depend:
+  - WbsUtils
+commands:
+  chatgame:
+    aliases:
+      - cg
+    description: Commands to interact with the game.
+
+  guess:
+    aliases:
+      - g
+    description: The command to make a guess in the game.

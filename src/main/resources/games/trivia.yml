@@ -1,0 +1,495 @@
+trivia:
+  # The chance to use a challenge instead of a normal game.
+  # 0 = never use challenges, 100 = always use challenges
+  challenge-chance: 5
+
+  # How long should players have to guess?
+  duration: 120
+
+  challenges:
+    # Chance that a trivia question will be replaced with
+    # "Who is at rank [1-5] in the all time ranking for ChatGame?"
+    position-all-time: 2
+
+    # Same as above, but with weekly ranking instead.
+    position-weekly: 2
+
+    # Chance that a trivia question will be replaced with "Who won last round?"
+    won-last-round: 2
+
+    # Chance that a trivia question will be replaced with
+    # "What was the answer to the previous question?"
+    answer-last-round: 2
+
+    # Chance that a trivia question will be replaced with "How many players are online right now?"
+    players-online: 2
+
+  questions:
+    # The unique name of the question. It's not used, but must be unique
+    Notch:
+      # The question to display
+      question: 'What is the screen-name of Markus Persson?'
+      # A list of answers - Any of these will be accepted, but only the one answered appears.
+      answers:
+        - 'Notch' # If it only has one answer, just put it here!
+      points: 1
+
+    NetherPortalObsidian:
+      question: 'What is the minimum amount of obsidian needed for a nether portal?'
+      answers: # You can list multiple answers if people might answer differently
+        - '10'
+        - 'Ten'
+      points: 1
+
+    RarestOre:
+      question: 'What is the rarest ore in Minecraft?'
+      use-regex: true # You can enable regex for the answers to condense answers.
+      answers:
+        - 'Emerald(s|\sOre)?' # Catches Emerald, Emeralds, and Emerald Ore!
+      points: 1
+
+    Fatigue:
+      question: 'Which potion effect is applied exclusively by Elder Guardians?'
+      answers:
+        - 'Mining Fatigue'
+      points: 1
+
+    Dimensions:
+      question: 'How many dimensions are there in minecraft?'
+      answers:
+        - '3'
+        - 'Three'
+      points: 1
+
+    CakeEggs:
+      question: 'How many eggs do you need to craft a cake?'
+      answers:
+        - '1'
+        - 'One'
+      points: 1
+
+    CakeSugar:
+      question: 'How much sugar do you need to craft a cake?'
+      answers:
+        - '2'
+        - 'Two'
+      points: 1
+
+    CakeWheat:
+      question: 'How much wheat do you need to craft a cake?'
+      answers:
+        - '3'
+        - 'Three'
+      points: 1
+
+    CakeMilk:
+      question: 'How many buckets of milk do you need to craft a cake?'
+      answers:
+        - '3'
+        - 'Three'
+      points: 1
+
+    EndPortalEyes:
+      question: 'How many Eyes of Ender are needed to complete an end portal?'
+      answers:
+        - '12'
+        - 'Twelve'
+      points: 1
+
+    Sweden:
+      question: 'In which country was Minecraft made?'
+      answers:
+        - 'Sweden'
+      points: 1
+
+    Repeater:
+      question: 'How many tick options are there on a redstone repeater?'
+      answers:
+        - '4'
+        - 'Four'
+      points: 1
+
+    PistonPush:
+      question: 'How many blocks can a piston push?'
+      answers:
+        - '12'
+        - 'Twelve'
+      points: 1
+
+    CreeperModel:
+      question: 'Which entity was Notch trying to make when he accidentally created the creeper model?'
+      answers:
+        - 'Pig'
+        - 'A pig'
+      points: 1
+
+    AnvilVariants:
+      question: 'How many variants of anvils are there?'
+      answers:
+        - '3'
+        - 'Three'
+      points: 1
+
+    Dinnerbone:
+      question: 'What name can be given to a mob that will turn it upside-down?'
+      answers:
+        - 'Dinnerbone'
+        - 'Grumm'
+      points: 1
+
+    Jeb:
+      question: 'What name can be given to a sheep that will make it change colours?'
+      answers:
+        - 'jeb_'
+      points: 1
+
+    WoolColours:
+      question: 'How many colours of wool are there?'
+      answers:
+        - '16'
+        - 'Sixteen'
+      points: 1
+
+    BannerPatterns:
+      question: 'How many banner patterns are there?'
+      answers:
+        - '6'
+        - 'Six'
+      points: 1
+
+    FishingRodDurability:
+      question: 'What is the maximum durability of a fishing rod?'
+      answers:
+        - '64'
+      points: 1
+
+    FindNetherFortress:
+      question: 'What is the name of the advancement you get when you find a Nether Fortress for the first time?'
+      answers:
+        - 'A Terrible Fortress'
+      points: 1
+
+    EndSecondAdvancement:
+      question: 'What is the second advancement you get in the End?'
+      answers:
+        - 'Free the End'
+      points: 1
+
+    OlBetsyDescription:
+      question: 'What is the description for the advancement "Ol'' Betsy"?'
+      answers:
+        - 'Shoot a Crossbow'
+      points: 1
+
+    FletchingTableCategory:
+      question: 'In which tab of the Creative Menu does the Fletching Table appear?'
+      answers:
+        - 'Decoration Blocks'
+      points: 1
+
+    PhantomMembraneCategory:
+      question: 'In which tab of the Creative Menu does Phantom Membrane appear?'
+      answers:
+        - 'Brewing'
+      points: 1
+
+    SmallestMenuCategory:
+      question: 'Which tab of the Creative Menu has the fewest items?'
+      answers:
+        - 'Transportation'
+      points: 1
+
+    MinecartTypes:
+      question: 'How many types of minecarts are there?'
+      answers:
+        - '7'
+        - 'Seven'
+      points: 1
+
+    CreepersScared:
+      question: 'What are creepers scared of?'
+      answers:
+        - 'Cats'
+        - 'Ocelots'
+        - 'Cat'
+        - 'Ocelot'
+      points: 1
+
+    Toast:
+      question: 'What can you name a rabbit to give it a special texture?'
+      answers:
+        - 'Toast'
+      points: 1
+
+    ShulkerTypes:
+      question: 'How many types of Shulker Box are there?'
+      answers:
+        - '17'
+        - 'Seventeen'
+      points: 1
+
+    ShulkerSlots:
+      question: 'How many slots does a shulker box have?'
+      answers:
+        - '27'
+      points: 2
+
+    Version1_4:
+      question: 'What was the 1.4 release of Minecraft: Java Edition called?'
+      answers:
+        - 'The Pretty Scary Update'
+        - 'Pretty Scary Update'
+        - 'Pretty Scary'
+      points: 2
+
+    Version1_5:
+      question: 'What was the 1.5 release of Minecraft: Java Edition called?'
+      answers:
+        - 'The Redstone Update'
+        - 'Redstone Update'
+        - 'Redstone'
+      points: 2
+
+    Version1_6:
+      question: 'What was the 1.6 release of Minecraft: Java Edition called?'
+      answers:
+        - 'The Horse Update'
+        - 'Horse Update'
+        - 'Horse'
+      points: 2
+
+    Version1_7:
+      question: 'What was the 1.7 release of Minecraft: Java Edition called?'
+      answers:
+        - 'The Update That Changed The World'
+        - 'Update That Changed The World'
+      points: 2
+
+    Version1_8:
+      question: 'What was the 1.8 release of Minecraft: Java Edition called?'
+      answers:
+        - 'The Bountiful Update'
+        - 'Bountiful Update'
+        - 'Bountiful'
+      points: 2
+
+    Version1_9:
+      question: 'What was the 1.9 release of Minecraft: Java Edition called?'
+      answers:
+        - 'The Combat Update'
+        - 'Combat Update'
+        - 'Combat'
+      points: 2
+
+    Version1_10:
+      question: 'What was the 1.10 release of Minecraft: Java Edition called?'
+      answers:
+        - 'The Frostburn Update'
+        - 'Frostburn Update'
+        - 'Frostburn'
+      points: 2
+
+    Version1_11:
+      question: 'What was the 1.11 release of Minecraft: Java Edition called?'
+      answers:
+        - 'The Exploration Update'
+        - 'Exploration Update'
+        - 'Exploration'
+      points: 2
+
+    Version1_12:
+      question: 'What was the 1.12 release of Minecraft: Java Edition called?'
+      answers:
+        - 'The World of Color Update'
+        - 'The World of Colour Update'
+        - 'World of Color Update'
+        - 'World of Colour Update'
+        - 'World of Color'
+        - 'World of Colour'
+      points: 2
+
+    Version1_13:
+      question: 'What was the 1.13 release of Minecraft: Java Edition called?'
+      answers:
+        - 'The Update Aquatic'
+        - 'Update Aquatic'
+      points: 2
+
+    Version1_14:
+      question: 'What was the 1.14 release of Minecraft: Java Edition called?'
+      answers:
+        - 'Village and Pillage'
+      points: 2
+
+    Version1_15:
+      question: 'What was the 1.15 release of Minecraft: Java Edition called?'
+      answers:
+        - 'Buzzy Bees'
+      points: 2
+
+    Version1_16:
+      question: 'What was the 1.16 release of Minecraft: Java Edition called?'
+      answers:
+        - 'Nether Update'
+      points: 2
+
+    Version1_17:
+      question: 'What was the 1.17 release of Minecraft: Java Edition called?'
+      answers:
+        - 'Caves and Cliffs: Part I'
+        - 'Caves and Cliffs: Part 1'
+        - 'Caves and Cliffs Part I'
+        - 'Caves and Cliffs Part 1'
+      points: 2
+
+    Version1_18:
+      question: 'What was the 1.18 release of Minecraft: Java Edition called?'
+      answers:
+        - 'Caves and Cliffs: Part II'
+        - 'Caves and Cliffs: Part 2'
+        - 'Caves and Cliffs Part II'
+        - 'Caves and Cliffs Part 2'
+      points: 2
+
+    Version1_19:
+      # TODO: Update this manually when 1.19 is released.
+      question: 'What will the 1.19 release of Minecraft: Java Edition be called?'
+      answers:
+        - 'The Wild Update'
+        - 'Wild Update'
+        - 'Wild'
+      points: 2
+
+    Johnny:
+      question: 'What name can be given to a Vindicator that will make it attack other mobs?'
+      answers:
+        - 'Johnny'
+      points: 2
+
+    LightningWitch:
+      question: 'What will create a witch when it hits a villager?'
+      answers:
+        - 'Lightning'
+      points: 2
+
+    UnobtainablePotion:
+      question: 'Name a potion effect that is impossible to get in vanilla survival mode.'
+      answers:
+        - 'Luck'
+        - 'Unluck'
+        - 'Health Boost'
+      points: 2
+
+    NightVision:
+      question: 'Brewing which item will give you a night vision potion?'
+      answers:
+        - 'Golden Carrot'
+      points: 2
+
+    MinecraftDay:
+      question: 'How long is a minecraft day in real time?'
+      answers:
+        - '20 minutes'
+        - '20m'
+        - '20 m'
+        - '20minutes'
+        - '20min'
+        - '20 min'
+      points: 2
+
+    GameTicks:
+      question: 'How many game ticks are there in a second?'
+      answers:
+        - '20'
+        - 'Twenty'
+      points: 2
+
+    SeecretFriday:
+      question: 'How many "Seecret Friday" updates were there during the Alpha stage of development?'
+      answers:
+        - '7'
+        - 'Seven'
+      points: 2
+
+    ArrowCrafting:
+      question: 'When arrows first became craftable in early development, what was used instead of flint for the tip?'
+      answers:
+        - 'Iron'
+        - 'Iron ingot'
+      points: 2
+
+    CakeBites:
+      question: 'How many bites does a cake have?'
+      answers:
+        - '7'
+        - 'Seven'
+      points: 2
+
+    GhastSounds:
+      question: 'Ghast sounds were created by distorting the sounds of which animal?'
+      answers:
+        - 'Cat'
+      points: 2
+
+    BedrockEdition:
+      question: 'What is the alternative to Minecraft: Java Edition?'
+      answers:
+        - 'Minecraft: Bedrock Edition'
+        - 'Bedrock Edition'
+        - 'Bedrock'
+      points: 2
+
+    CantSwim:
+      question: 'Name a mob that cannot swim.'
+      answers:
+        - 'Iron Golem'
+        - 'IronGolem'
+        - 'Enderman'
+      points: 2
+
+    C418:
+      question: 'C418''s skin has what block as a head?'
+      answers:
+        - 'Jukebox'
+        - 'A Jukebox'
+      points: 2
+
+    MojangBanner:
+      question: 'What item is used to craft a Mojang Banner Pattern?'
+      answers:
+        - 'Enchanted Golden Apple'
+        - 'Notch Apple'
+      points: 2
+
+    CaveGame:
+      question: 'What was Minecraft originally going to be called?'
+      answers:
+        - 'Cave Game'
+        - 'Cavegame'
+      points: 2
+
+    WorstFuel:
+      question: 'What is the worst fuel to use in a furnace?'
+      answers:
+        - 'Scaffolding'
+        - 'Bamboo'
+      points: 3
+
+    GolemIngots:
+      question: 'How many iron ingots are required to build an iron golem?'
+      answers:
+        - '36'
+      points: 3
+
+    Postmortal:
+      question: 'Using a totem of undying will get you which advancement?'
+      answers:
+        - 'Postmortal'
+      points: 3
+
+    Alphabet:
+      question: 'Type the alphabet backwards.'
+      answers:
+        - 'ZYXWVUTSRQPONMLKJIHGFEDCBA'
+        - 'Z Y X W V U T S R Q P O N M L K J I H G F E D C B A'
+      points: 3

@@ -1,0 +1,85 @@
+unscramble:
+  # How long should players have to guess?
+  duration: 180
+
+  # Hints for unscramble show up if nobody guesses after a set amount of time.
+  hints:
+    # You can disable hints entirely here.
+    enabled: true
+    # How many points does a question need to be worth to do hints?
+    point-threshold: 2
+    # How long should the game wait before showing a hint?
+    delay: 120
+
+    # There are multiple types of hints that can run depending on the words.
+    # Set any of these to false to disable that type of hint.
+    hint-types:
+      # Scrambles the words individually. Requires multiple words.
+      # Example: "the end". Original question: "hd eten". Hint: "het nde".
+      scramble-individually: true
+
+      # Scramble again with the first letter capitalized to tell players the first letter.
+      # Requires no capital letters in the original word.
+      # Example: "villager". Original question: "rriglvael". Hint: "laVlergi".
+      capitalize-first: true
+
+      # Scramble the word(s) 3 times, and show them all to the players to help them see patterns.
+      # Example: "Night Vision". Original question: "ogiNsi Vtinh". Hint: "Ngihsti Voni", "oigniVNthi s", "hi inNgiVtso"
+      scramble-multiple: true
+
+      # Reveals the first and last letter, or the first 2 letters and last letter if
+      # the word contains a capital.
+      # Example: "Spectator". Original question: "peoSttrca". Hint: "Sp______r"
+      # Example: "overworld". Original question: "rooderwvl". Hint: "o_______d"
+      reveal-ends: true
+
+      # If the word was created from a generator, tells players which generator it came from.
+      # Example: "Knockback". Original question: "ccKonbkka". Hint: "Enchantment"
+      generator-hints: true
+
+  # The chance to use a challenge instead of a normal game.
+  # 0 = never use challenges, 100 = always use challenges
+  challenge-chance: 5
+  # Challenges are variations on the normal game.
+  challenges:
+    # Use a random player online, letting players know that it's a player
+    # to avoid confusion.
+    random_player: 100
+
+  # The chance to generate a word instead of using one from the
+  # 'custom' list at the bottom of the file.
+  # 100 = always generate, 0 = always use custom
+  generation-chance: 98
+
+  # Word generators that use words from the game itself, so you don't need to
+  # add a large amount of minecraft themed words.
+  generators:
+  # generator_type: chance
+    animal: 5
+    # While there are many biomes, it's recommended to keep this number low, due to biome names
+    # that are overly challenging or uncommon, such as "Old Growth Spruce Taiga"
+    biome: 1
+    block: 40
+    enchantment: 3
+    item: 40 # Excludes blocks, even though they're items too.
+    monster: 5
+    potion: 2
+    structure: 1
+
+  # Use the format word:points
+  custom:
+    - minecraft:1
+
+    - overworld:2
+    - nether:2
+    - The End:2
+    - spectator:2
+
+    - Charged Creeper:4
+    - Spider Jockey:4
+    - Blacksmith Villager:4
+    - Thick Potion:4
+    - Mundane Potion:4
+    - Awkward Potion:4
+    - Giant Mushroom:4
+    - Abandoned Mineshaft:4

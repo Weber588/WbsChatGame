@@ -1,0 +1,127 @@
+math:
+  # List equation generators here
+  generators:
+    simple_random: # Names must be unique, but aren't used.
+
+      # How likely should this equation be to appear?
+      chance: 50
+
+      # Numbers are specified by a min and max.
+      # See next section for non-number usages.
+      variables:
+        a:
+          min: 2
+          max: 9
+        b:
+          min: 2
+          max: 9
+        c:
+          min: 2
+          max: 9
+
+      # This defines which operators can replace question marks (?) in the equation.
+      random-operators:
+        - '+'
+        - '-'
+        - '*'
+
+      # Write out the equation to use here!
+      # It can contain numbers, variables, and operators.
+      # Variables are surrounded by % signs from the 'variables' section.
+      equation: '%a% ? %b% ? %c%'
+
+    # You can make worded math using a template as well as an equation.
+    worded_simple:
+      chance: 5
+
+      # Variables are used for numbers and for flavour strings.
+      variables:
+        a:
+          min: 2
+          max: 9
+        b:
+          min: 4
+          max: 8
+        # You can list strings and a random one will be used.
+        ingot_type:
+          - 'iron'
+          - 'gold'
+
+      # By specifying a template, you hide the real equation and show a fake one.
+      # The equation field is still required to calculate the actual answer.
+      template: 'If you have &h%b% %ingot_type% nuggets&r and uncraft &h%a% %ingot_type% ingots&r, how many %ingot_type% nuggets do you have?'
+
+      equation: '%a% * 9 + %b%'
+
+    longer_math:
+      chance: 15
+
+      variables:
+        a:
+          min: 2
+          max: 9
+        b:
+          min: 2
+          max: 9
+        c:
+          min: 2
+          max: 9
+        d:
+          min: 2
+          max: 9
+
+      random-operators:
+        - '+'
+        - '-'
+        - '*'
+
+      equation: '%a% ? %b% ? %c% ? %d%'
+
+    big_addition:
+      chance: 10
+
+      variables:
+        a:
+          min: 10
+          max: 99
+        b:
+          min: 10
+          max: 99
+
+      equation: '%a% + %b%'
+
+    complex_small:
+      chance: 20
+
+      variables:
+        # Variables are processed top to bottom, so you can use variables from lower in the list
+        # with string list variables! Random operators (?) are processed after all variables are filled.
+        extra_calc:
+          - '? %a%'
+          - '? %b%'
+          - '? %c%'
+          - ''
+        extra_calc2:
+          - '? %d%'
+          - ''
+          - ''
+          - ''
+        a:
+          min: 3
+          max: 9
+        b:
+          min: 3
+          max: 9
+        c:
+          min: 3
+          max: 9
+        d:
+          min: 3
+          max: 9
+
+      random-operators:
+        - '+'
+        - '-'
+        - '*'
+
+      equation: '%a% ? %b% ? %c% %extra_calc% %extra_calc2%'

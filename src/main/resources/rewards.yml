@@ -1,0 +1,39 @@
+enable-rewards: true
+
+# This configures what /cg rewards shows. You can use &r to go to the configured main colour,
+# and &h for the configured highlight colour.
+message:
+  - '&m     &h( Rewards )&r&m     '
+  - '&h> &r$25 every 25 points!'
+  - '&h> &r10% of questions worth 3 or more points will give you some iron!'
+  - '&h> &rReaching 100 points will give you $100!'
+
+
+rewards:
+  # Random rewards occur with a chance for every question answered over a certain amount of points.
+  random:
+    givemoney10: # This is the name of the reward - It isn't used, but needs to be unique.
+      chance: 10
+      points-needed: 3 # The question answered must have been worth this many points (or more).
+      money: 5
+      message: 'Congratulations!'
+      commands:
+        - 'minecraft:give %player% minecraft:iron_ingot 1'
+        - 'minecraft:say This is the default ChatGame reward!'
+      broadcast: '%player% just got some money and an iron ingot!'
+
+  # Recurring rewards occur every X points. An example has been provided.
+  recurring:
+    givemoney25:
+      points-needed: 25 # The reward will run every 25 points
+      money: 25
+      message: '25 more points! Good job!' # Send a message to the player!
+
+  # Milestone rewards occur when a certain amount of points is reached.
+  # For example, when a player reaches 100 points you may want to reward them with
+  # a permission or an item. This can be done here.
+  milestone:
+    100milestone:
+      points-needed: 100 # When the player reaches 100 points
+      broadcast: '%player% has reached 100 points! Woo!'
+      money: 100
