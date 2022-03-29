@@ -12,6 +12,7 @@ import wbs.chatgame.data.PlayerRecord;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
 import wbs.utils.util.WbsEnums;
+import wbs.utils.util.WbsMath;
 import wbs.utils.util.commands.WbsSubcommand;
 import wbs.utils.util.plugin.WbsPlugin;
 
@@ -94,16 +95,46 @@ public class StatsCommand extends WbsSubcommand {
         }
 
         if (game != null) {
-            sendMessage("&h" + player.getName() + "&r's stats in &h" + game.getGameName() + "&r:", sender);
-            sendMessage("Total points: &h" + player.getPoints(game, GameStats.TrackedPeriod.TOTAL), sender);
-            sendMessage("Points this month: &h" + player.getPoints(game, GameStats.TrackedPeriod.MONTHLY), sender);
-            sendMessage("Points this week: &h" + player.getPoints(game, GameStats.TrackedPeriod.WEEKLY), sender);
+            sendMessageNoPrefix("&h" + player.getName() + "&r's stats in &h" + game.getGameName() + "&r:", sender);
+
+            plugin.buildMessageNoPrefix("Total points: &h" + player.getPoints(game, GameStats.TrackedPeriod.TOTAL), sender)
+                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.TOTAL))
+                    .send();
+
+            plugin.buildMessageNoPrefix("Points this month: &h" + player.getPoints(game, GameStats.TrackedPeriod.MONTHLY), sender)
+                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.MONTHLY))
+                    .send();
+
+            plugin.buildMessageNoPrefix("Points this week: &h" + player.getPoints(game, GameStats.TrackedPeriod.WEEKLY), sender)
+                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.WEEKLY))
+                    .send();
         } else {
-            sendMessage("&h" + player.getName() + "&r's stats:", sender);
-            sendMessage("Total points: &h" + player.getPoints(), sender);
-            sendMessage("Points this month: &h" + player.getPoints(GameStats.TrackedPeriod.MONTHLY), sender);
-            sendMessage("Points this week: &h" + player.getPoints(GameStats.TrackedPeriod.WEEKLY), sender);
+            sendMessageNoPrefix("&h" + player.getName() + "&r's stats:", sender);
+
+            plugin.buildMessageNoPrefix("Total points: &h" + player.getPoints(GameStats.TrackedPeriod.TOTAL), sender)
+                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.TOTAL))
+                    .send();
+
+            plugin.buildMessageNoPrefix("Points this month: &h" + player.getPoints(GameStats.TrackedPeriod.MONTHLY), sender)
+                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.MONTHLY))
+                    .send();
+
+            plugin.buildMessageNoPrefix("Points this week: &h" + player.getPoints(GameStats.TrackedPeriod.WEEKLY), sender)
+                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.WEEKLY))
+                    .send();
         }
+    }
+
+    private String getStatsBreakdownString(PlayerRecord player, GameStats.TrackedPeriod period) {
+        int totalPoints = player.getPoints(period);
+        return GameManager.getGames().stream()
+                .map(game -> {
+                    int points = player.getPoints(game, period);
+                    double percent = (double) points / totalPoints * 100;
+                    percent = WbsMath.roundTo(percent, 2);
+                    return "&6" + game.getGameName() + "&r: &h" + player.getPoints(game, period) + "&r (" + percent + "%)";
+                })
+                .collect(Collectors.joining("\n"));
     }
 
     @Override
