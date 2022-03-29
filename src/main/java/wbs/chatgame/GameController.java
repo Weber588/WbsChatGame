@@ -109,10 +109,14 @@ public class GameController {
 
         String error = null;
         if (nextOptions != null) {
-            error = currentGame.startWithOptions(nextOptions);
+            try {
+                currentGame = currentGame.startWithOptions(nextOptions);
+            } catch (IllegalArgumentException e) {
+                error = e.getMessage();
+            }
             nextOptions = null;
         } else {
-            currentGame.startGame();
+            currentGame = currentGame.startGame();
         }
 
         if (lastNextSender != null && error != null) {
@@ -122,7 +126,7 @@ public class GameController {
         }
         if (error != null) {
             currentGame = GameManager.getRandomGame();
-            currentGame.startGame();
+            currentGame = currentGame.startGame();
         }
 
         roundRunnableId = new BukkitRunnable() {
@@ -332,6 +336,7 @@ public class GameController {
         nextOptions = options;
     }
 
+    @SuppressWarnings("NullableProblems")
     public static void setLastNextSender(CommandSender sender) {
         lastNextSender = sender;
     }

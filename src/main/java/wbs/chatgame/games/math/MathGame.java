@@ -13,6 +13,7 @@ import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsMath;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MathGame extends Game {
 
@@ -76,7 +77,7 @@ public class MathGame extends Game {
     }
 
     @Override
-    public String startWithOptions(@NotNull List<String> options) {
+    public @NotNull Game startWithOptions(@NotNull List<String> options) {
         if (options.isEmpty()) {
             currentEquation = generateQuestion();
         } else {
@@ -91,19 +92,19 @@ public class MathGame extends Game {
                 try {
                     currentEquation = generator.getEquation();
                 } catch (InvalidConfigurationException e) {
-                    return e.getMessage();
+                    throw new IllegalArgumentException(e.getMessage());
                 }
             }
         }
 
         if (currentEquation == null) {
             GameController.skip();
-            return null;
+            return this;
         }
         try {
             currentSolution = currentEquation.equation().solve();
         } catch (IllegalStateException e) {
-            return e.getMessage();
+            throw new IllegalArgumentException(e.getMessage());
         }
         currentPoints = currentSolution.points();
 
@@ -114,7 +115,7 @@ public class MathGame extends Game {
             broadcastQuestion("Solve \"&h" + equationString + "&r\" for " + GameController.pointsDisplay(currentPoints) + "!");
         }
 
-        return null;
+        return this;
     }
 
     @Nullable
@@ -155,5 +156,13 @@ public class MathGame extends Game {
     @Override
     public List<String> getAnswers() {
         return Collections.singletonList(formatAnswer());
+    }
+
+    @Override
+    public List<String> getOptionCompletions() {
+        return generatorsWithChances.keySet().stream()
+                .map(EquationGenerator::getGeneratorName)
+                .map(String::toLowerCase)
+                .collect(Collectors.toList());
     }
 }

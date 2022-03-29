@@ -8,7 +8,7 @@ public class ChatGameCommand extends WbsCommand {
     public ChatGameCommand(WbsPlugin plugin, PluginCommand command) {
         super(plugin, command);
 
-        String perm = "wbscommand";
+        String perm = "chatgame";
 
         addSubcommand(new StatsCommand(plugin), perm + ".stats");
         addSubcommand(new CurrentCommand(plugin), perm + ".current");

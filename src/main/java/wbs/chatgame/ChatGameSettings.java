@@ -37,6 +37,7 @@ public class ChatGameSettings extends WbsSettings {
         if (settingsSection != null) {
             requireGuessCommand = settingsSection.getBoolean("require-guess-command", requireGuessCommand);
             listenByDefault = settingsSection.getBoolean("listen-by-default", listenByDefault);
+            debugMode = settingsSection.getBoolean("debug-mode", debugMode);
             GameController.roundDelay = (int) (settingsSection.getDouble("seconds-between-rounds", 180) * 20);
 
             ConfigurationSection ratesSection = settingsSection.getConfigurationSection("rates");
@@ -81,6 +82,7 @@ public class ChatGameSettings extends WbsSettings {
 
     public boolean requireGuessCommand = false;
     public boolean listenByDefault = true;
+    public boolean debugMode = false;
 
     private final List<File> gameFiles = new ArrayList<>();
 
@@ -107,7 +109,8 @@ public class ChatGameSettings extends WbsSettings {
             String gameName = gameFile.getName().substring(0, gameFile.getName().lastIndexOf('.'));
 
             try {
-                GameManager.newGame(gameName, specs, gameFile.getName());
+                Game game = GameManager.createGame(gameName, specs, gameFile.getName());
+                GameManager.addGame(gameName, game);
                 gamesLoaded++;
             } catch (InvalidConfigurationException ignored) {}
         }

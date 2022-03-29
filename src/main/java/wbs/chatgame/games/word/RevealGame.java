@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import wbs.chatgame.GameController;
+import wbs.chatgame.games.challenges.Challenge;
 
 public class RevealGame extends WordGame {
     public RevealGame(String gameName, ConfigurationSection section, String directory) {
@@ -13,7 +14,7 @@ public class RevealGame extends WordGame {
         durationPerReveal = (int) (section.getDouble("duration-per-reveal", getDuration() * 20 / 5.0) * 20);
     }
 
-    private final int durationPerReveal;
+    private int durationPerReveal;
 
     private int revealTaskId = -1;
     private String currentDisplay;
@@ -28,7 +29,7 @@ public class RevealGame extends WordGame {
         String answer = getCurrentWord().word;
         int maxAmount = Math.max(1, (int) Math.round(answer.length()/4.0));
 
-        final int initialPoints = Math.max(1, (answer.length()/4));
+        final int initialPoints = calculatePoints(getCurrentWord().word);
         currentPoints = initialPoints;
 
         currentDisplay = reveal(currentDisplay, answer, maxAmount);
@@ -113,7 +114,16 @@ public class RevealGame extends WordGame {
     }
 
     @Override
-    protected int calculatePoints(Word word) {
-        return 0;
+    protected void configure(Challenge<?> challenge) {
+        super.configure(challenge);
+
+        if (challenge instanceof RevealGame other) {
+            other.durationPerReveal = durationPerReveal;
+        }
+    }
+
+    @Override
+    protected int calculatePoints(String word) {
+        return Math.max(1, (word.length()/4));
     }
 }

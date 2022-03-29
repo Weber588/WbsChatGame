@@ -7,6 +7,7 @@ import wbs.chatgame.ChatGameSettings;
 import wbs.chatgame.GameController;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.challenges.Challenge;
+import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsMath;
 
@@ -14,12 +15,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public abstract class Game {
-
-    protected final WbsChatGame plugin;
-    protected final ChatGameSettings settings;
 
     public Game(String gameName, ConfigurationSection section, String directory) {
         plugin = WbsChatGame.getInstance();
@@ -40,38 +37,83 @@ public abstract class Game {
                     chance = Double.parseDouble(chanceString);
                 } catch (NumberFormatException e) {
                     settings.logError(key + " must be a number. Invalid value: " + challengesSection.get(key), directory + "/challenges/" + key);
+                    continue;
                 }
 
-                // TODO
+                challengesWithChance.put(key, chance);
+            }
+
+            if (!challengesWithChance.isEmpty()) {
+                plugin.logger.info("Loaded " + challengesWithChance.size() + " challenges for " + getGameName());
             }
         }
-
     }
+
+    public Game(String gameName, double challengeChance, int duration) {
+        plugin = WbsChatGame.getInstance();
+        settings = plugin.settings;
+        this.gameName = gameName;
+        this.challengeChance = challengeChance;
+        this.duration = duration;
+    }
+
+    protected final WbsChatGame plugin;
+    protected final ChatGameSettings settings;
 
     protected final String gameName;
     private final double challengeChance;
-    private final int duration;
-    private final Map<Challenge, Double> challengesWithChance = new HashMap<>();
 
-    private List<String> options;
+    /** Duration in ticks */
+    private final int duration;
+
+    private List<String> challengeHistory = new LinkedList<>();
+    /** A map of challenge ids to the chance */
+    private final Map<String, Double> challengesWithChance = new HashMap<>();
 
     private String currentQuestion;
     protected int currentPoints;
 
-    protected void broadcastQuestion(String currentQuestion) {
+    public void broadcastQuestion(String currentQuestion) {
+        if (settings.debugMode) {
+            String lineBreak = "___________________________________________________________";
+            plugin.logger.info(lineBreak);
+            plugin.logger.info("Question: " + currentQuestion);
+            plugin.logger.info("Answers: ");
+            for (String answer : getAnswers()) {
+                plugin.logger.info(" - " + answer);
+            }
+            plugin.logger.info(lineBreak);
+        }
+
         this.currentQuestion = currentQuestion;
         GameController.broadcast(currentQuestion);
     }
 
-    public final void startGame() {
-        if (WbsMath.chance(challengeChance) && !challengesWithChance.isEmpty()) {
-            boolean challengeStarted = WbsCollectionUtil.getRandomWeighted(challengesWithChance).startChallenge();
-            if (!challengeStarted) {
-                start();
+    /**
+     * Start the game, or a challenge, and return the game that was started.
+     * @return The game that was started; either this object, or the challenge
+     * that was started instead.
+     */
+    @NotNull
+    public final Game startGame() {
+        if (!(this instanceof Challenge)) {
+            if (WbsMath.chance(challengeChance) && !challengesWithChance.isEmpty()) {
+                String id = WbsCollectionUtil.pseudoRandomAvoidRepeats(challengesWithChance, challengeHistory, 2);
+
+                Challenge<?> challenge = ChallengeManager.getChallenge(id, this);
+
+                if (challenge == null) {
+                    plugin.logger.info("Invalid challenge in game " + gameName + ": " + id);
+                } else {
+                    Game started = challenge.startChallenge();
+                    if (started != null) {
+                        return started;
+                    }
+                }
             }
-        } else {
-            start();
         }
+        start();
+        return this;
     }
 
     /**
@@ -80,9 +122,9 @@ public abstract class Game {
      * @return Any errors that occurred during the start, or
      * null if the game started properly.
      */
-    public String startWithOptions(@NotNull List<String> options) {
-        startGame();
-        return null;
+    @NotNull
+    public Game startWithOptions(@NotNull List<String> options) throws IllegalArgumentException {
+        return startGame();
     }
 
     /**
@@ -126,5 +168,45 @@ public abstract class Game {
 
     public int getPoints() {
         return currentPoints;
+    }
+
+    /**
+     * Register this games' challenges with the {@link ChallengeManager}, if it has any,
+     * using the {@link #register(String, Class)} method.
+     */
+    public void registerChallenges() {}
+
+    protected final <T extends Game> void register(String id, Class<? extends Challenge<T>> challengeClass) {
+        @SuppressWarnings("unchecked")
+        Challenge<?> challenge = ChallengeManager.buildAndRegisterChallenge(id, (T) this, challengeClass);
+        if (challenge != null) {
+            try {
+                configure(challenge);
+            } catch (IllegalArgumentException ignored) {}
+        }
+    }
+
+    /**
+     * Set any fields that are needed to ensure behaviour of the challenge matches the behaviour of the current
+     * instance. For example, if the subclass of {@link Game} has a "hint" functionality, it should copy that functionality
+     * over to the challenge that extends that subclass.
+     * @param challenge The challenge, which should also extend the class of the current implementation of {@link Game}
+     */
+    protected void configure(Challenge<?> challenge) throws IllegalArgumentException {
+        if (!getClass().isAssignableFrom(challenge.getClass())) {
+            plugin.logger.severe("Failed to configure challenge. Challenge \"" +
+                    challenge.getClass().getCanonicalName() + "\" is not an extension of " +
+                    getClass().getCanonicalName());
+            throw new IllegalArgumentException();
+        }
+    }
+
+    /**
+     * Returns a list of strings to use as suggestions when entering options for
+     * the given game type.
+     * @return The strings to suggest when entering options for this game type.
+     */
+    public List<String> getOptionCompletions() {
+        return new LinkedList<>();
     }
 }

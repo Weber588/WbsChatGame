@@ -1,6 +1,14 @@
 package wbs.chatgame.games.math;
 
+/**
+ * Defines mathematical operators that accept two values and return a {@link Solution},
+ * which defines how many points that solution is worth.
+ * <br/>
+ * The order of declaration defines the order of operations, where operations defined
+ * earlier are processed first.
+ */
 public enum Operator {
+    EXPONENTIATION('^'),
     MULTIPLICATION('*'),
     DIVISION('/'),
     SUBTRACTION('-'),
@@ -30,6 +38,9 @@ public enum Operator {
                     new Solution(val1 / val2,
                             val1 % val2 != 0
                                     ? 1 : 0);
+            case EXPONENTIATION ->
+                    new Solution(Math.pow(val1, val2),
+                            (int) (Math.ceil(val2) + (val1 / 4)));
         };
     }
 
@@ -39,7 +50,13 @@ public enum Operator {
             case '/' -> DIVISION;
             case '+' -> ADDITION;
             case '-' -> SUBTRACTION;
+            case '^' -> EXPONENTIATION;
             default -> null;
         };
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(operator);
     }
 }

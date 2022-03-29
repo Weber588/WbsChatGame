@@ -1,5 +1,7 @@
 package wbs.chatgame.games;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -7,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.ChatGameSettings;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.WordUtil;
+import wbs.chatgame.games.challenges.Challenge;
 import wbs.chatgame.games.math.MathGame;
 import wbs.chatgame.games.trivia.TriviaGame;
 import wbs.chatgame.games.word.QuickTypeGame;
@@ -27,6 +30,10 @@ public class GameManager {
 
     private static final Map<String, Game> games = new HashMap<>();
     private static final Map<Game, Double> chances = new HashMap<>();
+    /**
+     * A map of a game's ID to a collection of it's challenges
+     */
+    private static final Multimap<String, Game> challenges = HashMultimap.create();
 
     public static void registerNativeGames() {
         registerGame("unscramble", UnscrambleGame.class);
@@ -42,8 +49,16 @@ public class GameManager {
 
     @Nullable
     public static String getRegistrationId(Game game) {
+        Class<? extends Game> gameClass;
+
+        if (game instanceof Challenge) {
+            gameClass = ((Challenge<?>) game).getGameClass();
+        } else {
+            gameClass = game.getClass();
+        }
+
         for (String id : registeredGames.keySet()) {
-            if (registeredGames.get(id).equals(game.getClass())) {
+            if (registeredGames.get(id).equals(gameClass)) {
                 return id;
             }
         }
@@ -52,7 +67,7 @@ public class GameManager {
     }
 
     @Nullable
-    public static Game newGame(String gameName, YamlConfiguration specs, String directory) throws InvalidConfigurationException {
+    public static Game createGame(String gameName, YamlConfiguration specs, String directory) throws InvalidConfigurationException {
         ChatGameSettings settings = WbsChatGame.getInstance().settings;
 
         String typeString = specs.getKeys(false).toArray(new String[0])[0];
@@ -69,7 +84,6 @@ public class GameManager {
         try {
             Constructor<? extends Game> constructor = gameClass.getConstructor(String.class, ConfigurationSection.class, String.class);
             game = constructor.newInstance(gameName, section, directory);
-
         } catch (SecurityException | NoSuchMethodException | InstantiationException
                 | IllegalAccessException | IllegalArgumentException e) {
             settings.logError("Invalid constructor for game type " + typeString, directory);
@@ -84,16 +98,16 @@ public class GameManager {
             return null;
         }
 
-        addGame(gameName, game);
         return game;
     }
 
-    private static void addGame(String name, Game game) {
+    public static void addGame(String name, Game game) {
         name = WordUtil.stripSyntax(name);
         if (games.containsKey(name))
             throw new IllegalArgumentException("Name \"" + name + "\" already registered to game of type " + game.getClass().getSimpleName());
 
         games.put(name, game);
+        game.registerChallenges();
     }
 
     public static void setChance(String id, double chance) {

@@ -1,18 +1,19 @@
 package wbs.chatgame.games.challenges;
 
+import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.Game;
 
-public abstract class Challenge {
-
-    protected final Game game;
-    public Challenge(Game game) {
-        this.game = game;
+public interface Challenge<T extends Game> {
+    default Game startChallenge() {
+        if (this instanceof Game) {
+            return ((Game) this).startGame();
+        } else {
+            WbsChatGame.getInstance().logger
+                    .severe("Challenge classes must extend the Game class. Class: " + getClass().getCanonicalName()
+                            + ". Please report this to the developer.");
+            return null;
+        }
     }
 
-    /**
-     * Start the challenge.
-     * @return Whether or not the challenge was successful. False = failed to start challenge.
-     */
-    public abstract boolean startChallenge();
-
+    Class<T> getGameClass();
 }

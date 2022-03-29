@@ -56,7 +56,14 @@ public class SkipCommand extends WbsSubcommand {
     @Override
     protected List<String> getTabCompletions(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         if (args.length == 2) {
-            return GameManager.getGames().stream().map(Game::getGameName).collect(Collectors.toList());
+            return GameManager.getGames().stream()
+                    .map(Game::getGameName)
+                    .collect(Collectors.toList());
+        } else if (args.length == 3) {
+            Game game = GameManager.getGame(args[1]);
+            if (game != null) {
+                return game.getOptionCompletions();
+            }
         }
         return Collections.emptyList();
     }

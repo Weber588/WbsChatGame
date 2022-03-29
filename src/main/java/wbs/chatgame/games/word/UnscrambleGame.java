@@ -6,6 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import wbs.chatgame.GameController;
 import wbs.chatgame.WordUtil;
+import wbs.chatgame.games.challenges.Challenge;
+import wbs.chatgame.games.challenges.ChallengeManager;
+import wbs.chatgame.games.challenges.UnscrambleOnlinePlayer;
 import wbs.chatgame.games.word.generator.GeneratorManager;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsEnums;
@@ -27,7 +30,7 @@ public class UnscrambleGame extends WordGame {
         } else {
             hintsEnabled = hintSection.getBoolean("enabled", true);
             hintThreshold = hintSection.getInt("point-threshold", 0);
-            hintDelay = (int) (hintSection.getDouble("delay", getDuration() * 2.0 / 3.0) * 20);
+            hintDelay = (int) (hintSection.getDouble("delay", (getDuration() / 20.0) * 2.0 / 3.0) * 20);
 
             ConfigurationSection typeSection = hintSection.getConfigurationSection("hint-types");
             if (typeSection == null) {
@@ -54,9 +57,16 @@ public class UnscrambleGame extends WordGame {
         }
     }
 
-    private final boolean hintsEnabled;
-    private final int hintThreshold;
-    private final int hintDelay;
+    public UnscrambleGame(String gameName, double challengeChance, int duration) {
+        super(gameName, challengeChance, duration);
+
+        enabledHintTypes.addAll(Arrays.asList(HintType.values()));
+    }
+
+    private boolean hintsEnabled = false;
+    private int hintThreshold = 0;
+    private int hintDelay = (int) (getDuration() * 2.0 / 3.0);
+
     private final Set<HintType> enabledHintTypes = new HashSet<>();
 
     private String originalScramble = null;
@@ -66,18 +76,21 @@ public class UnscrambleGame extends WordGame {
     @Override
     public void startGame(Word word) {
         originalScramble = WordUtil.scrambleString(word.word);
-
-        broadcastQuestion("Unscramble \"&h" + originalScramble + "&r\" for "
-                + GameController.pointsDisplay(getPoints()) + "!");
+        broadcastScramble(originalScramble);
 
         if (hintsEnabled && getPoints() >= hintThreshold) {
             scheduleHint();
         }
     }
 
+    protected void broadcastScramble(String scrambledWord) {
+        broadcastQuestion("Unscramble \"&h" + scrambledWord + "&r\" for "
+                + GameController.pointsDisplay(getPoints()) + "!");
+    }
+
     @Override
-    protected int calculatePoints(Word word) {
-        return WordUtil.scramblePoints(word.word);
+    protected int calculatePoints(String word) {
+        return WordUtil.scramblePoints(word);
     }
 
     private void scheduleHint() {
@@ -202,6 +215,26 @@ public class UnscrambleGame extends WordGame {
         if (hintTaskId != -1) {
             Bukkit.getScheduler().cancelTask(hintTaskId);
             hintTaskId = -1;
+        }
+    }
+
+    /**
+     * Register this games challenges with the ChallengeManager, if it has any.
+     */
+    @Override
+    public void registerChallenges() {
+        super.registerChallenges();
+        ChallengeManager.buildAndRegisterChallenge("randomplayer", this, UnscrambleOnlinePlayer.class);
+    }
+
+    @Override
+    protected void configure(Challenge<?> challenge) {
+        super.configure(challenge);
+
+        if (challenge instanceof UnscrambleGame other) {
+            other.hintsEnabled = hintsEnabled;
+            other.hintDelay = hintDelay;
+            other.hintThreshold = hintThreshold;
         }
     }
 

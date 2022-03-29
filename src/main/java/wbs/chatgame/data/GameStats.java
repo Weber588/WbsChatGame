@@ -80,6 +80,10 @@ public class GameStats implements RecordProducer {
         return gameId;
     }
 
+    public UUID getUUID() {
+        return uuid;
+    }
+
     @Override
     public WbsRecord toRecord() {
         WbsRecord record = new WbsRecord(ChatGameDB.getDatabase());

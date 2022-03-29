@@ -15,4 +15,9 @@ public class Value implements Solveable {
     public Solution solve() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value.value());
+    }
 }

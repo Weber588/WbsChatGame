@@ -3,6 +3,7 @@ package wbs.chatgame;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 
 public final class WordUtil {
     private WordUtil() {}
@@ -53,5 +54,16 @@ public final class WordUtil {
         // if escape is 100 here, it was likely impossible to make the string have no consecutive spaces, just return the string
 
         return output;
+    }
+
+    public static String reverseString(String input) {
+        int length = input.length();
+        char[] oldLetters = input.toCharArray();
+        char[] newLetters = new char[length];
+        for (int i = 0; i < length; i++) {
+            newLetters[i] = oldLetters[length - i - 1];
+        }
+
+        return new String(newLetters);
     }
 }

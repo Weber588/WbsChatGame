@@ -186,6 +186,7 @@ public class EquationGenerator {
                 }
 
                 StringBuilder valueString = new StringBuilder();
+                valueString.append(current);
 
                 int subindex = index + 1;
 
@@ -203,9 +204,7 @@ public class EquationGenerator {
                         subindex++;
                     }
 
-                    index += valueString.length();
-                } else {
-                    valueString.append(current);
+                    index += valueString.length() - 1;
                 }
 
                 int value;

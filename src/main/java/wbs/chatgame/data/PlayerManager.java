@@ -65,7 +65,11 @@ public class PlayerManager extends AbstractDataManager<PlayerRecord, UUID> {
     public List<UUID> getUUIDs(String username) {
         List<WbsRecord> records = ChatGameDB.playerTable.selectOnField(ChatGameDB.nameField, username);
 
-        return records.stream().map(record -> record.getValue(ChatGameDB.uuidField, UUID.class)).collect(Collectors.toList());
+        return records.stream()
+                .map(record ->
+                        record.getValue(ChatGameDB.uuidField, String.class))
+                .map(UUID::fromString)
+                .collect(Collectors.toList());
     }
 
     public void getUUIDsAsync(String username, Consumer<List<UUID>> callback) {

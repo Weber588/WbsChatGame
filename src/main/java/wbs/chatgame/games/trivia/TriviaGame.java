@@ -5,13 +5,14 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.GameController;
 import wbs.chatgame.games.Game;
-import wbs.chatgame.games.trivia.TriviaQuestion;
+import wbs.chatgame.games.challenges.Challenge;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.string.WbsStrings;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TriviaGame extends Game {
 
@@ -46,7 +47,7 @@ public class TriviaGame extends Game {
                 boolean showAnswer = qSection.getBoolean("show-answer", false);
                 boolean useRegex = qSection.getBoolean("use-regex", false);
 
-                questions.add(new TriviaQuestion(question, points, showAnswer, useRegex, answers.toArray(new String[0])));
+                questions.add(new TriviaQuestion(key, question, points, showAnswer, useRegex, answers.toArray(new String[0])));
             }
         }
 
@@ -54,6 +55,7 @@ public class TriviaGame extends Game {
     }
 
     private final List<TriviaQuestion> questions = new LinkedList<>();
+    private final List<TriviaQuestion> history = new LinkedList<>();
     private TriviaQuestion question;
 
     /**
@@ -77,9 +79,72 @@ public class TriviaGame extends Game {
 
     @Override
     protected void start() {
-        question = WbsCollectionUtil.getRandom(questions);
+        question = nextQuestion();
         currentPoints = question.points();
         broadcastQuestion(question.question() + "&h (" + GameController.pointsDisplay(question.points()) + ")");
+    }
+
+    @Override
+    public @NotNull Game startWithOptions(@NotNull List<String> options) {
+        if (options.isEmpty()) {
+            start();
+            return this;
+        }
+
+        String id = options.get(0);
+
+        TriviaQuestion found = null;
+        for (TriviaQuestion check : questions) {
+            if (check.id().equalsIgnoreCase(id)) {
+                found = check;
+                break;
+            }
+        }
+
+        if (found != null) {
+            question = found;
+        } else {
+            String formatErrorString = "Custom trivia questions must be in the form " +
+                    "&h\"<points> <question> -a <answer1>, [answer2], [answer3]\"&r.";
+
+            int points;
+            try {
+                points = Integer.parseInt(options.get(0));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid number: " + options.get(0) + ". " + formatErrorString);
+            }
+
+            String fullOptions = String.join(" ", options.subList(1, options.size()));
+
+            String[] split = fullOptions.split("-a");
+
+            if (split.length == 1) {
+                throw new IllegalArgumentException(formatErrorString);
+            }
+
+            String questionString = split[0].trim();
+            String answerString = split[1].trim();
+            String[] answers = answerString.split(",");
+
+            for (int i = 0; i < answers.length; i++) {
+                answers[i] = answers[i].trim();
+            }
+
+            question = new TriviaQuestion("custom", questionString, points, false, false, answers);
+        }
+
+        currentPoints = question.points();
+        broadcastQuestion(question.question() + "&h (" + GameController.pointsDisplay(question.points()) + ")");
+
+        return this;
+    }
+
+    protected TriviaQuestion nextQuestion() {
+        return WbsCollectionUtil.getAvoidRepeats(
+                () -> WbsCollectionUtil.getRandom(questions),
+                questions.size(),
+                history,
+                2);
     }
 
     @Override
@@ -112,5 +177,22 @@ public class TriviaGame extends Game {
     @Override
     public List<String> getAnswers() {
         return new LinkedList<>(Arrays.asList(question.answers()));
+    }
+
+    @Override
+    protected void configure(Challenge<?> challenge) {
+        super.configure(challenge);
+
+        if (challenge instanceof TriviaGame other) {
+            other.questions.addAll(questions);
+
+        }
+    }
+
+    @Override
+    public List<String> getOptionCompletions() {
+        return questions.stream()
+                .map(TriviaQuestion::id)
+                .collect(Collectors.toList());
     }
 }

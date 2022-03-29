@@ -1,7 +1,9 @@
 package wbs.chatgame.games.math;
 
+import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.WbsChatGame;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,6 +65,14 @@ public class Equation implements Solveable {
         // processed in.
         for (Operator operator : Operator.values()) {
             while (operators.contains(operator)) {
+                if (WbsChatGame.getInstance().settings.debugMode) {
+                    Equation tempEquation = new Equation()
+                            .addAllOperators(operators)
+                            .addAllValues(values);
+
+                    WbsChatGame.getInstance().logger.info(tempEquation.toString());
+                }
+
                 int index = operators.indexOf(operator);
                 points += solveAndReduce(index, operators, values).points();
             }
@@ -71,14 +81,32 @@ public class Equation implements Solveable {
         return new Solution(values.get(0).solve().value(), Math.max(1, points));
     }
 
+    @NotNull
+    public Equation addAllOperators(Collection<Operator> operators) {
+        this.operators.addAll(operators);
+        return this;
+    }
+
+    @NotNull
+    public Equation addAllValues(Collection<Solveable> values) {
+        this.values.addAll(values);
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder equationString = new StringBuilder(values.get(0) + "");
         for (int i = 0; i < operators.size(); i++) {
             equationString.append(" ")
                     .append(operators.get(i))
-                    .append(" ")
-                    .append(values.get(i + 1));
+                    .append(" ");
+
+            Solveable solveable = values.get(i + 1);
+            if (solveable instanceof Equation) {
+                equationString.append('(').append(solveable).append(')');
+            } else {
+                equationString.append(solveable);
+            }
         }
         return equationString.toString();
     }

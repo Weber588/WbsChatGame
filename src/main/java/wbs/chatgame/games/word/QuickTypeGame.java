@@ -4,6 +4,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import wbs.chatgame.GameController;
 import wbs.chatgame.WordUtil;
+import wbs.chatgame.games.challenges.Challenge;
+import wbs.chatgame.games.challenges.QuickTypeBackwards;
 
 public class QuickTypeGame extends WordGame {
     public QuickTypeGame(String gameName, ConfigurationSection section, String directory) {
@@ -13,8 +15,12 @@ public class QuickTypeGame extends WordGame {
         matchCase = section.getBoolean("match-case", true);
     }
 
-    private final boolean scramble;
-    private final boolean matchCase;
+    public QuickTypeGame(String gameName, double challengeChance, int duration) {
+        super(gameName, challengeChance, duration);
+    }
+
+    private boolean scramble;
+    private boolean matchCase;
 
     @Override
     protected void startGame(Word wordToGuess) {
@@ -61,11 +67,27 @@ public class QuickTypeGame extends WordGame {
     }
 
     @Override
-    protected int calculatePoints(Word word) {
+    protected int calculatePoints(String word) {
         return Math.max(1,
                 (int) Math.round(
-                        Math.log(word.word.length() / 3.0) / Math.log(2) // log_2(length/3)
+                        Math.log(word.length() / 3.0) / Math.log(2) // log_2(length/3)
                 )
         );
+    }
+
+    @Override
+    public void registerChallenges() {
+        super.registerChallenges();
+        register("backwards", QuickTypeBackwards.class);
+    }
+
+    @Override
+    protected void configure(Challenge<?> challenge) {
+        super.configure(challenge);
+
+        if (challenge instanceof QuickTypeGame other) {
+            other.scramble = scramble;
+            other.matchCase = matchCase;
+        }
     }
 }
