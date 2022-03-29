@@ -335,20 +335,18 @@ trivia:
 
     Version1_17:
       question: 'What was the 1.17 release of Minecraft: Java Edition called?'
+      use-regex: true
       answers:
-        - 'Caves and Cliffs: Part I'
-        - 'Caves and Cliffs: Part 1'
-        - 'Caves and Cliffs Part I'
-        - 'Caves and Cliffs Part 1'
+        # Accepts "Caves and Cliffs Part 1", "Caves & Cliffs: Part I", and variations in between!
+        - 'Caves (and|&) Cliffs(:? Part (1|I))?'
       points: 2
 
     Version1_18:
       question: 'What was the 1.18 release of Minecraft: Java Edition called?'
+      use-regex: true
       answers:
-        - 'Caves and Cliffs: Part II'
-        - 'Caves and Cliffs: Part 2'
-        - 'Caves and Cliffs Part II'
-        - 'Caves and Cliffs Part 2'
+        # Accepts "Caves and Cliffs Part 2", "Caves & Cliffs: Part II", and variations in between!
+        - 'Caves (and|&) Cliffs:? Part (2|II)'
       points: 2
 
     Version1_19:
