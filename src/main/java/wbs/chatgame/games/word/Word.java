@@ -5,7 +5,7 @@ import wbs.chatgame.games.word.generator.WordGenerator;
 
 import java.util.Objects;
 
-public final class Word {
+public class Word {
     public final String word;
     private int points;
     @Nullable

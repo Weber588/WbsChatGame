@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EnchantmentWordGenerator extends WordGenerator {
+public class EnchantmentWordGenerator extends SimpleWordGenerator {
     @Override
-    public List<String> generateWords() {
+    public List<String> generateStrings() {
         return Arrays.stream(Enchantment.values())
                 .map(ench ->
                         WbsStrings.capitalizeAll(

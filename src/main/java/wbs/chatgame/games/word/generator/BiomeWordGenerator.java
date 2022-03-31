@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BiomeWordGenerator extends WordGenerator {
+public class BiomeWordGenerator extends SimpleWordGenerator {
     @Override
-    public List<String> generateWords() {
+    public List<String> generateStrings() {
         return Arrays.stream(Biome.values())
                 .filter(biome -> biome != Biome.CUSTOM)
                 .map(WbsEnums::toPrettyString)

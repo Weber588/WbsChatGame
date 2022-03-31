@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.GameController;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.Challenge;
+import wbs.chatgame.games.word.generator.GeneratedWord;
 import wbs.chatgame.games.word.generator.GeneratorManager;
 import wbs.chatgame.games.word.generator.WordGenerator;
 import wbs.utils.exceptions.InvalidConfigurationException;
@@ -188,10 +189,9 @@ public abstract class WordGame extends Game {
         return getGeneratedWord(generator);
     }
 
-    protected Word getGeneratedWord(@NotNull WordGenerator generator) {
-        String generated = generator.getNext();
+    protected GeneratedWord getGeneratedWord(@NotNull WordGenerator generator) {
+        GeneratedWord word = generator.getNext();
 
-        Word word = new Word(generated, generator);
         int points = Math.max(1, calculatePoints(word.word) + generator.getPointsModifier());
         word.setPoints(points);
 

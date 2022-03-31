@@ -9,7 +9,7 @@ import wbs.chatgame.WordUtil;
 import wbs.chatgame.games.challenges.Challenge;
 import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.chatgame.games.challenges.UnscrambleOnlinePlayer;
-import wbs.chatgame.games.word.generator.GeneratorManager;
+import wbs.chatgame.games.word.generator.GeneratedWord;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsEnums;
 import wbs.utils.util.string.WbsStrings;
@@ -28,7 +28,9 @@ public class UnscrambleGame extends WordGame {
             hintThreshold = 0;
             hintDelay = 0;
         } else {
-            hintsEnabled = hintSection.getBoolean("enabled", true);
+            hintsEnabled = hintSection.getBoolean("enabled", hintsEnabled);
+            generatorHintsEnabled = hintSection.getBoolean("generator-hints", generatorHintsEnabled);
+            enhancedGeneratorHints = hintSection.getBoolean("enhanced-material-hints", enhancedGeneratorHints);
             hintThreshold = hintSection.getInt("point-threshold", 0);
             hintDelay = (int) (hintSection.getDouble("delay", (getDuration() / 20.0) * 2.0 / 3.0) * 20);
 
@@ -64,6 +66,8 @@ public class UnscrambleGame extends WordGame {
     }
 
     private boolean hintsEnabled = false;
+    private boolean generatorHintsEnabled = true;
+    private boolean enhancedGeneratorHints = true;
     private int hintThreshold = 0;
     private int hintDelay = (int) (getDuration() * 2.0 / 3.0);
 
@@ -119,7 +123,7 @@ public class UnscrambleGame extends WordGame {
             }
         }
 
-        if (word.generator != null) {
+        if (word.generator != null && generatorHintsEnabled) {
             addHintIfEnabled(possibleTypes, HintType.GENERATOR_HINTS);
         }
 
@@ -179,15 +183,15 @@ public class UnscrambleGame extends WordGame {
                     broadcastQuestion("Hint: \"&h" + hintString + "&r\" (" + GameController.pointsDisplay(getPoints()) + ")");
                 }
                 case GENERATOR_HINTS -> {
-                    String generatorId = GeneratorManager.getRegisteredId(word.generator);
-                    if (generatorId == null) {
-                        plugin.logger.severe("Internal error. A generator was in-use without having an id registered.");
+                    if (word instanceof GeneratedWord generatedWord) {
+                        String hint = generatedWord.getHint();
+
+                        broadcastQuestion("Hint: " + hint + "! \"&h" + originalScramble + "&r\" (" + GameController.pointsDisplay(getPoints()) + ")");
+                    } else {
+                        plugin.logger.severe("Internal error. Generator hints was chosen as a hint type for a non-generated word.");
                         possibleTypes.remove(HintType.GENERATOR_HINTS);
                         showHint(possibleTypes);
-                        return;
                     }
-                    
-                    broadcastQuestion("This word is a type of " + generatorId + "! \"&h" + originalScramble + "&r\" (" + GameController.pointsDisplay(getPoints()) + ")");
                 }
             }
         }

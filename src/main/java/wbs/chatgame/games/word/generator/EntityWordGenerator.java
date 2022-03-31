@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class EntityWordGenerator<T extends Entity> extends WordGenerator {
+public abstract class EntityWordGenerator<T extends Entity> extends SimpleWordGenerator {
     @Override
-    public List<String> generateWords() {
+    public List<String> generateStrings() {
         return Arrays.stream(EntityType.values())
                 .filter(type -> type != EntityType.UNKNOWN)
                 .filter(type -> {

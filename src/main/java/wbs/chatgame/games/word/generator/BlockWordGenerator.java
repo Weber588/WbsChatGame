@@ -6,9 +6,9 @@ import wbs.utils.util.WbsEnums;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class BlockWordGenerator extends WordGenerator {
+public class BlockWordGenerator extends SimpleWordGenerator {
     @Override
-    public List<String> generateWords() {
+    public List<String> generateStrings() {
         return Arrays.stream(Material.values())
                 .filter(Material::isBlock)
                 .map(WbsEnums::toPrettyString)

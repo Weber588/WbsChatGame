@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class PotionWordGenerator extends WordGenerator {
+public class PotionWordGenerator extends SimpleWordGenerator {
 
     private final static Map<PotionEffectType, String> potionNameOverrides = new HashMap<>();
 
@@ -25,7 +25,7 @@ public class PotionWordGenerator extends WordGenerator {
     }
 
     @Override
-    public List<String> generateWords() {
+    public List<String> generateStrings() {
         return Arrays.stream(PotionEffectType.values())
                 .map(potion -> potionNameOverrides.getOrDefault(potion, potion.getName()))
                 .map(name -> name.replace("_", " "))

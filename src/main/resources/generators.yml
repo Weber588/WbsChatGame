@@ -76,6 +76,9 @@ block:
     - 'Moving Piston'
     - 'Potted' # Prevent duplicating plants that can be put in pot plants
 
+  ignore-exact:
+    - 'Hay Block'
+
   # Including the above as generic words without specific materials ("slab" instead of "Acacia slab" etc)
   include:
     - 'Banner'
@@ -98,6 +101,8 @@ block:
     - 'Stairs'
     - 'Trapdoor'
     - 'Wall'
+
+    - 'Hay Bale' # Most people know "Hay Block" as "Hay Bale"
 
 enchantment: {}
 

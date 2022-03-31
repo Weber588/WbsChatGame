@@ -12,22 +12,22 @@ public abstract class WordGenerator {
         generated = new HashSet<>(generateWords());
     }
 
-    protected abstract List<String> generateWords();
+    protected abstract List<GeneratedWord> generateWords();
 
-    private final Set<String> generated;
-    private final List<String> history = new LinkedList<>();
+    private final Set<GeneratedWord> generated;
+    private final List<GeneratedWord> history = new LinkedList<>();
     private int pointsModifier;
 
     @NotNull
-    public String getRandomWord() {
+    public GeneratedWord getRandomWord() {
         return WbsCollectionUtil.getRandom(generated);
     }
 
     @NotNull
-    public String getNext() {
-        Set<String> words = generated;
+    public GeneratedWord getNext() {
+        Set<GeneratedWord> words = generated;
 
-        String word;
+        GeneratedWord word;
         do {
             word = WbsCollectionUtil.getRandom(words);
         } while (history.contains(word));
@@ -53,12 +53,12 @@ public abstract class WordGenerator {
         List<String> ignoreContains = genSection.getStringList("ignore-contains");
         List<String> include = genSection.getStringList("include");
 
-        List<String> toRemove = new LinkedList<>();
+        List<GeneratedWord> toRemove = new LinkedList<>();
 
-        for (String word : generated) {
+        for (GeneratedWord word : generated) {
             boolean removed = false;
             for (String ignore : ignoreExact) {
-                if (word.equalsIgnoreCase(ignore)) {
+                if (word.word.equalsIgnoreCase(ignore)) {
                     toRemove.add(word);
                     removed = true;
                     break;
@@ -68,7 +68,7 @@ public abstract class WordGenerator {
             if (removed) continue;
 
             for (String ignore : ignoreContains) {
-                if (word.toLowerCase().contains(ignore.toLowerCase())) {
+                if (word.word.toLowerCase().contains(ignore.toLowerCase())) {
                     toRemove.add(word);
                 //    removed = true;
                     break;
@@ -77,10 +77,15 @@ public abstract class WordGenerator {
         }
 
         toRemove.forEach(generated::remove); // Faster, according to IntelliJ.
-        generated.addAll(include);
+        include.forEach(word -> generated.add(new GeneratedWord(word, this, null)));
     }
 
     public int getPointsModifier() {
         return pointsModifier;
+    }
+
+    @NotNull
+    public String getGenericHint() {
+        return "This word is a type of " + GeneratorManager.getRegisteredId(this);
     }
 }

@@ -34,8 +34,17 @@ unscramble:
       reveal-ends: true
 
       # If the word was created from a generator, tells players which generator it came from.
-      # Example: "Knockback". Original question: "ccKonbkka". Hint: "Enchantment"
+      # Example: "Knockback". Hint: "This word is a type of enchantment"
+      # Example: "Stone Bricks". Hint: "This word is a type of block"
       generator-hints: true
+
+      # If the word was specifically from a material generator (i.e. block or item), use more specific hints
+      # due to the large range of items & blocks that exist.
+      # Example: "Chainmail Helmet". Hint: "This item is a type of armour"
+      # Example: "Cooked Mutton". Hint: "This item is a type of food"
+      # Example: "Acacia Planks". Hint: "This block is flammable"
+      # Example: "Tripwire Hook". Hint: "This block is in the Redstone category"
+      enhanced-material-hints: true
 
   # The chance to use a challenge instead of a normal game.
   # 0 = never use challenges, 100 = always use challenges
