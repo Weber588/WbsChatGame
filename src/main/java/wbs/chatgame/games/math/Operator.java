@@ -22,6 +22,14 @@ public enum Operator {
 
     public Solution operate(double val1, double val2) {
         return switch (this) {
+            case EXPONENTIATION -> {
+                if (val1 != 1 && val2 != 1) {
+                    yield new Solution(Math.pow(val1, val2),
+                            (int) (Math.ceil(val2) + (val1 / 4)));
+                } else {
+                    yield new Solution(val1, 0);
+                }
+            }
             case ADDITION ->
                     new Solution(val1 + val2,
                             val1 > 100 && val2 > 100
@@ -38,9 +46,6 @@ public enum Operator {
                     new Solution(val1 / val2,
                             val1 % val2 != 0
                                     ? 1 : 0);
-            case EXPONENTIATION ->
-                    new Solution(Math.pow(val1, val2),
-                            (int) (Math.ceil(val2) + (val1 / 4)));
         };
     }
 

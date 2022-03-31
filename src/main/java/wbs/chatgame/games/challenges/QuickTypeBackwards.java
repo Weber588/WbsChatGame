@@ -1,5 +1,6 @@
 package wbs.chatgame.games.challenges;
 
+import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.GameController;
 import wbs.chatgame.games.word.QuickTypeGame;
 import wbs.chatgame.games.word.Word;
@@ -12,20 +13,27 @@ public class QuickTypeBackwards extends QuickTypeGame implements Challenge<Quick
     }
 
     @Override
-    protected Word getWord() {
-        Word word = super.getWord();
-        return new Word(reverseString(word.word), word.getPoints() + 1, word.generator);
-    }
-
-    @Override
     protected void startGame(Word wordToGuess) {
-        // Rebuild word in it's "forward" form to display, but don't change the actual word to guess.
-        broadcastQuestion("Quick! Type \"&h" + reverseString(wordToGuess.word) + "&r\" &obackwards&r for "
+        setCurrentWord(new Word(reverseString(wordToGuess.word), wordToGuess.getPoints() + 1, wordToGuess.generator));
+
+        broadcastQuestion("Quick! Type \"&h" + wordToGuess.word + "&r\" &obackwards&r for "
                 + GameController.pointsDisplay(getPoints()) + "!");
     }
 
     @Override
     public Class<QuickTypeGame> getGameClass() {
         return QuickTypeGame.class;
+    }
+
+    private String challengeId;
+
+    @Override
+    public final void setId(@NotNull String id) {
+        challengeId = id;
+    }
+
+    @Override
+    public final @NotNull String getId() {
+        return challengeId;
     }
 }

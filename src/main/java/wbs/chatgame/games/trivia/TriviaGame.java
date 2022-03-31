@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.GameController;
 import wbs.chatgame.games.Game;
-import wbs.chatgame.games.challenges.Challenge;
+import wbs.chatgame.games.challenges.*;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.string.WbsStrings;
 
@@ -52,6 +52,10 @@ public class TriviaGame extends Game {
         }
 
         plugin.logger.info("Loaded " + questions.size() + " questions for " + gameName);
+    }
+
+    public TriviaGame(String gameName, double challengeChance, int duration) {
+        super(gameName, challengeChance, duration);
     }
 
     private final List<TriviaQuestion> questions = new LinkedList<>();
@@ -162,16 +166,8 @@ public class TriviaGame extends Game {
     }
 
     @Override
-    public boolean checkGuess(String guess) {
-        for (String answer : question.answers()) {
-            if (question.useRegex()) {
-                if (guess.toLowerCase().matches(answer.toLowerCase())) return true;
-            } else {
-                if (guess.equalsIgnoreCase(answer)) return true;
-            }
-        }
-
-        return false;
+    public boolean checkGuess(String guess, Player guesser) {
+        return question.checkGuess(guess, guesser);
     }
 
     @Override
@@ -194,5 +190,15 @@ public class TriviaGame extends Game {
         return questions.stream()
                 .map(TriviaQuestion::id)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void registerChallenges() {
+        super.registerChallenges();
+        ChallengeManager.buildAndRegisterChallenge("won-last-round", this, TriviaLastWinner.class);
+        ChallengeManager.buildAndRegisterChallenge("answer-last-round", this, TriviaLastAnswer.class);
+        ChallengeManager.buildAndRegisterChallenge("players-online", this, TriviaPlayersOnline.class);
+        ChallengeManager.buildAndRegisterChallenge("player-in-position", this, TriviaPosition.class);
+        ChallengeManager.buildAndRegisterChallenge("player-in-game-position", this, TriviaGamePosition.class);
     }
 }

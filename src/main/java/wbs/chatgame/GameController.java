@@ -34,6 +34,7 @@ public class GameController {
     private static int betweenRoundsRunnableId = -1;
 
     private static Player lastWinner;
+    private static String lastAnswer;
 
     @Nullable
     private static Game nextGame;
@@ -110,9 +111,10 @@ public class GameController {
         String error = null;
         if (nextOptions != null) {
             try {
-                currentGame = currentGame.startWithOptions(nextOptions);
+                currentGame = currentGame.startWithOptionsOrChallenge(nextOptions);
             } catch (IllegalArgumentException e) {
                 error = e.getMessage();
+                nextOptions = null;
             }
             if (!nextLocked) {
                 nextOptions = null;
@@ -180,6 +182,7 @@ public class GameController {
 
         lastWinner = winner;
         currentGame.endWinner(winner, guess);
+        lastAnswer = guess;
 
         onRoundEnd(true);
 
@@ -237,7 +240,7 @@ public class GameController {
                     return;
                 }
 
-                boolean won = currentGame.checkGuess(guess);
+                boolean won = currentGame.checkGuess(guess, guesser);
 
                 if (won) {
                     GameController.endRoundWithWinner(guesser, guess);
@@ -260,7 +263,7 @@ public class GameController {
      * actually won if their guess was correct. To check if the player won, use the callback.
      */
     public static boolean guessAfterCheck(Player guesser, String guess, Consumer<Boolean> callback, Runnable alreadyWon) {
-        if (currentGame.checkGuess(guess)) {
+        if (currentGame.checkGuess(guess, guesser)) {
             GameController.guess(guesser, guess, callback, alreadyWon);
             return true;
         }
@@ -369,5 +372,9 @@ public class GameController {
     @SuppressWarnings("NullableProblems")
     public static void setLastNextSender(CommandSender sender) {
         lastNextSender = sender;
+    }
+
+    public static String getLastAnswer() {
+        return lastAnswer;
     }
 }

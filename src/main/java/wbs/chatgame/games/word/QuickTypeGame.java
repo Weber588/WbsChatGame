@@ -39,7 +39,7 @@ public class QuickTypeGame extends WordGame {
     }
 
     @Override
-    public boolean checkGuess(String guess) {
+    public boolean checkGuess(String guess, Player guesser) {
         if (matchCase) {
             return guess.equals(getCurrentWord().word);
         } else {

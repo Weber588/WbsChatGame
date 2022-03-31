@@ -1,6 +1,7 @@
 package wbs.chatgame.data;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
@@ -13,7 +14,8 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class StatsManager {
+public final class StatsManager {
+    private StatsManager() {}
 
     public static final String TOTAL_POINTS_NAME = "total_points";
 
@@ -24,8 +26,45 @@ public class StatsManager {
 
     public static boolean pointsUpdated = false;
 
+    /**
+     * Update all leaderboard caches that contain an entry for the given player, updating leaderboard order accordingly.
+     */
+    public static void updateCaches(PlayerRecord record, Game game) {
+        for (GameStats.TrackedPeriod period : GameStats.TrackedPeriod.values()) {
+            List<LeaderboardEntry> top = periodTops.get(period);
+            if (top != null) {
+                updateTop(top, record, null);
+            }
+        }
+
+        Map<GameStats.TrackedPeriod, List<LeaderboardEntry>> gamePeriodTops = gameTops.get(game);
+        if (gamePeriodTops != null) {
+            for (GameStats.TrackedPeriod period : GameStats.TrackedPeriod.values()) {
+                List<LeaderboardEntry> top = gamePeriodTops.get(period);
+                if (top != null) {
+                    updateTop(top, record, game);
+                }
+            }
+        }
+    }
+
+    private static void updateTop(List<LeaderboardEntry> top, PlayerRecord record, @Nullable Game game) {
+        for (LeaderboardEntry entry : top) {
+            if (entry.uuid().equals(record.getUUID())) {
+                if (game != null) {
+                    entry.setPoints(record.getPoints(game, entry.period()));
+                } else {
+                    entry.setPoints(record.getPoints(entry.period()));
+                }
+            }
+        }
+
+        top.sort(Comparator.comparing(LeaderboardEntry::points));
+    }
+
+
     @NotNull
-    public List<LeaderboardEntry> getCachedTop(GameStats.TrackedPeriod stat) {
+    public static List<LeaderboardEntry> getCachedTop(GameStats.TrackedPeriod stat) {
         List<LeaderboardEntry> top = periodTops.get(stat);
         if (top == null) {
             top = new LinkedList<>();
@@ -34,18 +73,21 @@ public class StatsManager {
     }
 
     @NotNull
-    public List<LeaderboardEntry> getCachedTop(Game game) {
+    public static List<LeaderboardEntry> getCachedTop(Game game) {
         return getCachedTop(GameStats.TrackedPeriod.TOTAL, game);
     }
 
     @NotNull
-    public List<LeaderboardEntry> getCachedTop(GameStats.TrackedPeriod stat, Game game) {
+    public static List<LeaderboardEntry> getCachedTop(GameStats.TrackedPeriod period, Game game) {
+        if (game == null) {
+            return getCachedTop(period);
+        }
         Map<GameStats.TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
         if (gamePeriods == null) {
             gamePeriods = new HashMap<>();
         }
 
-        List<LeaderboardEntry> top = gamePeriods.get(stat);
+        List<LeaderboardEntry> top = gamePeriods.get(period);
         if (top == null) {
             top = new LinkedList<>();
         }

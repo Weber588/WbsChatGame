@@ -14,7 +14,7 @@ public final class LeaderboardEntry {
 
     private final UUID uuid;
     private final String name;
-    private final int points;
+    private int points;
     private final GameStats.TrackedPeriod period;
     private final long createdTime;
 
@@ -55,6 +55,10 @@ public final class LeaderboardEntry {
 
     public long createdTime() {
         return createdTime;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     @Override

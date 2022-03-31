@@ -3,6 +3,7 @@ package wbs.chatgame.games;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.ChatGameSettings;
 import wbs.chatgame.GameController;
 import wbs.chatgame.WbsChatGame;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class Game {
 
@@ -73,6 +75,9 @@ public abstract class Game {
     private String currentQuestion;
     protected int currentPoints;
 
+    @Nullable
+    private Challenge<?> nextChallenge = null;
+
     public void broadcastQuestion(String currentQuestion) {
         if (settings.debugMode) {
             String lineBreak = "___________________________________________________________";
@@ -97,23 +102,74 @@ public abstract class Game {
     @NotNull
     public final Game startGame() {
         if (!(this instanceof Challenge)) {
-            if (WbsMath.chance(challengeChance) && !challengesWithChance.isEmpty()) {
-                String id = WbsCollectionUtil.pseudoRandomAvoidRepeats(challengesWithChance, challengeHistory, 2);
+            if (nextChallenge != null || (WbsMath.chance(challengeChance) && !challengesWithChance.isEmpty())) {
+                Challenge<?> challenge;
+                if (nextChallenge == null) {
+                    String id = WbsCollectionUtil.pseudoRandomAvoidRepeats(challengesWithChance, challengeHistory, 2);
+                    challenge = ChallengeManager.getChallenge(id, this);
 
-                Challenge<?> challenge = ChallengeManager.getChallenge(id, this);
-
-                if (challenge == null) {
-                    plugin.logger.info("Invalid challenge in game " + gameName + ": " + id);
+                    if (challenge == null) {
+                        plugin.logger.info("Invalid challenge in game " + gameName + ": " + id);
+                    }
                 } else {
-                    Game started = challenge.startChallenge();
-                    if (started != null) {
-                        return started;
+                    challenge = nextChallenge;
+                    nextChallenge = null;
+                }
+
+                if (challenge != null) {
+                    if (challenge.valid()) {
+                        Game started = challenge.startChallenge();
+                        if (started != null) {
+                            return started;
+                        }
                     }
                 }
             }
         }
+
         start();
         return this;
+    }
+
+    public final Game startWithOptionsOrChallenge(@NotNull List<String> options) throws IllegalArgumentException {
+        if (options.size() > 0) {
+            String checkForChallenge = options.get(0);
+            if (checkForChallenge.equalsIgnoreCase("-c")) {
+                if (options.size() == 1) {
+                    List<String> challengeIds = ChallengeManager.listChallenges(this)
+                            .stream()
+                            .filter(Challenge::valid)
+                            .map(Challenge::getId)
+                            .collect(Collectors.toList());
+                    if (challengeIds.isEmpty()) {
+                        throw new IllegalArgumentException("There are currently no valid challenges for this game type.");
+                    } else {
+                        throw new IllegalArgumentException("Provide a challenge: " + String.join(", ", challengeIds));
+                    }
+                }
+
+                String challengeString = options.get(1);
+
+                nextChallenge = ChallengeManager.getChallenge(challengeString, this);
+                if (nextChallenge == null) {
+                    throw new IllegalArgumentException("Invalid challenge: " + challengeString + ". Valid challenges: " +
+                            ChallengeManager.listChallenges(this)
+                                    .stream()
+                                    .filter(Challenge::valid)
+                                    .map(Challenge::getId)
+                                    .collect(Collectors.joining(", ")));
+                } else {
+                    if (!nextChallenge.valid()) {
+                        nextChallenge = null;
+                        throw new IllegalArgumentException("That challenge isn't available at the moment.");
+                    } else {
+                        return ((Game) nextChallenge).startWithOptions(options.subList(2, options.size()));
+                    }
+                }
+            }
+        }
+
+        return startWithOptions(options);
     }
 
     /**
@@ -130,9 +186,11 @@ public abstract class Game {
     /**
      * Checks if a string guess was correct.
      * @param guess Checks if a given guess is correct.
+     * @param guesser The player making the guess. Rewards should not be applied,
+     *                but this allows player specific guesses.
      * @return Whether or not the guess is a valid answer.
      */
-    public abstract boolean checkGuess(String guess);
+    public abstract boolean checkGuess(String guess, Player guesser);
 
     protected abstract void start();
 

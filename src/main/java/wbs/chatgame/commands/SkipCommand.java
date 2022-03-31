@@ -25,11 +25,7 @@ public class SkipCommand extends AbstractNextCommand {
     protected void afterNext(CommandSender sender, String label, String[] args, @Nullable Game game, List<String> options) {
         sendMessage("Skipping...", sender);
 
-        String result = GameController.skip();
-        if (result != null) {
-            sendMessage("&w" + result, sender);
-        }
-
+        GameController.skip();
         GameController.unlockNext();
     }
 }

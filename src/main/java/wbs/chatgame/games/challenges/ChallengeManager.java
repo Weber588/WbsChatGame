@@ -1,5 +1,6 @@
 package wbs.chatgame.games.challenges;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.WordUtil;
@@ -7,8 +8,7 @@ import wbs.chatgame.games.Game;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class ChallengeManager {
     private ChallengeManager() {}
@@ -26,6 +26,7 @@ public final class ChallengeManager {
         gameClasses.put(id, challenge);
 
         registered.put(game, gameClasses);
+        challenge.setId(id);
     }
 
     @Nullable
@@ -78,5 +79,21 @@ public final class ChallengeManager {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @NotNull
+    public static List<Challenge<?>> listChallenges(Game game) {
+        Map<String, Challenge<?>> gameChallenges = registered.get(game);
+        if (gameChallenges != null) {
+            List<Challenge<?>> challenges = new LinkedList<>();
+
+            for (String id : gameChallenges.keySet()) {
+                challenges.add(gameChallenges.get(id));
+            }
+
+            return challenges;
+        }
+
+        return Collections.emptyList();
     }
 }

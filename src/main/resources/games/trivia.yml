@@ -8,11 +8,12 @@ trivia:
 
   challenges:
     # Chance that a trivia question will be replaced with
-    # "Who is at rank [1-5] in the all time ranking for ChatGame?"
-    position-all-time: 2
+    # "Who is at rank [1-5] in ChatGame?"
+    player-in-position: 2
 
-    # Same as above, but with weekly ranking instead.
-    position-weekly: 2
+    # Chance that a trivia question will be replaced with
+    # "Who is at rank [1-5] for [random game] in ChatGame?"
+    player-in-game-position: 2
 
     # Chance that a trivia question will be replaced with "Who won last round?"
     won-last-round: 2

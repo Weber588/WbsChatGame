@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.GameController;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
+import wbs.chatgame.games.challenges.Challenge;
+import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.utils.util.commands.WbsSubcommand;
 import wbs.utils.util.plugin.WbsPlugin;
 
@@ -74,14 +76,35 @@ public abstract class AbstractNextCommand extends WbsSubcommand {
 
     @Override
     protected List<String> getTabCompletions(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        if (args.length == 2) {
-            return GameManager.getGames().stream()
-                    .map(Game::getGameName)
-                    .collect(Collectors.toList());
-        } else if (args.length == 3) {
-            Game game = GameManager.getGame(args[1]);
-            if (game != null) {
-                return game.getOptionCompletions();
+        switch (args.length) {
+            case 2:
+                return GameManager.getGames().stream()
+                        .map(Game::getGameName)
+                        .collect(Collectors.toList());
+            case 3: {
+                Game game = GameManager.getGame(args[1]);
+                if (game != null) {
+                    List<String> choices = game.getOptionCompletions();
+                    if (ChallengeManager.listChallenges(game)
+                            .stream().anyMatch(Challenge::valid)) {
+                        choices.add("-c");
+                    }
+                    return choices;
+                }
+                break;
+            }
+            case 4: {
+                if (args[2].equalsIgnoreCase("-c")) {
+                    Game game = GameManager.getGame(args[1]);
+                    if (game != null) {
+                        return ChallengeManager.listChallenges(game)
+                                .stream()
+                                .filter(Challenge::valid)
+                                .map(Challenge::getId)
+                                .collect(Collectors.toList());
+                    }
+                }
+                break;
             }
         }
         return Collections.emptyList();

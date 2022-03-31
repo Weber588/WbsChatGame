@@ -199,7 +199,7 @@ public abstract class WordGame extends Game {
     }
 
     @Override
-    public boolean checkGuess(String guess) {
+    public boolean checkGuess(String guess, Player guesser) {
         return guess.equalsIgnoreCase(currentWord.word);
     }
 
@@ -209,6 +209,9 @@ public abstract class WordGame extends Game {
 
     protected Word getCurrentWord() {
         return currentWord;
+    }
+    protected void setCurrentWord(Word word) {
+        this.currentWord = word;
     }
 
     @Override

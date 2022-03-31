@@ -2,11 +2,10 @@ package wbs.chatgame.games.challenges;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import wbs.chatgame.GameController;
+import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.games.word.UnscrambleGame;
 import wbs.chatgame.games.word.Word;
 import wbs.utils.util.WbsCollectionUtil;
-import wbs.utils.util.WbsMath;
 
 import java.util.Collection;
 
@@ -38,5 +37,17 @@ public class UnscrambleOnlinePlayer extends UnscrambleGame implements Challenge<
     @Override
     public Class<UnscrambleGame> getGameClass() {
         return UnscrambleGame.class;
+    }
+
+    private String challengeId;
+
+    @Override
+    public final void setId(@NotNull String id) {
+        challengeId = id;
+    }
+
+    @Override
+    public final @NotNull String getId() {
+        return challengeId;
     }
 }

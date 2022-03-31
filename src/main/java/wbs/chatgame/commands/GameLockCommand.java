@@ -18,8 +18,10 @@ public class GameLockCommand extends AbstractNextCommand {
         if (GameController.isNextLocked()) {
             sendMessage("Game is already locked as &h" + GameController.getNext() + "&r. Use &h/" + label + " unlock&r to change it.", sender);
             return true;
+        } else {
+            sendMessage("Game unlocked!", sender);
+            return false;
         }
-        return false;
     }
 
     @Override

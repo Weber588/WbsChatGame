@@ -60,7 +60,7 @@ public class MathGame extends Game {
     private final Map<EquationGenerator, Double> generatorsWithChances = new HashMap<>();
 
     @Override
-    public boolean checkGuess(String guess) {
+    public boolean checkGuess(String guess, Player guesser) {
         double numberGuess;
         try {
             numberGuess = Double.parseDouble(guess);
