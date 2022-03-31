@@ -14,55 +14,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NextCommand extends WbsSubcommand {
+public class NextCommand extends AbstractNextCommand {
     public NextCommand(@NotNull WbsPlugin plugin) {
         super(plugin, "next");
         addAlias("custom");
     }
 
     @Override
-    protected boolean onCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        Game game;
-
-        if (args.length >= 2) {
-            game = GameManager.getGame(args[1]);
-            if (game == null) {
-                String gameList = GameManager.getGames().stream().map(Game::getGameName).collect(Collectors.joining(", "));
-                sendMessage("Game not found: &h" + args[1] + "&r. Please choose from the following: &h" + gameList, sender);
-                return true;
-            }
-        } else {
-            sendMessage("Usage: &h/" + label + " " + args[0] + " <game> [options]", sender);
-            return true;
-        }
-
-        List<String> options = new LinkedList<>();
-        if (args.length > 2) {
-            options.addAll(Arrays.asList(Arrays.copyOfRange(args, 2, args.length)));
-        }
-
-        GameController.setNext(game);
-        GameController.setLastNextSender(sender);
-        if (!options.isEmpty()) {
-            GameController.setNext(options);
-        }
-
+    protected void afterNext(CommandSender sender, String label, String[] args, Game game, List<String> options) {
         sendMessage("The next round will be " + game.getGameName() + ".", sender);
-        return true;
-    }
-
-    @Override
-    protected List<String> getTabCompletions(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        if (args.length == 2) {
-            return GameManager.getGames().stream()
-                    .map(Game::getGameName)
-                    .collect(Collectors.toList());
-        } else if (args.length == 3) {
-            Game game = GameManager.getGame(args[1]);
-            if (game != null) {
-                return game.getOptionCompletions();
-            }
-        }
-        return Collections.emptyList();
     }
 }

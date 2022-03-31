@@ -14,10 +14,7 @@ import wbs.utils.util.string.WbsStringify;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class GameController {
@@ -42,6 +39,7 @@ public class GameController {
     private static Game nextGame;
     @Nullable
     private static List<String> nextOptions;
+    private static boolean nextLocked = false;
     // The last command sender to set the next game & options above, to report any errors to.
     @Nullable
     private static CommandSender lastNextSender;
@@ -102,7 +100,9 @@ public class GameController {
 
         if (nextGame != null) {
             currentGame = nextGame;
-            nextGame = null;
+            if (!nextLocked) {
+                nextGame = null;
+            }
         } else {
             currentGame = GameManager.getRandomGame();
         }
@@ -114,7 +114,9 @@ public class GameController {
             } catch (IllegalArgumentException e) {
                 error = e.getMessage();
             }
-            nextOptions = null;
+            if (!nextLocked) {
+                nextOptions = null;
+            }
         } else {
             currentGame = currentGame.startGame();
         }
@@ -334,6 +336,34 @@ public class GameController {
 
     public static void setNext(List<String> options) {
         nextOptions = options;
+    }
+
+    @NotNull
+    public static List<String> getNextOptions() {
+        if (nextOptions == null) {
+            return new LinkedList<>();
+        }
+        return new LinkedList<>(nextOptions);
+    }
+
+    public static Game getNext() {
+        return nextGame;
+    }
+
+    public static boolean hasNextOptions() {
+        return nextOptions != null && !nextOptions.isEmpty();
+    }
+
+    public static boolean isNextLocked() {
+        return nextLocked;
+    }
+
+    public static void lockNext() {
+        nextLocked = true;
+    }
+
+    public static void unlockNext() {
+        nextLocked = false;
     }
 
     @SuppressWarnings("NullableProblems")

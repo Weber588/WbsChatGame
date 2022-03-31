@@ -26,6 +26,8 @@ public class ChatGameCommand extends WbsCommand {
         addSubcommand(new TempWordSearchCommand(plugin), adminPerm + ".temp");
         addSubcommand(new DelayCommand(plugin), adminPerm + ".delay");
         addSubcommand(new NextCommand(plugin), adminPerm + ".next");
+        addSubcommand(new GameLockCommand(plugin), adminPerm + ".lock");
+        addSubcommand(new GameUnlockCommand(plugin), adminPerm + ".lock");
         addSubcommand(new SaveCacheCommand(plugin), adminPerm + ".savecache");
     }
 }
