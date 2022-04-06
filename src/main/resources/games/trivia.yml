@@ -25,6 +25,10 @@ trivia:
     # Chance that a trivia question will be replaced with "How many players are online right now?"
     players-online: 2
 
+    # Chance that a trivia question will be replaced with "How many points do you currently have?",
+    # where the answer is different depending on who answers.
+    current-points: 0.5
+
   questions:
     # The unique name of the question. It's not used, but must be unique
     Notch:
@@ -178,12 +182,14 @@ trivia:
 
     OlBetsyDescription:
       question: 'What is the description for the advancement "Ol'' Betsy"?'
+      required-version: 1.14
       answers:
         - 'Shoot a Crossbow'
       points: 1
 
     FletchingTableCategory:
       question: 'In which tab of the Creative Menu does the Fletching Table appear?'
+      required-version: 1.14
       answers:
         - 'Decoration Blocks'
       points: 1
@@ -438,14 +444,6 @@ trivia:
         - 'Bedrock'
       points: 2
 
-    CantSwim:
-      question: 'Name a mob that cannot swim.'
-      answers:
-        - 'Iron Golem'
-        - 'IronGolem'
-        - 'Enderman'
-      points: 2
-
     C418:
       question: 'C418''s skin has what block as a head?'
       answers:
@@ -467,7 +465,46 @@ trivia:
         - 'Cavegame'
       points: 2
 
+    AxolotlMiningFatigue:
+      required-version: 1.17
+      question: 'Which mob can remove Mining Fatigue from the player?'
+      answers:
+        - 'Axolotl'
+      points: 2
+
+    BabyPandaSneeze:
+      required-version: 1.14
+      question: 'What is the chance of a baby panda dropping a slime ball when sneezing?'
+      use-regex: true
+      answers:
+        - '0\.1( ?%| percent)?' # 0.1, 0.1%, 0.1 %, 0.1 percent
+      points: 2
+
+    TurtleLightning:
+      question: 'What does a turtle drop when struck by lightning?'
+      answers:
+        - 'A Bowl'
+        - 'Bowl'
+      points: 2
+
+    TintedGlass:
+      required-version: 1.17
+      question: 'What type of glass can be picked up without silk touch?'
+      answers:
+        - 'Tinted'
+        - 'Tinted Glass'
+      points: 2
+
+    ShearsWool:
+      question: 'What level of Efficiency is needed on shears to instantly mine wool?'
+      answers:
+        - '5'
+        - 'Five'
+        - 'V'
+      points: 2
+
     WorstFuel:
+      required-version: 1.14
       question: 'What is the worst fuel to use in a furnace?'
       answers:
         - 'Scaffolding'
@@ -484,6 +521,89 @@ trivia:
       question: 'Using a totem of undying will get you which advancement?'
       answers:
         - 'Postmortal'
+      points: 3
+
+    Armorer:
+      question: 'Which type of villager will sell you a shield?'
+      answers:
+        - 'Armorer'
+        - 'Armourer'
+      points: 3
+
+    Butcher:
+      question: 'Which type of villager will sell you rabbit stew?'
+      answers:
+        - 'Butcher'
+      points: 3
+
+    Cartographer:
+      question: 'Which type of villager will sell you an item frame?'
+      answers:
+        - 'Cartographer'
+      points: 3
+
+    Cleric:
+      question: 'Which type of villager will sell you an ender pearl?'
+      answers:
+        - 'Cleric'
+      points: 3
+
+    Farmer:
+      question: 'Which type of villager will sell you a cake?'
+      answers:
+        - 'Farmer'
+      points: 3
+
+    Fisherman:
+      question: 'Which type of villager will sell you a campfire?'
+      answers:
+        - 'Fisherman'
+        - 'Fisher'
+      points: 3
+
+    Fletcher:
+      question: 'Which type of villager will sell you a crossbow?'
+      answers:
+        - 'Fletcher'
+      points: 3
+
+    Leatherworker:
+      question: 'Which type of villager will sell you a saddle?'
+      answers:
+        - 'Leatherworker'
+        - 'Leather Worker'
+      points: 3
+
+    Librarian:
+      question: 'Which type of villager will sell you a lantern?'
+      answers:
+        - 'Librarian'
+      points: 3
+
+    Mason:
+      question: 'Which type of villager will sell you a block of quartz?'
+      answers:
+        - 'Mason'
+      points: 3
+
+    Shepherd:
+      question: 'Which type of villager will sell you a painting?'
+      answers:
+        - 'Shepherd'
+      points: 3
+
+    Toolsmith:
+      question: 'Which type of villager will sell you an iron pickaxe?'
+      answers:
+        - 'Toolsmith'
+        - 'Tool Smith'
+      points: 3
+
+    Weaponsmith:
+      question: 'Which type of villager will sell you an iron sword?'
+      answers:
+        - 'Weaponsmith'
+        - 'Weapon Smith'
       points: 3
 
     Alphabet:

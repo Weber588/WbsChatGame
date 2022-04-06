@@ -24,7 +24,30 @@ public final class StatsManager {
     private static final Map<GameStats.TrackedPeriod, List<LeaderboardEntry>> periodTops = new HashMap<>();
     private static final Map<Game, Map<GameStats.TrackedPeriod, List<LeaderboardEntry>>> gameTops = new HashMap<>();
 
+    // Maintain a constant cache of all player's total points for use in placeholders and
+    // challenges.
+    private static final Map<UUID, Integer> cachedTotalPoints = new HashMap<>();
+
     public static boolean pointsUpdated = false;
+
+    public static void loadTotalPoints(UUID uuid) {
+        ChatGameDB.getPlayerManager().getAsync(uuid, record -> {
+            cachedTotalPoints.put(uuid, record.getPoints());
+        });
+    }
+
+    public static void unload(UUID uuid) {
+        cachedTotalPoints.remove(uuid);
+    }
+
+    public static int getTotalCachedPoints(UUID uuid) {
+        Integer cached = cachedTotalPoints.get(uuid);
+        return cached != null ? cached : 0;
+    }
+
+    public static void updateTotalCache(PlayerRecord playerRecord) {
+        cachedTotalPoints.put(playerRecord.getUUID(), playerRecord.getPoints());
+    }
 
     /**
      * Update all leaderboard caches that contain an entry for the given player, updating leaderboard order accordingly.

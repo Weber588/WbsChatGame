@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.GameController;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.*;
+import wbs.utils.util.VersionUtil;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.string.WbsStrings;
 
@@ -28,6 +29,28 @@ public class TriviaGame extends Game {
                 if (qSection == null) {
                     settings.logError("Questions must be defined as a section with the question, points, and a list of possible answers.", qDir);
                     continue;
+                }
+
+                String requiredVersion = qSection.getString("required-version");
+                if (requiredVersion != null) {
+                    if (requiredVersion.startsWith("1.")) {
+                        requiredVersion = requiredVersion.substring(2);
+                    }
+
+                    double versionAsDouble = -1;
+                    try {
+                        versionAsDouble = Double.parseDouble(requiredVersion);
+                    } catch (NumberFormatException ignored) {}
+
+                    if (versionAsDouble != -1) {
+                        if (versionAsDouble < VersionUtil.getVersion()) {
+                            continue;
+                        }
+                    } else {
+                        settings.logError("Invalid required-version: \"" + requiredVersion + "\". Skipping.",
+                                qDir + "/required-version");
+                        continue;
+                    }
                 }
 
                 List<String> answers = qSection.getStringList("answers");
@@ -200,5 +223,6 @@ public class TriviaGame extends Game {
         ChallengeManager.buildAndRegisterChallenge("players-online", this, TriviaPlayersOnline.class);
         ChallengeManager.buildAndRegisterChallenge("player-in-position", this, TriviaPosition.class);
         ChallengeManager.buildAndRegisterChallenge("player-in-game-position", this, TriviaGamePosition.class);
+        ChallengeManager.buildAndRegisterChallenge("current-points", this, TriviaYourCurrentPoints.class);
     }
 }

@@ -95,6 +95,7 @@ public class PlayerRecord implements RecordProducer {
     public void addPoints(int points, Game game) {
         getStats(game).addPoints(points);
         StatsManager.updateCaches(this, game);
+        StatsManager.updateTotalCache(this);
     }
 
     public int getPoints() {

@@ -1,9 +1,12 @@
 package wbs.chatgame;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Player;
 import wbs.chatgame.commands.ChatGameCommand;
 import wbs.chatgame.commands.GuessCommand;
 import wbs.chatgame.data.ChatGameDB;
+import wbs.chatgame.data.StatsManager;
 import wbs.chatgame.games.GameManager;
 import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.chatgame.listeners.ChatGuessListener;
@@ -39,6 +42,10 @@ public class WbsChatGame extends WbsPlugin {
         if (pluginCommand != null) {
             pluginCommand.setExecutor(guessCommand);
             pluginCommand.setTabCompleter(guessCommand);
+        }
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            StatsManager.loadTotalPoints(player.getUniqueId());
         }
     }
 

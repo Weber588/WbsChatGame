@@ -36,11 +36,11 @@ public class TriviaPosition extends TriviaQuestionChallenge {
         }
 
         return new TriviaQuestion("custom",
-                "Who is at rank " + position + gameString + " in ChatGame?",
+                "Who is at rank " + (position + 1) + gameString + " in ChatGame?",
                 2,
                 true,
                 false,
-                entry.points() + ""
+                entry.name() + ""
         );
     }
 
