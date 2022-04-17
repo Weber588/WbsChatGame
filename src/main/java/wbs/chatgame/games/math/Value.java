@@ -3,7 +3,7 @@ package wbs.chatgame.games.math;
 /**
  * Wrapper class for a double (Solution) to make equations easier to solve
  */
-public class Value implements Solveable {
+public class Value implements Solvable {
 
     private final Solution value;
 
@@ -12,7 +12,7 @@ public class Value implements Solveable {
     }
 
     @Override
-    public Solution solve() {
+    public Solution solve(boolean withPoints) {
         return value;
     }
 

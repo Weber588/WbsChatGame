@@ -105,17 +105,17 @@ public class TriviaGame extends Game {
     }
 
     @Override
-    protected void start() {
+    protected Game start() {
         question = nextQuestion();
         currentPoints = question.points();
         broadcastQuestion(question.question() + "&h (" + GameController.pointsDisplay(question.points()) + ")");
+        return this;
     }
 
     @Override
-    public @NotNull Game startWithOptions(@NotNull List<String> options) {
+    public Game startWithOptions(@NotNull List<String> options) {
         if (options.isEmpty()) {
-            start();
-            return this;
+            return start();
         }
 
         String id = options.get(0);

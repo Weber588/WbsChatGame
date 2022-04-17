@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import wbs.chatgame.GameController;
+import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.Challenge;
 
 public class RevealGame extends WordGame {
@@ -20,9 +21,10 @@ public class RevealGame extends WordGame {
     private String currentDisplay;
 
     @Override
-    protected void startGame(Word wordToGuess) {
+    protected Game startGame(Word wordToGuess) {
         currentDisplay = conceal(wordToGuess.word);
         startRevealTimer();
+        return this;
     }
 
     private void startRevealTimer() {

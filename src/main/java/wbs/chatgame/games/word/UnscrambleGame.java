@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import wbs.chatgame.GameController;
 import wbs.chatgame.WordUtil;
+import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.Challenge;
 import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.chatgame.games.challenges.UnscrambleOnlinePlayer;
@@ -78,13 +79,15 @@ public class UnscrambleGame extends WordGame {
     private int hintTaskId = -1;
 
     @Override
-    public void startGame(Word word) {
+    public Game startGame(Word word) {
         originalScramble = WordUtil.scrambleString(word.word);
         broadcastScramble(originalScramble);
 
         if (hintsEnabled && getPoints() >= hintThreshold) {
             scheduleHint();
         }
+
+        return this;
     }
 
     protected void broadcastScramble(String scrambledWord) {

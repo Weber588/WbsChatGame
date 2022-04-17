@@ -127,8 +127,7 @@ public abstract class Game {
             }
         }
 
-        start();
-        return this;
+        return start();
     }
 
     public final Game startWithOptionsOrChallenge(@NotNull List<String> options) throws IllegalArgumentException {
@@ -175,10 +174,9 @@ public abstract class Game {
     /**
      * Start this game with a given set of options.
      * @param options The options to use.
-     * @return Any errors that occurred during the start, or
-     * null if the game started properly.
+     * @return The game itself, or null if the game failed to start.
      */
-    @NotNull
+    @Nullable
     public Game startWithOptions(@NotNull List<String> options) throws IllegalArgumentException {
         return startGame();
     }
@@ -192,7 +190,7 @@ public abstract class Game {
      */
     public abstract boolean checkGuess(String guess, Player guesser);
 
-    protected abstract void start();
+    protected abstract Game start();
 
     /**
      * Called when the game ends without a winner, usually by the round

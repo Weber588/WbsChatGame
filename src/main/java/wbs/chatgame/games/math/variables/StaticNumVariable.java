@@ -1,4 +1,4 @@
-package wbs.chatgame.games.math;
+package wbs.chatgame.games.math.variables;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +12,7 @@ public class StaticNumVariable extends Variable {
     }
 
     @Override
-    public @NotNull String getPlaceholder() {
+    public @NotNull String getValue() {
         return value + "";
     }
 }

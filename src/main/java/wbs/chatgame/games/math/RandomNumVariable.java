@@ -1,6 +1,7 @@
 package wbs.chatgame.games.math;
 
 import org.jetbrains.annotations.NotNull;
+import wbs.chatgame.games.math.variables.Variable;
 import wbs.utils.util.providers.generator.num.RandomGenerator;
 
 public class RandomNumVariable extends Variable {
@@ -12,7 +13,7 @@ public class RandomNumVariable extends Variable {
     }
 
     @Override
-    public @NotNull String getPlaceholder() {
+    public @NotNull String getValue() {
         randomGenerator.refresh();
         return (int) randomGenerator.getValue() + "";
     }

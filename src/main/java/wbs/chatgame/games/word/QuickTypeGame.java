@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import wbs.chatgame.GameController;
 import wbs.chatgame.WordUtil;
+import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.Challenge;
 import wbs.chatgame.games.challenges.QuickTypeBackwards;
 
@@ -23,9 +24,10 @@ public class QuickTypeGame extends WordGame {
     private boolean matchCase;
 
     @Override
-    protected void startGame(Word wordToGuess) {
+    protected Game startGame(Word wordToGuess) {
         broadcastQuestion("Quick! Type \"&h" + wordToGuess.word + "&r\" for "
                 + GameController.pointsDisplay(getPoints()) + "!");
+        return this;
     }
 
     @Override

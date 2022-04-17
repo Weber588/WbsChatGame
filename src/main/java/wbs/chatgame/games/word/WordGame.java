@@ -110,17 +110,16 @@ public abstract class WordGame extends Game {
     private Word currentWord;
 
     @Override
-    protected final void start() {
+    protected final Game start() {
         currentWord = getWord();
         currentPoints = currentWord.getPoints();
-        startGame(currentWord);
+        return startGame(currentWord);
     }
 
     @Override
     public @NotNull Game startWithOptions(@NotNull List<String> options) {
         if (options.isEmpty()) {
-            start();
-            return this;
+            return start();
         }
 
         String id = options.get(0);
@@ -146,9 +145,7 @@ public abstract class WordGame extends Game {
         }
 
         currentPoints = currentWord.getPoints();
-        startGame(currentWord);
-
-        return this;
+        return startGame(currentWord);
     }
 
     @Override
@@ -203,7 +200,7 @@ public abstract class WordGame extends Game {
         return guess.equalsIgnoreCase(currentWord.word);
     }
 
-    protected abstract void startGame(Word wordToGuess);
+    protected abstract Game startGame(Word wordToGuess);
 
     protected abstract int calculatePoints(String word);
 

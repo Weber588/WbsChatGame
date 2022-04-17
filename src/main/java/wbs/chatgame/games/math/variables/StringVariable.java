@@ -1,4 +1,4 @@
-package wbs.chatgame.games.math;
+package wbs.chatgame.games.math.variables;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ public class StringVariable extends Variable {
     }
 
     @Override
-    public @NotNull String getPlaceholder() {
+    public @NotNull String getValue() {
         return WbsCollectionUtil.getRandom(strings);
     }
 }

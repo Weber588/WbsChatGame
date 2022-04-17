@@ -99,19 +99,21 @@ public class GameController {
             return null;
         }
 
+        Game chosenGame;
+
         if (nextGame != null) {
-            currentGame = nextGame;
+            chosenGame = nextGame;
             if (!nextLocked) {
                 nextGame = null;
             }
         } else {
-            currentGame = GameManager.getRandomGame();
+            chosenGame = GameManager.getRandomGame();
         }
 
         String error = null;
         if (nextOptions != null) {
             try {
-                currentGame = currentGame.startWithOptionsOrChallenge(nextOptions);
+                chosenGame = chosenGame.startWithOptionsOrChallenge(nextOptions);
             } catch (IllegalArgumentException e) {
                 error = e.getMessage();
                 nextOptions = null;
@@ -120,7 +122,7 @@ public class GameController {
                 nextOptions = null;
             }
         } else {
-            currentGame = currentGame.startGame();
+            chosenGame = chosenGame.startGame();
         }
 
         if (lastNextSender != null && error != null) {
@@ -129,8 +131,15 @@ public class GameController {
             lastNextSender = null;
         }
         if (error != null) {
-            currentGame = GameManager.getRandomGame();
-            currentGame = currentGame.startGame();
+            chosenGame = GameManager.getRandomGame();
+            chosenGame = chosenGame.startGame();
+        }
+
+        if (chosenGame == null) {
+            plugin.logger.warning("Game failed to start: ");
+            return startRound();
+        } else {
+            currentGame = chosenGame;
         }
 
         roundRunnableId = new BukkitRunnable() {

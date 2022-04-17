@@ -8,6 +8,9 @@ import wbs.chatgame.ChatGameSettings;
 import wbs.chatgame.GameController;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.Game;
+import wbs.chatgame.games.math.functions.CGFunction;
+import wbs.chatgame.games.math.functions.FunctionManager;
+import wbs.chatgame.games.math.operators.*;
 import wbs.utils.exceptions.InvalidConfigurationException;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsMath;
@@ -21,8 +24,6 @@ public class MathGame extends Game {
         super(gameName, section, directory);
 
         ChatGameSettings settings = WbsChatGame.getInstance().settings;
-
-        // TODO: Load generatorsWithChances
 
         ConfigurationSection generatorSection = section.getConfigurationSection("generators");
         if (generatorSection != null) {
@@ -53,11 +54,60 @@ public class MathGame extends Game {
         } else {
             plugin.logger.info("Loaded " + generatorsWithChances.size() + " equation generators for " + getGameName());
         }
+
+        operationSet = new OperationSet();
+
+        ConfigurationSection operatorsSection = section.getConfigurationSection("operators");
+        if (operatorsSection != null) {
+            Map<String, Class<? extends Operator>> operatorMap = OperatorManager.getRegistrations();
+            for (String operationKey : operatorMap.keySet()) {
+                ConfigurationSection operationSection = operatorsSection.getConfigurationSection(operationKey);
+
+                if (operationSection == null) {
+                    continue;
+                }
+
+                Operator operator = OperatorManager.getOperator(operatorMap.get(operationKey));
+
+                ConditionalPointsCalculator calculator =
+                        new ConditionalPointsCalculator(operationSection,
+                                directory + "/operators/" + operationKey);
+
+                operationSet.addOperator(operator, calculator);
+
+            }
+        } else {
+            operationSet.populateDefaultOperations();
+        }
+
+        ConfigurationSection functionsSection = section.getConfigurationSection("functions");
+        if (functionsSection != null) {
+            for (String functionKey : functionsSection.getKeys(false)) {
+                Class<? extends CGFunction> function = FunctionManager.getFunctionClass(functionKey);
+
+                if (function == null) {
+                    settings.logError("Invalid function: \"" + functionKey + "\".", directory + "/functions/" + functionKey);
+                    continue;
+                }
+
+                ConfigurationSection functionSection = functionsSection.getConfigurationSection(functionKey);
+                assert functionSection != null;
+
+                ConditionalPointsCalculator calculator =
+                        new ConditionalPointsCalculator(functionSection, directory + "/functions/" + functionKey);
+
+                operationSet.registerFunction(function, calculator);
+            }
+        } else {
+            operationSet.populateDefaultFunctions();
+        }
     }
 
     private ViewableEquation currentEquation;
     private Solution currentSolution;
     private final Map<EquationGenerator, Double> generatorsWithChances = new HashMap<>();
+
+    private final OperationSet operationSet;
 
     @Override
     public boolean checkGuess(String guess, Player guesser) {
@@ -72,25 +122,25 @@ public class MathGame extends Game {
     }
 
     @Override
-    protected void start() {
-        startWithOptions(new LinkedList<>());
+    protected Game start() {
+        return startWithOptions(new LinkedList<>());
     }
 
     @Override
-    public @NotNull Game startWithOptions(@NotNull List<String> options) {
+    public Game startWithOptions(@NotNull List<String> options) {
         if (options.isEmpty()) {
             currentEquation = generateQuestion();
         } else {
             for (EquationGenerator generator : generatorsWithChances.keySet()) {
                 if (generator.getGeneratorName().equalsIgnoreCase(options.get(0))) {
-                    currentEquation = generator.getEquation();
+                    currentEquation = generator.getEquation(operationSet);
                 }
             }
 
             if (currentEquation == null) {
                 EquationGenerator generator = new EquationGenerator(options);
                 try {
-                    currentEquation = generator.getEquation();
+                    currentEquation = generator.getEquation(operationSet);
                 } catch (InvalidConfigurationException e) {
                     throw new IllegalArgumentException(e.getMessage());
                 }
@@ -98,11 +148,10 @@ public class MathGame extends Game {
         }
 
         if (currentEquation == null) {
-            GameController.skip();
-            return this;
+            return null;
         }
         try {
-            currentSolution = currentEquation.equation().solve();
+            currentSolution = currentEquation.equation().solve(true);
         } catch (IllegalStateException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
@@ -122,7 +171,7 @@ public class MathGame extends Game {
     private ViewableEquation generateQuestion() {
         ViewableEquation equation;
         try {
-            equation = WbsCollectionUtil.getRandomWeighted(generatorsWithChances).getEquation();
+            equation = WbsCollectionUtil.getRandomWeighted(generatorsWithChances).getEquation(operationSet);
         } catch (InvalidConfigurationException e) {
             settings.logError(e.getMessage(), "Game config: " + getGameName());
             return null;

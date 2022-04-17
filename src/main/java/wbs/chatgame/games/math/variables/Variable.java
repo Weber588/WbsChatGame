@@ -1,4 +1,4 @@
-package wbs.chatgame.games.math;
+package wbs.chatgame.games.math.variables;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -10,6 +10,9 @@ public abstract class Variable {
     }
 
     @NotNull
-    public abstract String getPlaceholder();
+    public abstract String getValue();
 
+    public String name() {
+        return name;
+    }
 }

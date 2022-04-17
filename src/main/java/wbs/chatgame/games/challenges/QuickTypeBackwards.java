@@ -2,6 +2,7 @@ package wbs.chatgame.games.challenges;
 
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.GameController;
+import wbs.chatgame.games.Game;
 import wbs.chatgame.games.word.QuickTypeGame;
 import wbs.chatgame.games.word.Word;
 
@@ -13,11 +14,13 @@ public class QuickTypeBackwards extends QuickTypeGame implements Challenge<Quick
     }
 
     @Override
-    protected void startGame(Word wordToGuess) {
+    protected Game startGame(Word wordToGuess) {
         setCurrentWord(new Word(reverseString(wordToGuess.word), wordToGuess.getPoints() + 1, wordToGuess.generator));
 
         broadcastQuestion("Quick! Type \"&h" + wordToGuess.word + "&r\" &obackwards&r for "
                 + GameController.pointsDisplay(getPoints()) + "!");
+
+        return this;
     }
 
     @Override

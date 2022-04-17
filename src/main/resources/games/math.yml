@@ -1,7 +1,70 @@
 math:
+  # Configure how many points each operator is worth when calculating the points for a question.
+  # When defining points, use %val1% and %val2% to represent the numbers used in that operation.
+  # val1 is the value on the left, and val2 on the right (so with subtraction, it's always val1 - val2).
+  # Points are rounded to the nearest integer.
+  operators:
+    # ^
+    exponentiation:
+      # How many points should the ^ operator be worth?
+      points: "%val2% + (%val1% / 4)"
+
+      # All conditions in this list must be true to be worth any points
+      points-conditions:
+        - "abs(%val1%) > 4"
+        - "abs(%val2%) > 2"
+
+    # *
+    multiplication:
+      points: "log(%val1% * %val2%)"
+
+      points-conditions:
+        - "abs(%val1%) + abs(%val2%) > 10"
+
+    # /
+    division:
+      points: 1
+      points-conditions:
+        - "%val1% % %val2% > 0"
+
+    # %
+    modulo:
+      points: 1
+      points-conditions:
+        - "abs(%val1%) > %val2%"
+        - "abs(%val1% - %val2%) > 3"
+
+    # +
+    addition:
+      points: 1
+      points-conditions:
+        - "abs(%val1%) > 100"
+        - "abs(%val2%) > 100"
+
+    # -
+    subtraction:
+      points: 1
+      points-conditions:
+        - "%val2% > %val1%"
+        - "abs(%val2%) > 25"
+
+  # Configure how many points each function is worth when calculating the points for a question.
+  # When defining points, use %val% to represent the number inside the function.
+  # Points are rounded to the nearest integer.
+  functions:
+    # Absolute value function
+    abs:
+      points: 0
+
+    # Log base 10 function
+    log:
+      points: "log(%val%)"
+      points-conditions:
+        - "log(%val%) % 10 != 0"
+
   # List equation generators here
   generators:
-    simple_random: # Names must be unique, but aren't used.
+    simple_random: # Names must be unique
 
       # How likely should this equation be to appear?
       chance: 50
@@ -97,12 +160,12 @@ math:
         # Variables are processed top to bottom, so you can use variables from lower in the list
         # with string list variables! Random operators (?) are processed after all variables are filled.
         extra_calc:
-          - '? %a%'
-          - '? %b%'
-          - '? %c%'
+          - ' ? %a%'
+          - ' ? %b%'
+          - ' ? %c%'
           - ''
         extra_calc2:
-          - '? %d%'
+          - ' ? %d%'
           - ''
           - ''
           - ''
@@ -124,4 +187,4 @@ math:
         - '-'
         - '*'
 
-      equation: '%a% ? %b% ? %c% %extra_calc% %extra_calc2%'
+      equation: '%a% ? %b% ? %c%%extra_calc%%extra_calc2%'
