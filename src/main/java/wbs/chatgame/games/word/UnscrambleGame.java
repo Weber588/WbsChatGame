@@ -13,6 +13,7 @@ import wbs.chatgame.games.challenges.UnscrambleOnlinePlayer;
 import wbs.chatgame.games.word.generator.GeneratedWord;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsEnums;
+import wbs.utils.util.plugin.WbsMessage;
 import wbs.utils.util.string.WbsStrings;
 
 import java.util.Arrays;
@@ -91,8 +92,14 @@ public class UnscrambleGame extends WordGame {
     }
 
     protected void broadcastScramble(String scrambledWord) {
-        broadcastQuestion("Unscramble \"&h" + scrambledWord + "&r\" for "
-                + GameController.pointsDisplay(getPoints()) + "!");
+        WbsMessage message = plugin.buildMessage("Unscramble \"")
+                .appendRaw(scrambledWord)
+                    .setFormatting("&h")
+                .append("\" for "
+                        + GameController.pointsDisplay(getPoints()) + "!")
+                .build();
+
+        broadcastQuestion(message);
     }
 
     @Override

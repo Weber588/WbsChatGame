@@ -1,5 +1,9 @@
 package wbs.chatgame.games;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -11,11 +15,11 @@ import wbs.chatgame.games.challenges.Challenge;
 import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsMath;
+import wbs.utils.util.plugin.WbsMessage;
+import wbs.utils.util.plugin.WbsMessageBuilder;
+import wbs.utils.util.plugin.WbsPlugin;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class Game {
@@ -72,17 +76,22 @@ public abstract class Game {
     /** A map of challenge ids to the chance */
     private final Map<String, Double> challengesWithChance = new HashMap<>();
 
-    private String currentQuestion;
+    private WbsMessage currentQuestion;
     protected int currentPoints;
 
     @Nullable
     private Challenge<?> nextChallenge = null;
 
     public void broadcastQuestion(String currentQuestion) {
+        WbsMessageBuilder builder = plugin.buildMessage(currentQuestion);
+        broadcastQuestion(builder.build());
+    }
+
+    public void broadcastQuestion(WbsMessage currentQuestion) {
         if (settings.debugMode) {
             String lineBreak = "___________________________________________________________";
             plugin.logger.info(lineBreak);
-            plugin.logger.info("Question: " + currentQuestion);
+            currentQuestion.send(Bukkit.getConsoleSender());
             plugin.logger.info("Answers: ");
             for (String answer : getAnswers()) {
                 plugin.logger.info(" - " + answer);
@@ -218,7 +227,7 @@ public abstract class Game {
 
     public abstract List<String> getAnswers();
 
-    public String getCurrentQuestion() {
+    public WbsMessage getCurrentQuestion() {
         return currentQuestion;
     }
 

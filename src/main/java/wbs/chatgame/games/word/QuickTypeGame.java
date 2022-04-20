@@ -1,5 +1,6 @@
 package wbs.chatgame.games.word;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import wbs.chatgame.GameController;
@@ -7,6 +8,8 @@ import wbs.chatgame.WordUtil;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.Challenge;
 import wbs.chatgame.games.challenges.QuickTypeBackwards;
+import wbs.chatgame.games.challenges.QuickTypeHover;
+import wbs.utils.util.plugin.WbsMessage;
 
 public class QuickTypeGame extends WordGame {
     public QuickTypeGame(String gameName, ConfigurationSection section, String directory) {
@@ -25,8 +28,14 @@ public class QuickTypeGame extends WordGame {
 
     @Override
     protected Game startGame(Word wordToGuess) {
-        broadcastQuestion("Quick! Type \"&h" + wordToGuess.word + "&r\" for "
-                + GameController.pointsDisplay(getPoints()) + "!");
+        WbsMessage message = plugin.buildMessage("Quick! Type \"")
+                .appendRaw(wordToGuess.word)
+                    .setFormatting("&h")
+                .append("\" for "
+                        + GameController.pointsDisplay(getPoints()) + "!")
+                .build();
+
+        broadcastQuestion(message);
         return this;
     }
 
@@ -81,6 +90,7 @@ public class QuickTypeGame extends WordGame {
     public void registerChallenges() {
         super.registerChallenges();
         register("backwards", QuickTypeBackwards.class);
+        register("hover", QuickTypeHover.class);
     }
 
     @Override

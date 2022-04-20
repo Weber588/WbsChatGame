@@ -74,8 +74,7 @@ public class TopCommand extends WbsSubcommand {
                 plugin.buildMessage("&6" + i + ") &h" + entry.name() + "&r> &h" + entry.points())
                         .addHoverText("&hClick to view full stats for " + entry.name() + "!")
                         .addClickCommand("/chatgame stats " + entry.uuid() + " " + game.getGameName())
-                        .addRecipient(sender)
-                        .send();
+                        .send(sender);
                 i++;
             }
         } else {
@@ -86,8 +85,7 @@ public class TopCommand extends WbsSubcommand {
                 plugin.buildMessage("&6" + i + ") &h" + entry.name() + "&r> &h" + entry.points())
                         .addHoverText("&hClick to view full stats for " + entry.name() + "!")
                         .addClickCommand("/chatgame stats " + entry.uuid())
-                        .addRecipient(sender)
-                        .send();
+                        .send(sender);
                 i++;
             }
         }

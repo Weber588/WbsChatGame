@@ -85,7 +85,6 @@ public class ConditionalPointsCalculator {
         }
 
         public boolean compare(double val1, double val2) {
-            WbsChatGame.getInstance().logger.info("Comparing: " + val1 + " to " + val2);
             return switch (this) {
                 case NOT_EQUALS -> val1 != val2;
                 case GREATER_OR_EQUAL -> val1 >= val2;

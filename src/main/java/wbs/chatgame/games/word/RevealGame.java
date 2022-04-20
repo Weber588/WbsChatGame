@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import wbs.chatgame.GameController;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.Challenge;
+import wbs.utils.util.plugin.WbsMessage;
 
 public class RevealGame extends WordGame {
     public RevealGame(String gameName, ConfigurationSection section, String directory) {
@@ -35,8 +36,14 @@ public class RevealGame extends WordGame {
         currentPoints = initialPoints;
 
         currentDisplay = reveal(currentDisplay, answer, maxAmount);
-        broadcastQuestion("Guess the word! \"&h" + currentDisplay + "&r\" ("
-                + GameController.pointsDisplay(currentPoints) + ")");
+
+        WbsMessage message = plugin.buildMessage("Guess the word! \"")
+                .appendRaw(currentDisplay)
+                    .setFormatting("&h")
+                .append("\" ("
+                        + GameController.pointsDisplay(currentPoints) + ")")
+                .build();
+        broadcastQuestion(message);
 
         revealTaskId = new BukkitRunnable() {
 
@@ -60,7 +67,14 @@ public class RevealGame extends WordGame {
                 } else {
                     double fractionRevealed = revealedSoFar / (double) answer.length();
                     currentPoints = Math.max(1, (int) ((initialPoints - 1) * (1 - fractionRevealed)) + 1);
-                    broadcastQuestion(amountDisplay + "! \"&h" + currentDisplay + "&r\" (" + GameController.pointsDisplay(currentPoints) + ")");
+
+                    WbsMessage message = plugin.buildMessage(amountDisplay + "! \"")
+                            .appendRaw(currentDisplay)
+                                .setFormatting("&h")
+                            .append("\" ("
+                                    + GameController.pointsDisplay(currentPoints) + ")")
+                            .build();
+                    broadcastQuestion(message);
                 }
             }
         }.runTaskTimer(plugin, durationPerReveal, durationPerReveal).getTaskId();

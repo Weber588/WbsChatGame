@@ -121,6 +121,12 @@ trivia:
         - 'Twelve'
       points: 1
 
+    EndermenEyes:
+      question: 'What colour are endermen''s eyes?'
+      answers:
+        - 'Purple'
+      points: 1
+
     CreeperModel:
       question: 'Which entity was Notch trying to make when he accidentally created the creeper model?'
       answers:
@@ -235,10 +241,44 @@ trivia:
         - 'Seventeen'
       points: 1
 
+    BeetrootRedDye:
+      question: 'Crafting a single beetroot will give you which item?'
+      answers:
+        - 'Red Dye'
+      points: 1
+
     ShulkerSlots:
       question: 'How many slots does a shulker box have?'
       answers:
         - '27'
+      points: 2
+
+    FastestPlant:
+      question: 'Which plant grows the fastest in Minecraft?'
+      answers:
+        - 'Bamboo'
+      points: 2
+
+    BambooOutsideJungles:
+      question: 'Outside of jungles, where else can you find bamboo?'
+      answers:
+        - 'Shipwreck'
+        - 'Shipwrecks'
+      points: 2
+
+    SpawnInAllDimensions:
+      question: 'Which mob spawns naturally in all three dimensions?'
+      answers:
+        - 'Endermen'
+        - 'Enderman'
+      points: 2
+
+    JumpHeight:
+      question: 'How high does a player jump?'
+      use-regex: true
+      answers:
+        - '1.25\s?blocks?'
+        - '1 1/4\s?blocks?'
       points: 2
 
     Version1_4:
@@ -369,6 +409,15 @@ trivia:
       question: 'What name can be given to a Vindicator that will make it attack other mobs?'
       answers:
         - 'Johnny'
+      points: 2
+
+    HoglinsFear:
+      question: 'What are hoglins afraid of?'
+      answers:
+        - 'Warped Fungus'
+        - 'Nether Portal'
+        - 'Portal'
+        - 'Respawn Anchor'
       points: 2
 
     LightningWitch:
@@ -503,6 +552,12 @@ trivia:
         - 'V'
       points: 2
 
+    DevelopmentEndermanEyes:
+      question: 'During development, what colour were endermen''s eyes?'
+      answers:
+        - 'Green'
+      points: 2
+
     WorstFuel:
       required-version: 1.14
       question: 'What is the worst fuel to use in a furnace?'
@@ -515,6 +570,29 @@ trivia:
       question: 'How many iron ingots are required to build an iron golem?'
       answers:
         - '36'
+      points: 3
+
+    AnvilCrafting:
+      question: 'How many iron ingots are required to craft an anvil?'
+      answers:
+        - '31'
+      points: 3
+
+    NoteBlockStartingNote:
+      question: 'When a note block is placed, which note does it start on?'
+      use-regex: true
+      answers:
+        - 'F\s?(♯|#|sharp)3?'
+      points: 3
+
+    CoalBlockFuelTime:
+      question: 'How long can a stack of coal blocks keep a furnace lit for?'
+      use-regex: true
+      answers:
+        - '42\s?days?'
+        - '51200\s?seconds?'
+        - '853(\.3*)?\s?minutes?'
+        - '14(\.2*)?\s?hours?'
       points: 3
 
     Postmortal:

@@ -10,6 +10,9 @@ import wbs.chatgame.data.ChatGameDB;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
 import wbs.chatgame.rewards.RewardManager;
+import wbs.utils.util.plugin.WbsMessage;
+import wbs.utils.util.plugin.WbsMessageBuilder;
+import wbs.utils.util.plugin.WbsPlugin;
 import wbs.utils.util.string.WbsStringify;
 
 import java.time.Duration;
@@ -293,10 +296,13 @@ public class GameController {
     }
 
     public static void broadcast(String message) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            // TODO: Filter on player records to see if they're listening to the game
-            plugin.sendMessage(message, player);
-        }
+        WbsMessageBuilder builder = plugin.buildMessage(message);
+        broadcast(builder.build());
+    }
+
+    public static void broadcast(WbsMessage message) {
+        // TODO: Filter on player records to see if they're listening to the game
+        message.send(Bukkit.getOnlinePlayers());
     }
 
     public static String pointsDisplay(int points) {

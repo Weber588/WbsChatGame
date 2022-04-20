@@ -3,9 +3,11 @@ package wbs.chatgame.games.challenges;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import wbs.chatgame.GameController;
 import wbs.chatgame.games.word.UnscrambleGame;
 import wbs.chatgame.games.word.Word;
 import wbs.utils.util.WbsCollectionUtil;
+import wbs.utils.util.plugin.WbsMessage;
 
 import java.util.Collection;
 
@@ -35,6 +37,18 @@ public class UnscrambleOnlinePlayer extends UnscrambleGame implements Challenge<
     }
 
     @Override
+    protected void broadcastScramble(String scrambledWord) {
+        WbsMessage message = plugin.buildMessage("Unscramble \"")
+                .appendRaw(scrambledWord)
+                    .setFormatting("&h")
+                .append("\" for "
+                        + GameController.pointsDisplay(getPoints()) + "! This unscramble is an online player's name!")
+                .build();
+
+        broadcastQuestion(message);
+    }
+
+    @Override
     public Class<UnscrambleGame> getGameClass() {
         return UnscrambleGame.class;
     }
@@ -49,5 +63,10 @@ public class UnscrambleOnlinePlayer extends UnscrambleGame implements Challenge<
     @Override
     public final @NotNull String getId() {
         return challengeId;
+    }
+
+    @Override
+    public boolean valid() {
+        return Bukkit.getOnlinePlayers().size() > 0;
     }
 }

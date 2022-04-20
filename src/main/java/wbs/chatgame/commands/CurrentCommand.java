@@ -25,7 +25,7 @@ public class CurrentCommand extends WbsSubcommand {
                 sendMessage("The game is not running right now.", sender);
             }
         } else {
-            sendMessage(currentGame.getCurrentQuestion(), sender);
+            currentGame.getCurrentQuestion().send(sender);
         }
 
         return true;

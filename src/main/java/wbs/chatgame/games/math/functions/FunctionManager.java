@@ -21,11 +21,25 @@ public final class FunctionManager {
 
     public static void registerFunction(String name, Class<? extends CGFunction> function) {
         functions.put(WordUtil.stripSyntax(name), function);
+
+        new CGFunction(null) {
+            @Override
+            public double operateOn(double value) {
+                return 0;
+            }
+
+            @Override
+            protected int getDefaultPoints(double val) {
+                return 0;
+            }
+        };
     }
 
     static {
         registerFunction("log", LogFunction.class);
         registerFunction("abs", AbsFunction.class);
+        registerFunction("round", RoundFunction.class);
+        registerFunction("round", RoundFunction.class);
     }
 
     public static boolean isRegistered(String name) {

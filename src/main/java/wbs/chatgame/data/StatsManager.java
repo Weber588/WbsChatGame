@@ -179,6 +179,8 @@ public final class StatsManager {
                 "LIMIT " + topListSize
                 ;
 
+        WbsChatGame.getInstance().logger.info("Game recalculation query: " + query);
+
         WbsDatabase db = ChatGameDB.getDatabase();
         List<WbsRecord> selected;
         try (Connection connection = db.getConnection();

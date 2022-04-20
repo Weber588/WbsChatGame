@@ -9,7 +9,11 @@ public class LogFunction extends CGFunction {
 
     @Override
     public double operateOn(double operand) {
-        return Math.log10(operand);
+        if (operand > 0) {
+            return Math.log10(operand);
+        } else {
+            return 0;
+        }
     }
 
     @Override

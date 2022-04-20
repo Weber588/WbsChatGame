@@ -209,6 +209,7 @@ public abstract class WordGame extends Game {
     }
     protected void setCurrentWord(Word word) {
         this.currentWord = word;
+        currentPoints = word.getPoints();
     }
 
     @Override
