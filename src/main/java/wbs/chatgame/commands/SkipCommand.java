@@ -26,6 +26,5 @@ public class SkipCommand extends AbstractNextCommand {
         sendMessage("Skipping...", sender);
 
         GameController.skip();
-        GameController.unlockNext();
     }
 }

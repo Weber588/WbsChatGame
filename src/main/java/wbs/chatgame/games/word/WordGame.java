@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.GameController;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.Challenge;
+import wbs.chatgame.games.math.ConditionalPointsCalculator;
+import wbs.chatgame.games.math.EquationGenerator;
+import wbs.chatgame.games.math.OperationSet;
 import wbs.chatgame.games.word.generator.GeneratedWord;
 import wbs.chatgame.games.word.generator.GeneratorManager;
 import wbs.chatgame.games.word.generator.WordGenerator;
@@ -20,6 +23,12 @@ public abstract class WordGame extends Game {
         super(gameName, section, directory);
 
         generationChance = section.getDouble("generation-chance", 0);
+        String pointsEquation = section.getString("points");
+        if (pointsEquation != null) {
+            pointsCalculator = new ConditionalPointsCalculator(new EquationGenerator(pointsEquation));
+        } else {
+            pointsCalculator = null;
+        }
 
         if (generationChance < 100) {
             for (String wordFormat : section.getStringList("custom")) {
@@ -106,6 +115,8 @@ public abstract class WordGame extends Game {
     private List<Word> history = new LinkedList<>();
 
     private double generationChance;
+
+    private ConditionalPointsCalculator pointsCalculator = null;
 
     private Word currentWord;
 
@@ -202,7 +213,22 @@ public abstract class WordGame extends Game {
 
     protected abstract Game startGame(Word wordToGuess);
 
-    protected abstract int calculatePoints(String word);
+    protected int calculatePoints(String word) {
+        int points;
+        if (pointsCalculator != null) {
+            Map<String, Double> placeholders = new HashMap<>();
+            placeholders.put("length", (double) word.length());
+            int numOfSpaces = word.length() - word.replace(" ", "").length();
+            placeholders.put("spaces", (double) numOfSpaces);
+            points = pointsCalculator.getPoints(placeholders, OperationSet.getDefaultSet());
+        } else {
+            points = calculateDefaultPoints(word);
+        }
+
+        return Math.max(1, points);
+    }
+
+    protected abstract int calculateDefaultPoints(String word);
 
     protected Word getCurrentWord() {
         return currentWord;

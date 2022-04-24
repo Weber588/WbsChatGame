@@ -78,7 +78,7 @@ public class QuickTypeGame extends WordGame {
     }
 
     @Override
-    protected int calculatePoints(String word) {
+    protected int calculateDefaultPoints(String word) {
         return Math.max(1,
                 (int) Math.round(
                         Math.log(word.length() / 3.0) / Math.log(2) // log_2(length/3)

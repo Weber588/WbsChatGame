@@ -203,7 +203,7 @@ public class GameController {
             record.addPoints(points, finalGame);
 
             // TODO: Make it configurable, to save as batches or save after each win.
-            ChatGameDB.getPlayerManager().save(Collections.singletonList(record));
+            ChatGameDB.getPlayerManager().saveAsync(Collections.singletonList(record));
         });
         return true;
     }
@@ -335,6 +335,7 @@ public class GameController {
         return WbsStringify.toString(timeLeft, true);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean inRound() {
         return currentGame != null;
     }

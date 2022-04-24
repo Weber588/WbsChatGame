@@ -77,7 +77,7 @@ public abstract class WordGenerator {
         }
 
         toRemove.forEach(generated::remove); // Faster, according to IntelliJ.
-        include.forEach(word -> generated.add(new GeneratedWord(word, this, null)));
+        include.forEach(word -> generated.add(new GeneratedWord(word, this)));
     }
 
     public int getPointsModifier() {

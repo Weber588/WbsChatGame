@@ -274,4 +274,9 @@ public abstract class Game {
     public List<String> getOptionCompletions() {
         return new LinkedList<>();
     }
+
+    @Override
+    public String toString() {
+        return getGameName();
+    }
 }

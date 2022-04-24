@@ -7,7 +7,7 @@ public abstract class SimpleWordGenerator extends WordGenerator {
     @Override
     protected final List<GeneratedWord> generateWords() {
         return generateStrings().stream()
-                .map(string -> new GeneratedWord(string, this, null))
+                .map(string -> new GeneratedWord(string, this))
                 .collect(Collectors.toList());
     }
 

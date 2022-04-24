@@ -2,6 +2,12 @@ reveal:
   # How long should players have to guess?
   duration: 180
 
+  # How many points should a word be worth?
+  # You can use the following placeholders:
+  # %length% = The length of the word(s)
+  # %spaces% = The number of spaces in the word(s)
+  points: "%length% / 4"
+
   duration-per-reveal: 30
 
   # The chance to generate a word instead of using one from the

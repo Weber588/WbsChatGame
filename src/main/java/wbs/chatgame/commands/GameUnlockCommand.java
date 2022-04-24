@@ -15,6 +15,7 @@ public class GameUnlockCommand extends WbsSubcommand {
     protected boolean onCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args, int start) {
         if (GameController.isNextLocked()) {
             GameController.unlockNext();
+            sendMessage("Game unlocked!", sender);
         } else {
             sendMessage("Game is not locked! Use &h/" + label + " lock <game> [options]&r to lock it to a game type.", sender);
         }

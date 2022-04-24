@@ -2,6 +2,12 @@ unscramble:
   # How long should players have to guess?
   duration: 180
 
+  # How many points should a word be worth?
+  # You can use the following placeholders:
+  # %length% = The length of the word(s)
+  # %spaces% = The number of spaces in the word(s)
+  points: "log(%length% / 2.5) / log(2)"
+
   # Hints for unscramble show up if nobody guesses after a set amount of time.
   hints:
     # You can disable hints entirely here.

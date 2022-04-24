@@ -2,6 +2,12 @@ quicktype:
   # How long should players have to guess?
   duration: 30
 
+  # How many points should a word be worth?
+  # You can use the following placeholders:
+  # %length% = The length of the word(s)
+  # %spaces% = The number of spaces in the word(s)
+  points: "log(%length% / 3) / log(2)"
+
   # When true, the words below are treated as sets of characters to be scrambled and typed.
   # Players do not need to type the original word when scramble is on, they type the scrambled version.
   # If you're using real words, turn this off.

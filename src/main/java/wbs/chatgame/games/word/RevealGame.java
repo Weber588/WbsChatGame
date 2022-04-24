@@ -139,7 +139,7 @@ public class RevealGame extends WordGame {
     }
 
     @Override
-    protected int calculatePoints(String word) {
+    protected int calculateDefaultPoints(String word) {
         return Math.max(1, (word.length()/4));
     }
 }

@@ -10,6 +10,7 @@ import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.Challenge;
 import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.chatgame.games.challenges.UnscrambleOnlinePlayer;
+import wbs.chatgame.games.math.ConditionalPointsCalculator;
 import wbs.chatgame.games.word.generator.GeneratedWord;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsEnums;
@@ -103,7 +104,7 @@ public class UnscrambleGame extends WordGame {
     }
 
     @Override
-    protected int calculatePoints(String word) {
+    protected int calculateDefaultPoints(String word) {
         return WordUtil.scramblePoints(word);
     }
 
@@ -195,6 +196,12 @@ public class UnscrambleGame extends WordGame {
                 case GENERATOR_HINTS -> {
                     if (word instanceof GeneratedWord generatedWord) {
                         String hint = generatedWord.getHint();
+
+                        if (hint == null) {
+                            possibleTypes.remove(HintType.GENERATOR_HINTS);
+                            showHint(possibleTypes);
+                            return;
+                        }
 
                         broadcastQuestion("Hint: " + hint + "! \"&h" + originalScramble + "&r\" (" + GameController.pointsDisplay(getPoints()) + ")");
                     } else {

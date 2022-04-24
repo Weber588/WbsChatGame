@@ -50,6 +50,7 @@ block:
     - 'Terracotta'
     - 'Stained Glass'
     - 'Candle'
+    - 'Bed'
 
     # Filter out shaped blocks to prevent lots of shape variations on a single material
     # (i.e. slabs, stairs, fences, fence gates, etc. for each of acacia, spruce, birch, stone, cobblestone, etc.)
@@ -90,6 +91,7 @@ block:
     - 'Dye'
     - 'Stained Glass'
     - 'Candle'
+    - 'Bed'
 
     - 'Slab'
     - 'Fence'

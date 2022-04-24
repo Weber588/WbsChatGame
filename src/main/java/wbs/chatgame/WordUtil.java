@@ -16,16 +16,11 @@ public final class WordUtil {
     }
 
     public static int scramblePoints(String word) {
-        int points = Math.max(1,
+        return Math.max(1,
                 (int) Math.round(
-                        Math.log(word.length() / 2.0) / Math.log(2) // log_2(length/2)
+                        Math.log(word.length() / 2.5) / Math.log(2) // log_2(length/3)
                 )
         );
-
-        if (word.contains(" ")) {
-            points++;
-        }
-        return points;
     }
 
     public static String scrambleString(String input) {

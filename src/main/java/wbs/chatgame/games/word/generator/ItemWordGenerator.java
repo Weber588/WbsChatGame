@@ -12,7 +12,6 @@ public class ItemWordGenerator extends MaterialWordGenerator {
     @Override
     public List<Material> generateMaterials() {
         return Arrays.stream(Material.values())
-                .filter(material -> !material.toString().startsWith("LEGACY"))
                 .filter(material -> material.isItem() && !material.isBlock())
                 .collect(Collectors.toList());
     }
