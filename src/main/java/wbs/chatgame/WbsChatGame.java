@@ -46,6 +46,7 @@ public class WbsChatGame extends WbsPlugin {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             StatsManager.loadTotalPoints(player.getUniqueId());
+            ChatGameDB.getPlayerManager().loadOnlinePlayer(player);
         }
     }
 

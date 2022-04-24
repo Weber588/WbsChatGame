@@ -1,6 +1,8 @@
 package wbs.chatgame.data;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import wbs.utils.util.database.AbstractDataManager;
 import wbs.utils.util.database.WbsRecord;
 import wbs.utils.util.database.WbsTable;
@@ -15,6 +17,8 @@ public class PlayerManager extends AbstractDataManager<PlayerRecord, UUID> {
     public PlayerManager(WbsPlugin plugin, WbsTable table) {
         super(plugin, table);
     }
+
+    private final Map<UUID, PlayerRecord> onlinePlayers = new HashMap<>();
 
     /**
      * Synchronously get a record based on it's key. It's recommended
@@ -43,7 +47,7 @@ public class PlayerManager extends AbstractDataManager<PlayerRecord, UUID> {
             found.addStat(new GameStats(statRecord));
         }
 
-        getCache().put(key, found);
+        addToCache(key, found);
         return found;
     }
 
@@ -74,6 +78,60 @@ public class PlayerManager extends AbstractDataManager<PlayerRecord, UUID> {
 
     public void getUUIDsAsync(String username, Consumer<List<UUID>> callback) {
         plugin.getAsync(() -> getUUIDs(username), callback);
+    }
+
+    /**
+     * Load an online player's record into persistent memory rather than the cache, to
+     * guarantee the records of online players are always synchronously available.
+     * @param player The player to load
+     */
+    public void loadOnlinePlayer(Player player, @Nullable Consumer<PlayerRecord> consumer) {
+        getAsync(player.getUniqueId(), record -> {
+            // Check again if the player is online, in case they join and leave faster than the database can respond
+            if (player.isOnline()) {
+                onlinePlayers.put(player.getUniqueId(), record);
+                if (consumer != null) {
+                    consumer.accept(record);
+                }
+            }
+        });
+    }
+
+    /**
+     * Load an online player's record into persistent memory rather than the cache, to
+     * guarantee the records of online players are always synchronously available.
+     * @param player The player to load
+     */
+    public void loadOnlinePlayer(Player player) {
+        loadOnlinePlayer(player, null);
+    }
+
+    /**
+     * Remove a player from the online players map.
+     * @param uuid The UUID of the player to unload
+     */
+    public void unloadPlayer(UUID uuid) {
+        onlinePlayers.remove(uuid);
+    }
+
+    /**
+     * Get the record for the given player, guaranteed to be available
+     * while the player is online.
+     * @param player The player to retrieve the record for.
+     * @return The record associated with the given player.
+     */
+    public PlayerRecord getOnlinePlayer(Player player) {
+        return getOnlinePlayer(player.getUniqueId());
+    }
+
+    /**
+     * Get the record for the given player, guaranteed to be available
+     * while the player is online.
+     * @param uuid The uuid of the player to retrieve the record for.
+     * @return The record associated with the given uuid.
+     */
+    public PlayerRecord getOnlinePlayer(UUID uuid) {
+        return onlinePlayers.get(uuid);
     }
 
     @Override

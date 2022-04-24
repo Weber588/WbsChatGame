@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.data.ChatGameDB;
+import wbs.chatgame.data.PlayerRecord;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
 import wbs.chatgame.rewards.RewardManager;
@@ -301,8 +302,14 @@ public class GameController {
     }
 
     public static void broadcast(WbsMessage message) {
-        // TODO: Filter on player records to see if they're listening to the game
-        message.send(Bukkit.getOnlinePlayers());
+        List<Player> listeningPlayers = new LinkedList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerRecord record = ChatGameDB.getPlayerManager().getOnlinePlayer(player);
+            if (record.isListening()) {
+                listeningPlayers.add(player);
+            }
+        }
+        message.send(listeningPlayers);
     }
 
     public static String pointsDisplay(int points) {
