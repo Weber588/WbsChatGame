@@ -104,19 +104,28 @@ public abstract class WordGame extends Game {
         plugin.logger.info("Loaded " + customWords.size() + " custom words and " + generators.size() + " generators for " + gameName);
     }
 
-    public WordGame(String gameName, double challengeChance, int duration) {
-        super(gameName, challengeChance, duration);
+    protected WordGame(WordGame copy) {
+        super(copy);
+
+        generationChance = copy.generationChance;
+
+        customWords.addAll(copy.customWords);
+        generators.putAll(copy.generators);
+
+        history.addAll(copy.history);
+
+        pointsCalculator = copy.pointsCalculator;
     }
 
     private final List<Word> customWords = new LinkedList<>();
     private final Map<WordGenerator, Double> generators = new HashMap<>();
 
     // Track history to prevent repetition
-    private List<Word> history = new LinkedList<>();
+    private final List<Word> history = new LinkedList<>();
 
     private double generationChance;
 
-    private ConditionalPointsCalculator pointsCalculator = null;
+    private final ConditionalPointsCalculator pointsCalculator;
 
     private Word currentWord;
 
@@ -246,18 +255,6 @@ public abstract class WordGame extends Game {
     @Override
     public void endNoWinner() {
         GameController.broadcast("Nobody got the word in time! The word was: &h" + currentWord.word);
-    }
-
-    @Override
-    protected void configure(Challenge<?> challenge) {
-        super.configure(challenge);
-
-        if (challenge instanceof WordGame other) {
-            other.generators.putAll(this.generators);
-            other.customWords.addAll(customWords);
-            other.history = history; // Set by reference, so the two histories are synchronized.
-            other.generationChance = generationChance;
-        }
     }
 
     @Override

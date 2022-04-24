@@ -55,19 +55,19 @@ public abstract class Game {
         }
     }
 
-    public Game(String gameName, double challengeChance, int duration) {
-        plugin = WbsChatGame.getInstance();
-        settings = plugin.settings;
-        this.gameName = gameName;
-        this.challengeChance = challengeChance;
-        this.duration = duration;
+    protected Game(Game copy) {
+        this.plugin = copy.plugin;
+        this.settings = copy.settings;
+        this.gameName = copy.gameName;
+        this.challengeChance = copy.challengeChance;
+        this.duration = copy.duration;
     }
 
     protected final WbsChatGame plugin;
     protected final ChatGameSettings settings;
 
     protected final String gameName;
-    private final double challengeChance;
+    private double challengeChance;
 
     /** Duration in ticks */
     private final int duration;
@@ -236,35 +236,10 @@ public abstract class Game {
     }
 
     /**
-     * Register this games' challenges with the {@link ChallengeManager}, if it has any,
-     * using the {@link #register(String, Class)} method.
+     * Register this games' challenges using
+     * {@link ChallengeManager#registerChallenge(String, Game, Challenge)}
      */
     public void registerChallenges() {}
-
-    protected final <T extends Game> void register(String id, Class<? extends Challenge<T>> challengeClass) {
-        @SuppressWarnings("unchecked")
-        Challenge<?> challenge = ChallengeManager.buildAndRegisterChallenge(id, (T) this, challengeClass);
-        if (challenge != null) {
-            try {
-                configure(challenge);
-            } catch (IllegalArgumentException ignored) {}
-        }
-    }
-
-    /**
-     * Set any fields that are needed to ensure behaviour of the challenge matches the behaviour of the current
-     * instance. For example, if the subclass of {@link Game} has a "hint" functionality, it should copy that functionality
-     * over to the challenge that extends that subclass.
-     * @param challenge The challenge, which should also extend the class of the current implementation of {@link Game}
-     */
-    protected void configure(Challenge<?> challenge) throws IllegalArgumentException {
-        if (!getClass().isAssignableFrom(challenge.getClass())) {
-            plugin.logger.severe("Failed to configure challenge. Challenge \"" +
-                    challenge.getClass().getCanonicalName() + "\" is not an extension of " +
-                    getClass().getCanonicalName());
-            throw new IllegalArgumentException();
-        }
-    }
 
     /**
      * Returns a list of strings to use as suggestions when entering options for
@@ -278,5 +253,9 @@ public abstract class Game {
     @Override
     public String toString() {
         return getGameName();
+    }
+
+    public void setChallengeChance(double challengeChance) {
+        this.challengeChance = challengeChance;
     }
 }

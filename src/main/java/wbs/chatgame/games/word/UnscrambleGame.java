@@ -62,17 +62,23 @@ public class UnscrambleGame extends WordGame {
         }
     }
 
-    public UnscrambleGame(String gameName, double challengeChance, int duration) {
-        super(gameName, challengeChance, duration);
+    public UnscrambleGame(UnscrambleGame copy) {
+        super(copy);
 
-        enabledHintTypes.addAll(Arrays.asList(HintType.values()));
+        hintsEnabled = copy.hintsEnabled;
+        hintDelay = copy.hintDelay;
+        hintThreshold = copy.hintThreshold;
+        generatorHintsEnabled = copy.generatorHintsEnabled;
+        enhancedGeneratorHints = copy.enhancedGeneratorHints;
+
+        enabledHintTypes.addAll(copy.enabledHintTypes);
     }
 
     private boolean hintsEnabled = false;
     private boolean generatorHintsEnabled = true;
     private boolean enhancedGeneratorHints = true;
-    private int hintThreshold = 0;
-    private int hintDelay = (int) (getDuration() * 2.0 / 3.0);
+    private final int hintThreshold;
+    private final int hintDelay;
 
     private final Set<HintType> enabledHintTypes = new HashSet<>();
 
@@ -246,17 +252,6 @@ public class UnscrambleGame extends WordGame {
     public void registerChallenges() {
         super.registerChallenges();
         ChallengeManager.buildAndRegisterChallenge("randomplayer", this, UnscrambleOnlinePlayer.class);
-    }
-
-    @Override
-    protected void configure(Challenge<?> challenge) {
-        super.configure(challenge);
-
-        if (challenge instanceof UnscrambleGame other) {
-            other.hintsEnabled = hintsEnabled;
-            other.hintDelay = hintDelay;
-            other.hintThreshold = hintThreshold;
-        }
     }
 
     private enum HintType {

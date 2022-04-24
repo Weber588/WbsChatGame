@@ -13,7 +13,7 @@ import java.util.Collection;
 
 public class UnscrambleOnlinePlayer extends UnscrambleGame implements Challenge<UnscrambleGame> {
     public UnscrambleOnlinePlayer(UnscrambleGame parent) {
-        super(parent.getGameName(), 0, parent.getDuration());
+        super(parent);
     }
 
     @Override

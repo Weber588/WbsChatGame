@@ -6,7 +6,7 @@ import wbs.chatgame.games.trivia.TriviaQuestion;
 
 public abstract class TriviaQuestionChallenge extends TriviaGame implements Challenge<TriviaGame> {
     public TriviaQuestionChallenge(TriviaGame parent) {
-        super(parent.getGameName(), 0, parent.getDuration());
+        super(parent);
     }
 
     @Override

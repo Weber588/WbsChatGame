@@ -77,8 +77,11 @@ public class TriviaGame extends Game {
         plugin.logger.info("Loaded " + questions.size() + " questions for " + gameName);
     }
 
-    public TriviaGame(String gameName, double challengeChance, int duration) {
-        super(gameName, challengeChance, duration);
+    public TriviaGame(TriviaGame copy) {
+        super(copy);
+
+        questions.addAll(copy.questions);
+        history.addAll(copy.history);
     }
 
     private final List<TriviaQuestion> questions = new LinkedList<>();
@@ -196,16 +199,6 @@ public class TriviaGame extends Game {
     @Override
     public List<String> getAnswers() {
         return new LinkedList<>(Arrays.asList(question.answers()));
-    }
-
-    @Override
-    protected void configure(Challenge<?> challenge) {
-        super.configure(challenge);
-
-        if (challenge instanceof TriviaGame other) {
-            other.questions.addAll(questions);
-
-        }
     }
 
     @Override

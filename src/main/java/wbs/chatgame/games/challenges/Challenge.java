@@ -7,6 +7,7 @@ import wbs.chatgame.games.Game;
 public interface Challenge<T extends Game> {
     default Game startChallenge() {
         if (this instanceof Game) {
+            ((Game) this).setChallengeChance(0);
             return ((Game) this).startGame();
         } else {
             WbsChatGame.getInstance().logger

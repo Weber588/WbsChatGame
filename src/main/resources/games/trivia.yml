@@ -1,10 +1,10 @@
 trivia:
+  # How long should players have to guess?
+  duration: 120
+
   # The chance to use a challenge instead of a normal game.
   # 0 = never use challenges, 100 = always use challenges
   challenge-chance: 5
-
-  # How long should players have to guess?
-  duration: 120
 
   challenges:
     # Chance that a trivia question will be replaced with

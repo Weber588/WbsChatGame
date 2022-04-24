@@ -62,6 +62,16 @@ math:
       points-conditions:
         - "log(%val%) % 10 != 0"
 
+
+  # The chance to use a challenge instead of a normal game.
+  # 0 = never use challenges, 100 = always use challenges
+  challenge-chance: 0
+
+  challenges:
+    # Chance that numbers in the equation will be displayed as roman numerals.
+    # Does not affect worded equations.
+    romannumerals: 100
+
   # List equation generators here
   generators:
     simple_random: # Names must be unique

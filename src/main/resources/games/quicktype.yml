@@ -19,7 +19,6 @@ quicktype:
   # 0 = never use challenges, 100 = always use challenges
   challenge-chance: 5
 
-  include-challenges: true
   challenges:
     # Chance that users will be told to type the quicktype in reverse
     backwards: 5

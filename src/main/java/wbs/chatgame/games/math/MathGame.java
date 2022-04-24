@@ -8,6 +8,8 @@ import wbs.chatgame.ChatGameSettings;
 import wbs.chatgame.GameController;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.Game;
+import wbs.chatgame.games.challenges.ChallengeManager;
+import wbs.chatgame.games.challenges.MathRomanNumeralsChallenge;
 import wbs.chatgame.games.math.functions.CGFunction;
 import wbs.chatgame.games.math.functions.FunctionManager;
 import wbs.chatgame.games.math.operators.*;
@@ -103,6 +105,12 @@ public class MathGame extends Game {
         }
     }
 
+    public MathGame(MathGame copy) {
+        super(copy);
+        this.operationSet = copy.operationSet;
+        generatorsWithChances.putAll(copy.generatorsWithChances);
+    }
+
     private ViewableEquation currentEquation;
     private Solution currentSolution;
     private final Map<EquationGenerator, Double> generatorsWithChances = new HashMap<>();
@@ -157,14 +165,18 @@ public class MathGame extends Game {
         }
         currentPoints = currentSolution.points();
 
+        broadcastEquation(currentEquation);
+
+        return this;
+    }
+
+    public void broadcastEquation(ViewableEquation currentEquation) {
         String equationString = currentEquation.asString();
         if (currentEquation.customEquation()) {
             broadcastQuestion(equationString + " &h(" + GameController.pointsDisplay(currentPoints) + ")");
         } else {
             broadcastQuestion("Solve \"&h" + equationString + "&r\" for " + GameController.pointsDisplay(currentPoints) + "!");
         }
-
-        return this;
     }
 
     @Nullable
@@ -213,5 +225,10 @@ public class MathGame extends Game {
                 .map(EquationGenerator::getGeneratorName)
                 .map(String::toLowerCase)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void registerChallenges() {
+        ChallengeManager.buildAndRegisterChallenge("romannumerals", this, MathRomanNumeralsChallenge.class);
     }
 }

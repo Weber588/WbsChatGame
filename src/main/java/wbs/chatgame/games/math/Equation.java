@@ -111,7 +111,12 @@ public class Equation implements Solvable {
 
     @Override
     public String toString() {
-        StringBuilder equationString = new StringBuilder(values.get(0) + "");
+        return toString(false);
+    }
+
+    @Override
+    public String toString(boolean romanNumerals) {
+        StringBuilder equationString = new StringBuilder(values.get(0).toString(romanNumerals) + "");
         for (int i = 0; i < operators.size(); i++) {
             equationString.append(" ")
                     .append(operators.get(i))
@@ -119,11 +124,17 @@ public class Equation implements Solvable {
 
             Solvable solvable = values.get(i + 1);
             if (solvable instanceof Equation) {
-                equationString.append('(').append(solvable).append(')');
+                equationString.append('(').append(solvable.toString(romanNumerals)).append(')');
             } else {
-                equationString.append(solvable);
+                equationString.append(solvable.toString(romanNumerals));
             }
         }
         return equationString.toString();
+    }
+
+
+    @Override
+    public String toRomanNumeralString() {
+        return toString(true);
     }
 }

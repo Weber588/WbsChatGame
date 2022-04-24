@@ -16,7 +16,12 @@ public class RevealGame extends WordGame {
         durationPerReveal = (int) (section.getDouble("duration-per-reveal", getDuration() * 20 / 5.0) * 20);
     }
 
-    private int durationPerReveal;
+    protected RevealGame(RevealGame copy) {
+        super(copy);
+        durationPerReveal = copy.durationPerReveal;
+    }
+
+    private final int durationPerReveal;
 
     private int revealTaskId = -1;
     private String currentDisplay;
@@ -127,15 +132,6 @@ public class RevealGame extends WordGame {
             revealTaskId = -1;
         }
         currentDisplay = null;
-    }
-
-    @Override
-    protected void configure(Challenge<?> challenge) {
-        super.configure(challenge);
-
-        if (challenge instanceof RevealGame other) {
-            other.durationPerReveal = durationPerReveal;
-        }
     }
 
     @Override

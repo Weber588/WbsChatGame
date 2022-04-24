@@ -9,7 +9,7 @@ import wbs.utils.util.plugin.WbsMessage;
 
 public class QuickTypeHover extends QuickTypeGame implements Challenge<QuickTypeGame> {
     public QuickTypeHover(QuickTypeGame parent) {
-        super(parent.getGameName(), 0, parent.getDuration());
+        super(parent);
     }
 
     @Override

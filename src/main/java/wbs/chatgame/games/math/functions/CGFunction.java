@@ -42,6 +42,16 @@ public abstract class CGFunction implements Solvable, GameOperation {
 
     @Override
     public String toString() {
-        return FunctionManager.getRegistrationName(getClass()) + "(" + operand + ")";
+        return toString(false);
+    }
+
+    @Override
+    public String toString(boolean romanNumerals) {
+        return FunctionManager.getRegistrationName(getClass()) + "(" + operand.toString(romanNumerals) + ")";
+    }
+
+    @Override
+    public String toRomanNumeralString() {
+        return toString(true);
     }
 }

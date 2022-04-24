@@ -12,7 +12,7 @@ import static wbs.chatgame.WordUtil.reverseString;
 
 public class QuickTypeBackwards extends QuickTypeGame implements Challenge<QuickTypeGame> {
     public QuickTypeBackwards(QuickTypeGame parent) {
-        super(parent.getGameName(), 0, parent.getDuration());
+        super(parent);
     }
 
     @Override
