@@ -6,8 +6,8 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.data.ChatGameDB;
-import wbs.chatgame.data.GameStats;
 import wbs.chatgame.data.PlayerRecord;
+import wbs.chatgame.data.TrackedPeriod;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
 import wbs.utils.util.WbsMath;
@@ -95,35 +95,35 @@ public class StatsCommand extends WbsSubcommand {
         if (game != null) {
             sendMessageNoPrefix("&h" + player.getName() + "&r's stats in &h" + game.getGameName() + "&r:", sender);
 
-            plugin.buildMessageNoPrefix("Total points: &h" + player.getPoints(game, GameStats.TrackedPeriod.TOTAL))
-                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.TOTAL))
+            plugin.buildMessageNoPrefix("Total points: &h" + player.getPoints(game, TrackedPeriod.TOTAL))
+                    .addHoverText(getStatsBreakdownString(player, TrackedPeriod.TOTAL))
                     .send(sender);
 
-            plugin.buildMessageNoPrefix("Points this month: &h" + player.getPoints(game, GameStats.TrackedPeriod.MONTHLY))
-                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.MONTHLY))
+            plugin.buildMessageNoPrefix("Points this month: &h" + player.getPoints(game, TrackedPeriod.MONTHLY))
+                    .addHoverText(getStatsBreakdownString(player, TrackedPeriod.MONTHLY))
                     .send(sender);
 
-            plugin.buildMessageNoPrefix("Points this week: &h" + player.getPoints(game, GameStats.TrackedPeriod.WEEKLY))
-                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.WEEKLY))
+            plugin.buildMessageNoPrefix("Points this week: &h" + player.getPoints(game, TrackedPeriod.WEEKLY))
+                    .addHoverText(getStatsBreakdownString(player, TrackedPeriod.WEEKLY))
                     .send(sender);
         } else {
             sendMessageNoPrefix("&h" + player.getName() + "&r's stats:", sender);
 
-            plugin.buildMessageNoPrefix("Total points: &h" + player.getPoints(GameStats.TrackedPeriod.TOTAL))
-                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.TOTAL))
+            plugin.buildMessageNoPrefix("Total points: &h" + player.getPoints(TrackedPeriod.TOTAL))
+                    .addHoverText(getStatsBreakdownString(player, TrackedPeriod.TOTAL))
                     .send(sender);
 
-            plugin.buildMessageNoPrefix("Points this month: &h" + player.getPoints(GameStats.TrackedPeriod.MONTHLY))
-                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.MONTHLY))
+            plugin.buildMessageNoPrefix("Points this month: &h" + player.getPoints(TrackedPeriod.MONTHLY))
+                    .addHoverText(getStatsBreakdownString(player, TrackedPeriod.MONTHLY))
                     .send(sender);
 
-            plugin.buildMessageNoPrefix("Points this week: &h" + player.getPoints(GameStats.TrackedPeriod.WEEKLY))
-                    .addHoverText(getStatsBreakdownString(player, GameStats.TrackedPeriod.WEEKLY))
+            plugin.buildMessageNoPrefix("Points this week: &h" + player.getPoints(TrackedPeriod.WEEKLY))
+                    .addHoverText(getStatsBreakdownString(player, TrackedPeriod.WEEKLY))
                     .send(sender);
         }
     }
 
-    private String getStatsBreakdownString(PlayerRecord player, GameStats.TrackedPeriod period) {
+    private String getStatsBreakdownString(PlayerRecord player, TrackedPeriod period) {
         int totalPoints = player.getPoints(period);
         return GameManager.getGames().stream()
                 .map(game -> {

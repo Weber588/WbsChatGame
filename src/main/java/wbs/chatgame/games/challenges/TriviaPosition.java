@@ -1,15 +1,10 @@
 package wbs.chatgame.games.challenges;
 
 import org.jetbrains.annotations.Nullable;
-import wbs.chatgame.GameController;
-import wbs.chatgame.data.GameStats;
-import wbs.chatgame.data.LeaderboardEntry;
-import wbs.chatgame.data.PlayerRecord;
-import wbs.chatgame.data.StatsManager;
+import wbs.chatgame.data.*;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.trivia.TriviaGame;
 import wbs.chatgame.games.trivia.TriviaQuestion;
-import wbs.utils.util.WbsMath;
 
 import java.util.List;
 import java.util.Random;
@@ -24,7 +19,7 @@ public class TriviaPosition extends TriviaQuestionChallenge {
     @Override
     protected TriviaQuestion nextQuestion() {
         Game game = getGame();
-        List<LeaderboardEntry> top = StatsManager.getCachedTop(GameStats.TrackedPeriod.TOTAL, game);
+        List<LeaderboardEntry> top = StatsManager.getCachedTop(TrackedPeriod.TOTAL, game);
 
         int position = new Random().nextInt(Math.min(MAX_POSITION, top.size() - 1));
 
@@ -52,7 +47,7 @@ public class TriviaPosition extends TriviaQuestionChallenge {
 
     @Override
     public boolean valid() {
-        List<LeaderboardEntry> top = StatsManager.getCachedTop(GameStats.TrackedPeriod.TOTAL, getGame());
+        List<LeaderboardEntry> top = StatsManager.getCachedTop(TrackedPeriod.TOTAL, getGame());
         return top.size() >= 5;
     }
 }

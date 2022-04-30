@@ -15,14 +15,14 @@ public final class LeaderboardEntry {
     private final UUID uuid;
     private final String name;
     private int points;
-    private final GameStats.TrackedPeriod period;
+    private final TrackedPeriod period;
     private final long createdTime;
     private int position;
 
     /**
      *
      */
-    public LeaderboardEntry(UUID uuid, String name, int points, GameStats.TrackedPeriod period, long createdTime) {
+    public LeaderboardEntry(UUID uuid, String name, int points, TrackedPeriod period, long createdTime) {
         this.uuid = uuid;
         this.name = name;
         this.points = points;
@@ -30,7 +30,7 @@ public final class LeaderboardEntry {
         this.createdTime = createdTime;
     }
 
-    public LeaderboardEntry(WbsRecord record, GameStats.TrackedPeriod period) {
+    public LeaderboardEntry(WbsRecord record, TrackedPeriod period) {
         uuid = UUID.fromString(record.getValue(ChatGameDB.uuidField, String.class));
         name = record.getValue(ChatGameDB.nameField, String.class);
         points = (Integer) record.getAnonymousField(StatsManager.TOTAL_POINTS_NAME);
@@ -50,7 +50,7 @@ public final class LeaderboardEntry {
         return points;
     }
 
-    public GameStats.TrackedPeriod period() {
+    public TrackedPeriod period() {
         return period;
     }
 

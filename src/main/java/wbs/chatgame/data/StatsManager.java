@@ -21,8 +21,8 @@ public final class StatsManager {
 
     public static final int topListSize = 25;
 
-    private static final Map<GameStats.TrackedPeriod, List<LeaderboardEntry>> periodTops = new HashMap<>();
-    private static final Map<Game, Map<GameStats.TrackedPeriod, List<LeaderboardEntry>>> gameTops = new HashMap<>();
+    private static final Map<TrackedPeriod, List<LeaderboardEntry>> periodTops = new HashMap<>();
+    private static final Map<Game, Map<TrackedPeriod, List<LeaderboardEntry>>> gameTops = new HashMap<>();
 
     // Maintain a constant cache of all player's total points for use in placeholders and
     // challenges.
@@ -53,16 +53,16 @@ public final class StatsManager {
      * Update all leaderboard caches that contain an entry for the given player, updating leaderboard order accordingly.
      */
     public static void updateCaches(PlayerRecord record, Game game) {
-        for (GameStats.TrackedPeriod period : GameStats.TrackedPeriod.values()) {
+        for (TrackedPeriod period : TrackedPeriod.values()) {
             List<LeaderboardEntry> top = periodTops.get(period);
             if (top != null) {
                 updateTop(top, record, null);
             }
         }
 
-        Map<GameStats.TrackedPeriod, List<LeaderboardEntry>> gamePeriodTops = gameTops.get(game);
+        Map<TrackedPeriod, List<LeaderboardEntry>> gamePeriodTops = gameTops.get(game);
         if (gamePeriodTops != null) {
-            for (GameStats.TrackedPeriod period : GameStats.TrackedPeriod.values()) {
+            for (TrackedPeriod period : TrackedPeriod.values()) {
                 List<LeaderboardEntry> top = gamePeriodTops.get(period);
                 if (top != null) {
                     updateTop(top, record, game);
@@ -92,7 +92,7 @@ public final class StatsManager {
     }
 
     @NotNull
-    public static List<LeaderboardEntry> getCachedTop(GameStats.TrackedPeriod stat) {
+    public static List<LeaderboardEntry> getCachedTop(TrackedPeriod stat) {
         List<LeaderboardEntry> top = periodTops.get(stat);
         if (top == null) {
             top = new LinkedList<>();
@@ -102,15 +102,15 @@ public final class StatsManager {
 
     @NotNull
     public static List<LeaderboardEntry> getCachedTop(Game game) {
-        return getCachedTop(GameStats.TrackedPeriod.TOTAL, game);
+        return getCachedTop(TrackedPeriod.TOTAL, game);
     }
 
     @NotNull
-    public static List<LeaderboardEntry> getCachedTop(GameStats.TrackedPeriod period, Game game) {
+    public static List<LeaderboardEntry> getCachedTop(TrackedPeriod period, Game game) {
         if (game == null) {
             return getCachedTop(period);
         }
-        Map<GameStats.TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
+        Map<TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
         if (gamePeriods == null) {
             gamePeriods = new HashMap<>();
         }
@@ -123,7 +123,7 @@ public final class StatsManager {
     }
 
     public static void recalculateAll() {
-        for (GameStats.TrackedPeriod stat : GameStats.TrackedPeriod.values()) {
+        for (TrackedPeriod stat : TrackedPeriod.values()) {
             recalculate(stat);
             for (Game game : GameManager.getGames()) {
                 recalculate(stat, game);
@@ -131,7 +131,7 @@ public final class StatsManager {
         }
     }
 
-    public static List<LeaderboardEntry> recalculate(GameStats.TrackedPeriod period) {
+    public static List<LeaderboardEntry> recalculate(TrackedPeriod period) {
         List<LeaderboardEntry> topList = new LinkedList<>();
 
         String query =
@@ -188,7 +188,7 @@ public final class StatsManager {
         }
     }
 
-    public static List<LeaderboardEntry> recalculate(@NotNull GameStats.TrackedPeriod period, @NotNull Game game) {
+    public static List<LeaderboardEntry> recalculate(@NotNull TrackedPeriod period, @NotNull Game game) {
         List<LeaderboardEntry> topList = new LinkedList<>();
 
         String query =
@@ -223,7 +223,7 @@ public final class StatsManager {
 
         sortLeaderboard(topList);
 
-        Map<GameStats.TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
+        Map<TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
         if (gamePeriods == null) {
             gamePeriods = new HashMap<>();
         }
@@ -232,7 +232,7 @@ public final class StatsManager {
         return topList;
     }
 
-    public static List<LeaderboardEntry> getTop(GameStats.TrackedPeriod period) {
+    public static List<LeaderboardEntry> getTop(TrackedPeriod period) {
         List<LeaderboardEntry> top = periodTops.get(period);
 
         if (top != null && !pointsUpdated) {
@@ -242,7 +242,7 @@ public final class StatsManager {
         return recalculate(period);
     }
 
-    public static int getTopAsync(GameStats.TrackedPeriod period, Consumer<List<LeaderboardEntry>> callback) {
+    public static int getTopAsync(TrackedPeriod period, Consumer<List<LeaderboardEntry>> callback) {
         List<LeaderboardEntry> top = periodTops.get(period);
 
         if (top != null && !pointsUpdated) {
@@ -257,11 +257,11 @@ public final class StatsManager {
     }
 
     public static List<LeaderboardEntry> getTop(Game game) {
-        return getTop(GameStats.TrackedPeriod.TOTAL, game);
+        return getTop(TrackedPeriod.TOTAL, game);
     }
 
-    public static List<LeaderboardEntry> getTop(GameStats.TrackedPeriod period, Game game) {
-        Map<GameStats.TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
+    public static List<LeaderboardEntry> getTop(TrackedPeriod period, Game game) {
+        Map<TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
 
         if (gamePeriods != null) {
             List<LeaderboardEntry> top = gamePeriods.get(period);
@@ -275,11 +275,11 @@ public final class StatsManager {
     }
 
     public static int getTopAsync(Game game, Consumer<List<LeaderboardEntry>> callback) {
-        return getTopAsync(GameStats.TrackedPeriod.TOTAL, game, callback);
+        return getTopAsync(TrackedPeriod.TOTAL, game, callback);
     }
 
-    public static int getTopAsync(GameStats.TrackedPeriod period, Game game, Consumer<List<LeaderboardEntry>> callback) {
-        Map<GameStats.TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
+    public static int getTopAsync(TrackedPeriod period, Game game, Consumer<List<LeaderboardEntry>> callback) {
+        Map<TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
 
         if (gamePeriods != null) {
             List<LeaderboardEntry> top = gamePeriods.get(period);

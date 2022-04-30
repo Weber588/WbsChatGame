@@ -3,10 +3,7 @@ package wbs.chatgame.commands;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import wbs.chatgame.data.GameStats;
-import wbs.chatgame.data.LeaderboardEntry;
-import wbs.chatgame.data.PlayerRecord;
-import wbs.chatgame.data.StatsManager;
+import wbs.chatgame.data.*;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
 import wbs.utils.util.WbsEnums;
@@ -16,7 +13,6 @@ import wbs.utils.util.plugin.WbsPlugin;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TopCommand extends WbsSubcommand {
     public TopCommand(@NotNull WbsPlugin plugin) {
@@ -26,7 +22,7 @@ public class TopCommand extends WbsSubcommand {
     @Override
     protected boolean onCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         Game game = null;
-        GameStats.TrackedPeriod period = null;
+        TrackedPeriod period = null;
         int amount = 0;
 
         int nextArg = 1;
@@ -40,7 +36,7 @@ public class TopCommand extends WbsSubcommand {
         }
 
         if (args.length > nextArg) {
-            period = WbsEnums.getEnumFromString(GameStats.TrackedPeriod.class, args[nextArg]);
+            period = WbsEnums.getEnumFromString(TrackedPeriod.class, args[nextArg]);
             if (period != null) {
                 nextArg++;
             }
@@ -63,14 +59,14 @@ public class TopCommand extends WbsSubcommand {
         }
 
         if (period == null) {
-            period = GameStats.TrackedPeriod.TOTAL;
+            period = TrackedPeriod.TOTAL;
         }
 
         if (amount <= 0) {
             amount = 5;
         }
 
-        GameStats.TrackedPeriod finalPeriod = period;
+        TrackedPeriod finalPeriod = period;
         Game finalGame = game;
         int finalAmount = amount;
 
@@ -84,7 +80,7 @@ public class TopCommand extends WbsSubcommand {
     }
 
 
-    private void showTop(List<LeaderboardEntry> top, GameStats.TrackedPeriod period, @Nullable Game game, int amount, CommandSender sender) {
+    private void showTop(List<LeaderboardEntry> top, TrackedPeriod period, @Nullable Game game, int amount, CommandSender sender) {
         if (game != null) {
             sendMessage("Top " + Math.min(amount, top.size()) + " players for &h" + game.getGameName() + "&r (" + WbsEnums.toPrettyString(period) + "):", sender);
 
@@ -120,7 +116,7 @@ public class TopCommand extends WbsSubcommand {
             case 1 -> GameManager.getGames().stream()
                     .map(Game::getGameName)
                     .forEach(choices::add);
-            case 2 -> Arrays.stream(GameStats.TrackedPeriod.values())
+            case 2 -> Arrays.stream(TrackedPeriod.values())
                     .map(period -> WbsEnums.toPrettyString(period).toLowerCase())
                     .forEach(choices::add);
         }

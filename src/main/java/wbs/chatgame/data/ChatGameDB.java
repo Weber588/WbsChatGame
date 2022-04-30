@@ -6,9 +6,6 @@ import wbs.utils.util.database.WbsField;
 import wbs.utils.util.database.WbsFieldType;
 import wbs.utils.util.database.WbsTable;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public final class ChatGameDB {
 
     private static PlayerManager playerManager;
@@ -69,7 +66,7 @@ public final class ChatGameDB {
      * Add new fields added after the initial run.
      */
     private static void addNewFields() {
-        for (GameStats.TrackedPeriod period : GameStats.TrackedPeriod.values()) {
+        for (TrackedPeriod period : TrackedPeriod.values()) {
             statsTable.addFieldIfNotExists(period.field);
         }
     }

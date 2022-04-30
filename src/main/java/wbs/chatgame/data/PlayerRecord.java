@@ -99,10 +99,10 @@ public class PlayerRecord implements RecordProducer {
     }
 
     public int getPoints() {
-        return getPoints(GameStats.TrackedPeriod.TOTAL);
+        return getPoints(TrackedPeriod.TOTAL);
     }
 
-    public int getPoints(GameStats.TrackedPeriod period) {
+    public int getPoints(TrackedPeriod period) {
         int total = 0;
         for (GameStats stat : stats.values()) {
             total += stat.getPoints(period);
@@ -111,10 +111,10 @@ public class PlayerRecord implements RecordProducer {
     }
 
     public int getPoints(Game game) {
-        return getPoints(game, GameStats.TrackedPeriod.TOTAL);
+        return getPoints(game, TrackedPeriod.TOTAL);
     }
 
-    public int getPoints(Game game, GameStats.TrackedPeriod period) {
+    public int getPoints(Game game, TrackedPeriod period) {
         return getStats(game).getPoints(period);
     }
 
