@@ -68,9 +68,19 @@ math:
   challenge-chance: 0
 
   challenges:
+    # Chance that the game will require the player to provide their answer
+    # in roman numerals.
+    # Will not run when the answer is greater than 3999.
+    roman_numerals_answer: 33
+
     # Chance that numbers in the equation will be displayed as roman numerals.
     # Does not affect worded equations.
-    romannumerals: 100
+    roman_numerals_question: 33
+
+    # Chance that numbers in the equation will be displayed as roman numerals,
+    # AND the player will be required to answer in roman numerals.
+    # Does not affect worded equations.
+    roman_numerals: 33
 
   # List equation generators here
   generators:
@@ -111,20 +121,20 @@ math:
       variables:
         a:
           min: 2
-          max: 9
-        b:
-          min: 4
-          max: 8
+          max: 64
         # You can list strings and a random one will be used.
-        ingot_type:
-          - 'iron'
-          - 'gold'
+        material:
+          - 'Coal'
+          - 'Copper'
+          - 'Iron'
+          - 'Gold'
+          - 'Redstone'
 
       # By specifying a template, you hide the real equation and show a fake one.
       # The equation field is still required to calculate the actual answer.
-      template: 'If you have &h%b% %ingot_type% nuggets&r and uncraft &h%a% %ingot_type% ingots&r, how many %ingot_type% nuggets do you have?'
+      template: 'If you have &h%a% %material%&r, how many &h%material% Blocks&r can you craft?'
 
-      equation: '%a% * 9 + %b%'
+      equation: '(%a% - (%a% % 9)) / 9'
 
     longer_math:
       chance: 15

@@ -1,6 +1,6 @@
 reveal:
   # How long should players have to guess?
-  duration: 180
+  duration: 120
 
   # How many points should a word be worth?
   # You can use the following placeholders:

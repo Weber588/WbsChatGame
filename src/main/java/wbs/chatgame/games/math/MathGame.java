@@ -9,7 +9,9 @@ import wbs.chatgame.GameController;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.ChallengeManager;
-import wbs.chatgame.games.challenges.MathRomanNumeralsChallenge;
+import wbs.chatgame.games.challenges.MathRomanNumeralAnswer;
+import wbs.chatgame.games.challenges.MathRomanNumeralBoth;
+import wbs.chatgame.games.challenges.MathRomanNumeralQuestion;
 import wbs.chatgame.games.math.functions.CGFunction;
 import wbs.chatgame.games.math.functions.FunctionManager;
 import wbs.chatgame.games.math.operators.*;
@@ -111,8 +113,8 @@ public class MathGame extends Game {
         generatorsWithChances.putAll(copy.generatorsWithChances);
     }
 
-    private ViewableEquation currentEquation;
-    private Solution currentSolution;
+    protected ViewableEquation currentEquation;
+    protected Solution currentSolution;
     private final Map<EquationGenerator, Double> generatorsWithChances = new HashMap<>();
 
     private final OperationSet operationSet;
@@ -126,7 +128,11 @@ public class MathGame extends Game {
             return false;
         }
 
-        return WbsMath.roundTo(numberGuess, 2) == WbsMath.roundTo(currentSolution.value(), 2);
+        return checkAnswer(numberGuess);
+    }
+
+    public boolean checkAnswer(double guess) {
+        return WbsMath.roundTo(guess, 2) == WbsMath.roundTo(currentSolution.value(), 2);
     }
 
     @Override
@@ -206,7 +212,7 @@ public class MathGame extends Game {
         currentEquation = null;
     }
 
-    private String formatAnswer() {
+    protected String formatAnswer() {
         double rounded = WbsMath.roundTo(currentSolution.value(), 2);
         if (currentSolution.value() == rounded) {
             return (int) rounded + "";
@@ -229,6 +235,8 @@ public class MathGame extends Game {
 
     @Override
     public void registerChallenges() {
-        ChallengeManager.buildAndRegisterChallenge("romannumerals", this, MathRomanNumeralsChallenge.class);
+        ChallengeManager.buildAndRegisterChallenge("roman_numerals_question", this, MathRomanNumeralQuestion.class);
+        ChallengeManager.buildAndRegisterChallenge("roman_numerals_answer", this, MathRomanNumeralAnswer.class);
+        ChallengeManager.buildAndRegisterChallenge("roman_numerals", this, MathRomanNumeralBoth.class);
     }
 }

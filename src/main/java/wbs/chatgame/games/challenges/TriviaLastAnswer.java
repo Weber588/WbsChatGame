@@ -16,6 +16,7 @@ public class TriviaLastAnswer extends TriviaQuestionChallenge {
                 2,
                 true,
                 false,
+                false,
                 GameController.getLastAnswer()
         );
     }

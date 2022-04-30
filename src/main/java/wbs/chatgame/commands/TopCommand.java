@@ -25,68 +25,89 @@ public class TopCommand extends WbsSubcommand {
 
     @Override
     protected boolean onCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        GameStats.TrackedPeriod period = GameStats.TrackedPeriod.TOTAL;
-
-        if (args.length > 1) {
-            period = WbsEnums.getEnumFromString(GameStats.TrackedPeriod.class, args[1]);
-        }
-
-        if (period == null) {
-            sendMessage("Invalid period: " + args[1]
-                    + ". Please choose from the following: "
-                    + WbsEnums.joiningPrettyStrings(GameStats.TrackedPeriod.class), sender);
-            return true;
-        }
-
         Game game = null;
-        if (args.length > 2) {
-            String gameName = args[2];
-            game = GameManager.getGame(gameName);
+        GameStats.TrackedPeriod period = null;
+        int amount = 0;
 
-            if (game == null) {
-                sendMessage("Invalid game \"&h" + gameName + "&r\". Please choose from the following: " +
-                        GameManager.getGames().stream()
-                                .map(Game::getGameName)
-                                .collect(Collectors.joining(", ")), sender);
+        int nextArg = 1;
+
+        if (args.length > nextArg) {
+            game = GameManager.getGame(args[nextArg]);
+
+            if (game != null) {
+                nextArg++;
+            }
+        }
+
+        if (args.length > nextArg) {
+            period = WbsEnums.getEnumFromString(GameStats.TrackedPeriod.class, args[nextArg]);
+            if (period != null) {
+                nextArg++;
+            }
+        }
+
+        if (args.length > nextArg) {
+            try {
+                amount = Integer.parseInt(args[nextArg]);
+            } catch (NumberFormatException e) {
+                sendMessage("Invalid amount: " + args[nextArg] + ". " +
+                        "Please use an integer.", sender);
+                return true;
+            }
+
+            if (amount < 1 || amount > StatsManager.topListSize) {
+                sendMessage("Invalid amount: " + args[nextArg] + ". " +
+                        "Amount must be between 1 and " + StatsManager.topListSize, sender);
                 return true;
             }
         }
 
+        if (period == null) {
+            period = GameStats.TrackedPeriod.TOTAL;
+        }
+
+        if (amount <= 0) {
+            amount = 5;
+        }
+
         GameStats.TrackedPeriod finalPeriod = period;
         Game finalGame = game;
+        int finalAmount = amount;
 
         if (game == null) {
-            StatsManager.getTopAsync(period, (top) -> showTop(top, finalPeriod, null, sender));
+            StatsManager.getTopAsync(period, (top) -> showTop(top, finalPeriod, null, finalAmount, sender));
         } else {
-            StatsManager.getTopAsync(period, finalGame, (top) -> showTop(top, finalPeriod, finalGame, sender));
+            StatsManager.getTopAsync(period, finalGame, (top) -> showTop(top, finalPeriod, finalGame, finalAmount, sender));
         }
 
         return true;
     }
 
 
-    private void showTop(List<LeaderboardEntry> top, GameStats.TrackedPeriod period, @Nullable Game game, CommandSender sender) {
+    private void showTop(List<LeaderboardEntry> top, GameStats.TrackedPeriod period, @Nullable Game game, int amount, CommandSender sender) {
         if (game != null) {
-            sendMessage("Top " + top.size() + " players for &h" + game.getGameName() + "&r (" + WbsEnums.toPrettyString(period) + "):", sender);
+            sendMessage("Top " + Math.min(amount, top.size()) + " players for &h" + game.getGameName() + "&r (" + WbsEnums.toPrettyString(period) + "):", sender);
 
-            int i = 1;
+            int i = 0;
             for (LeaderboardEntry entry : top) {
-                plugin.buildMessage("&6" + i + ") &h" + entry.name() + "&r> &h" + entry.points())
+                if (i >= amount) break;
+                i++;
+                plugin.buildMessage("&6" + (entry.getPosition() + 1) + ") &h" + entry.name() + "&r> &h" + entry.points())
                         .addHoverText("&hClick to view full stats for " + entry.name() + "!")
                         .addClickCommand("/chatgame stats " + entry.uuid() + " " + game.getGameName())
                         .send(sender);
-                i++;
             }
         } else {
-            sendMessage("Top " + top.size() + " players (" + WbsEnums.toPrettyString(period) + "):", sender);
+            sendMessage("Top " + Math.min(amount, top.size()) + " players (" + WbsEnums.toPrettyString(period) + "):", sender);
 
-            int i = 1;
+            int i = 0;
             for (LeaderboardEntry entry : top) {
-                plugin.buildMessage("&6" + i + ") &h" + entry.name() + "&r> &h" + entry.points())
+                if (i >= amount) break;
+                i++;
+                plugin.buildMessage("&6" + (entry.getPosition() + 1) + ") &h" + entry.name() + "&r> &h" + entry.points())
                         .addHoverText("&hClick to view full stats for " + entry.name() + "!")
                         .addClickCommand("/chatgame stats " + entry.uuid())
                         .send(sender);
-                i++;
             }
         }
     }
@@ -96,11 +117,11 @@ public class TopCommand extends WbsSubcommand {
         List<String> choices = new LinkedList<>();
 
         switch (args.length - start + 1) {
-            case 1 -> Arrays.stream(GameStats.TrackedPeriod.values())
-                    .map(period -> WbsEnums.toPrettyString(period).toLowerCase())
-                    .forEach(choices::add);
-            case 2 -> GameManager.getGames().stream()
+            case 1 -> GameManager.getGames().stream()
                     .map(Game::getGameName)
+                    .forEach(choices::add);
+            case 2 -> Arrays.stream(GameStats.TrackedPeriod.values())
+                    .map(period -> WbsEnums.toPrettyString(period).toLowerCase())
                     .forEach(choices::add);
         }
 

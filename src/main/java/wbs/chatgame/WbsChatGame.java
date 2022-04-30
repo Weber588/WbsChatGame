@@ -48,6 +48,10 @@ public class WbsChatGame extends WbsPlugin {
             StatsManager.loadTotalPoints(player.getUniqueId());
             ChatGameDB.getPlayerManager().loadOnlinePlayer(player);
         }
+
+        StatsManager.recalculateAll();
+
+        PlaceholderManager.registerPlaceholders();
     }
 
     @Override

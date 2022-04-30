@@ -30,20 +30,7 @@ public class Value implements Solvable {
 
     @Override
     public String toRomanNumeralString() {
-        int whole = (int) value.value();
-        double decimal = (value.value() - whole);
-        String decimalString = String.valueOf(decimal).substring(2);
-        
-        int decimalAsWhole = -1;
-        try {
-            decimalAsWhole = Integer.parseInt(decimalString);
-        } catch (NumberFormatException ignored) {}
-
-        if (decimalAsWhole <= 0) {
-            return RomanNumerals.toRoman(whole);
-        } else {
-            return RomanNumerals.toRoman(whole) + "." + RomanNumerals.toRoman(decimalAsWhole);
-        }
+        return RomanNumerals.toRoman(value.value());
     }
 
     @Override

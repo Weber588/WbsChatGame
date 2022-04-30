@@ -174,7 +174,7 @@ public class GameController {
      * game stopping, or running out of time.
      * @return Whether or not there was a round running.
      */
-    public static boolean endRoundNoWinner(boolean startNext) {
+    public static synchronized boolean endRoundNoWinner(boolean startNext) {
         if (currentGame == null) {
             return false;
         }
@@ -358,10 +358,12 @@ public class GameController {
 
     public static void setNext(Game game) {
         nextGame = game;
+        unlockNext();
     }
 
     public static void setNext(List<String> options) {
         nextOptions = options;
+        unlockNext();
     }
 
     @NotNull

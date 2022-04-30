@@ -17,6 +17,7 @@ public class TriviaYourCurrentPoints extends TriviaQuestionChallenge {
                 2,
                 false,
                 false,
+                false,
                 "") {
             @Override
             public boolean checkGuess(String guess, Player player) {

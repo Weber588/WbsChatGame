@@ -40,6 +40,7 @@ public class TriviaPosition extends TriviaQuestionChallenge {
                 2,
                 true,
                 false,
+                false,
                 entry.name() + ""
         );
     }

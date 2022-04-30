@@ -17,6 +17,7 @@ public final class LeaderboardEntry {
     private int points;
     private final GameStats.TrackedPeriod period;
     private final long createdTime;
+    private int position;
 
     /**
      *
@@ -59,6 +60,14 @@ public final class LeaderboardEntry {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     @Override

@@ -17,6 +17,7 @@ public class TriviaLastWinner extends TriviaQuestionChallenge {
                 2,
                 true,
                 false,
+                false,
                 GameController.getLastWinner().getName()
                 ) {
             @Override

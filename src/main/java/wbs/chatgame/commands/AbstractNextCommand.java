@@ -76,37 +76,58 @@ public abstract class AbstractNextCommand extends WbsSubcommand {
 
     @Override
     protected List<String> getTabCompletions(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        switch (args.length) {
-            case 2:
-                return GameManager.getGames().stream()
-                        .map(Game::getGameName)
-                        .collect(Collectors.toList());
-            case 3: {
-                Game game = GameManager.getGame(args[1]);
-                if (game != null) {
-                    List<String> choices = game.getOptionCompletions();
-                    if (ChallengeManager.listChallenges(game)
-                            .stream().anyMatch(Challenge::valid)) {
-                        choices.add("-c");
-                    }
-                    return choices;
+        List<String> choices = new LinkedList<>();
+
+        if (args.length < 2) {
+            return choices;
+        }
+
+        if (args.length == 2) {
+            return GameManager.getGames().stream()
+                    .map(Game::getGameName)
+                    .collect(Collectors.toList());
+        }
+
+        Game game = GameManager.getGame(args[1]);
+
+        if (game != null) {
+            switch (args.length) {
+                case 3 -> {
+                    choices.addAll(game.getOptionCompletions());
+                    suggestChallengeIfAnyValid(game, choices);
                 }
-                break;
-            }
-            case 4: {
-                if (args[2].equalsIgnoreCase("-c")) {
-                    Game game = GameManager.getGame(args[1]);
-                    if (game != null) {
-                        return ChallengeManager.listChallenges(game)
-                                .stream()
-                                .filter(Challenge::valid)
-                                .map(Challenge::getId)
-                                .collect(Collectors.toList());
+                case 4 -> {
+                    if (args[2].equalsIgnoreCase("-c")) {
+                        choices.addAll(getValidChallengeList(game));
                     }
                 }
-                break;
+                case 5 -> {
+                    // Already specified challenge, now suggest options
+                    if (args[2].equalsIgnoreCase("-c")) {
+                        return game.getOptionCompletions();
+                    } else if (args[3].equalsIgnoreCase("-c")) {
+                        choices.addAll(getValidChallengeList(game));
+                    }
+                }
             }
         }
-        return Collections.emptyList();
+
+        return choices;
     }
+
+    private List<String> getValidChallengeList(Game game) {
+        return ChallengeManager.listChallenges(game)
+                .stream()
+                .filter(Challenge::valid)
+                .map(Challenge::getId)
+                .collect(Collectors.toList());
+    }
+
+    private void suggestChallengeIfAnyValid(Game game, List<String> choices) {
+        if (ChallengeManager.listChallenges(game)
+                .stream().anyMatch(Challenge::valid)) {
+            choices.add("-c");
+        }
+    }
+
 }

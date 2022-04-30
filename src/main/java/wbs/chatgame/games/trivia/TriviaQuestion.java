@@ -1,6 +1,7 @@
 package wbs.chatgame.games.trivia;
 
 import org.bukkit.entity.Player;
+import wbs.utils.util.pluginhooks.PlaceholderAPIWrapper;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -10,6 +11,7 @@ public class TriviaQuestion {
     private final String question;
     private final int points;
     private final boolean showAnswer;
+    private final boolean fillPlaceholders;
     private final boolean useRegex;
     private final String[] answers;
 
@@ -17,18 +19,23 @@ public class TriviaQuestion {
                           String question,
                           int points,
                           boolean showAnswer,
+                          boolean fillPlaceholders,
                           boolean useRegex,
                           String ... answers) {
         this.id = id;
         this.question = question;
         this.points = points;
         this.showAnswer = showAnswer;
+        this.fillPlaceholders = fillPlaceholders;
         this.useRegex = useRegex;
         this.answers = answers;
     }
 
     public boolean checkGuess(String guess, Player player) {
         for (String answer : answers) {
+            if (fillPlaceholders) {
+                answer = PlaceholderAPIWrapper.setPlaceholders(player, answer);
+            }
             if (useRegex) {
                 if (guess.toLowerCase().matches(answer.toLowerCase())) return true;
             } else {

@@ -69,8 +69,9 @@ public class TriviaGame extends Game {
                 int points = qSection.getInt("points");
                 boolean showAnswer = qSection.getBoolean("show-answer", false);
                 boolean useRegex = qSection.getBoolean("use-regex", false);
+                boolean fillPlaceholders = qSection.getBoolean("fill-placeholders", false);
 
-                questions.add(new TriviaQuestion(key, question, points, showAnswer, useRegex, answers.toArray(new String[0])));
+                questions.add(new TriviaQuestion(key, question, points, showAnswer, fillPlaceholders, useRegex, answers.toArray(new String[0])));
             }
         }
 
@@ -160,7 +161,7 @@ public class TriviaGame extends Game {
                 answers[i] = answers[i].trim();
             }
 
-            question = new TriviaQuestion("custom", questionString, points, false, false, answers);
+            question = new TriviaQuestion("custom", questionString, points, false, false, false, answers);
         }
 
         currentPoints = question.points();

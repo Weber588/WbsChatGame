@@ -19,7 +19,7 @@ public final class StatsManager {
 
     public static final String TOTAL_POINTS_NAME = "total_points";
 
-    private static final int topListSize = 25;
+    public static final int topListSize = 25;
 
     private static final Map<GameStats.TrackedPeriod, List<LeaderboardEntry>> periodTops = new HashMap<>();
     private static final Map<Game, Map<GameStats.TrackedPeriod, List<LeaderboardEntry>>> gameTops = new HashMap<>();
@@ -72,19 +72,24 @@ public final class StatsManager {
     }
 
     private static void updateTop(List<LeaderboardEntry> top, PlayerRecord record, @Nullable Game game) {
+        boolean updated = false;
+
         for (LeaderboardEntry entry : top) {
             if (entry.uuid().equals(record.getUUID())) {
+                updated = true;
                 if (game != null) {
                     entry.setPoints(record.getPoints(game, entry.period()));
                 } else {
                     entry.setPoints(record.getPoints(entry.period()));
                 }
+                break;
             }
         }
 
-        top.sort(Comparator.comparing(LeaderboardEntry::points));
+        if (updated) {
+            sortLeaderboard(top);
+        }
     }
-
 
     @NotNull
     public static List<LeaderboardEntry> getCachedTop(GameStats.TrackedPeriod stat) {
@@ -158,8 +163,29 @@ public final class StatsManager {
             topList.add(entry);
         }
 
+        sortLeaderboard(topList);
+
         periodTops.put(period, topList);
         return topList;
+    }
+
+    private static void sortLeaderboard(List<LeaderboardEntry> topList) {
+        topList.sort(Comparator.comparing(LeaderboardEntry::points).reversed());
+
+        int position = -1;
+        int sharedPosition = 1;
+        int currentPoints = Integer.MIN_VALUE;
+        for (LeaderboardEntry entry : topList) {
+            if (entry.points() != currentPoints) {
+                position += sharedPosition;
+                sharedPosition = 1;
+            } else {
+                sharedPosition++;
+            }
+
+            entry.setPosition(position);
+            currentPoints = entry.points();
+        }
     }
 
     public static List<LeaderboardEntry> recalculate(@NotNull GameStats.TrackedPeriod period, @NotNull Game game) {
@@ -179,8 +205,6 @@ public final class StatsManager {
                 "LIMIT " + topListSize
                 ;
 
-        WbsChatGame.getInstance().logger.info("Game recalculation query: " + query);
-
         WbsDatabase db = ChatGameDB.getDatabase();
         List<WbsRecord> selected;
         try (Connection connection = db.getConnection();
@@ -196,6 +220,8 @@ public final class StatsManager {
             LeaderboardEntry entry = new LeaderboardEntry(record, period);
             topList.add(entry);
         }
+
+        sortLeaderboard(topList);
 
         Map<GameStats.TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
         if (gamePeriods == null) {

@@ -17,6 +17,7 @@ public class TriviaPlayersOnline extends TriviaQuestionChallenge {
                 2,
                 true,
                 false,
+                false,
                 Bukkit.getOnlinePlayers().size() + ""
         ) {
             @Override
