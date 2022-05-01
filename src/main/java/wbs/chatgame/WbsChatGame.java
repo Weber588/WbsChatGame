@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import wbs.chatgame.commands.ChatGameCommand;
 import wbs.chatgame.commands.GuessCommand;
 import wbs.chatgame.data.ChatGameDB;
+import wbs.chatgame.data.ResetManager;
 import wbs.chatgame.data.StatsManager;
 import wbs.chatgame.games.GameManager;
 import wbs.chatgame.games.challenges.ChallengeManager;
@@ -30,6 +31,7 @@ public class WbsChatGame extends WbsPlugin {
         GameController.setPlugin(this);
         GameManager.registerNativeGames();
         ChatGameDB.setupDatabase();
+        ResetManager.scheduleResets();
 
         settings.reload();
 

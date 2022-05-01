@@ -39,6 +39,10 @@ public class GameStats implements RecordProducer {
         }
     }
 
+    public void setPoints(TrackedPeriod period, int points) {
+        this.points.put(period, points);
+    }
+
     public int getPoints() {
         return getPoints(TrackedPeriod.TOTAL);
     }

@@ -23,6 +23,12 @@ settings:
   # Should players be listening to the game by default?
   listen-by-default: true
 
+  # On which day should weekly stats be reset?
+  reset-day: 'SUNDAY'
+
+  # At what time should resets occur?
+  reset-time: '12:00'
+
   # Choose how frequently a given category comes up.
   # To disable a game, set the percentage to 0.
   rates:

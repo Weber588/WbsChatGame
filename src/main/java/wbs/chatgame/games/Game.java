@@ -79,9 +79,6 @@ public abstract class Game {
     private WbsMessage currentQuestion;
     protected int currentPoints;
 
-    @Nullable
-    private Challenge<?> nextChallenge = null;
-
     public void broadcastQuestion(String currentQuestion) {
         WbsMessageBuilder builder = plugin.buildMessage(currentQuestion);
         broadcastQuestion(builder.build());
@@ -111,18 +108,13 @@ public abstract class Game {
     @NotNull
     public final Game startGame() {
         if (!(this instanceof Challenge)) {
-            if (nextChallenge != null || (WbsMath.chance(challengeChance) && !challengesWithChance.isEmpty())) {
+            if (WbsMath.chance(challengeChance) && !challengesWithChance.isEmpty()) {
                 Challenge<?> challenge;
-                if (nextChallenge == null) {
-                    String id = WbsCollectionUtil.pseudoRandomAvoidRepeats(challengesWithChance, challengeHistory, 2);
-                    challenge = ChallengeManager.getChallenge(id, this);
+                String id = WbsCollectionUtil.pseudoRandomAvoidRepeats(challengesWithChance, challengeHistory, 2);
+                challenge = ChallengeManager.getChallenge(id, this);
 
-                    if (challenge == null) {
-                        plugin.logger.info("Invalid challenge in game " + gameName + ": " + id);
-                    }
-                } else {
-                    challenge = nextChallenge;
-                    nextChallenge = null;
+                if (challenge == null) {
+                    plugin.logger.info("Invalid challenge in game " + gameName + ": " + id);
                 }
 
                 if (challenge != null) {
@@ -158,7 +150,7 @@ public abstract class Game {
 
                 String challengeString = options.get(1);
 
-                nextChallenge = ChallengeManager.getChallenge(challengeString, this);
+                Challenge<?> nextChallenge = ChallengeManager.getChallenge(challengeString, this);
                 if (nextChallenge == null) {
                     throw new IllegalArgumentException("Invalid challenge: " + challengeString + ". Valid challenges: " +
                             ChallengeManager.listChallenges(this)
@@ -168,7 +160,6 @@ public abstract class Game {
                                     .collect(Collectors.joining(", ")));
                 } else {
                     if (!nextChallenge.valid()) {
-                        nextChallenge = null;
                         throw new IllegalArgumentException("That challenge isn't available at the moment.");
                     } else {
                         return ((Game) nextChallenge).startWithOptions(options.subList(2, options.size()));

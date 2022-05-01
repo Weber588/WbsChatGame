@@ -7,9 +7,12 @@ import wbs.chatgame.games.GameManager;
 import wbs.chatgame.games.word.generator.GeneratorManager;
 import wbs.chatgame.rewards.RewardManager;
 import wbs.utils.exceptions.InvalidConfigurationException;
+import wbs.utils.util.WbsEnums;
 import wbs.utils.util.plugin.WbsSettings;
 
 import java.io.File;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.*;
 
 public class ChatGameSettings extends WbsSettings {
@@ -32,12 +35,16 @@ public class ChatGameSettings extends WbsSettings {
         loadGames();
         RewardManager.reloadRewards(rewardsConfig);
 
+        String settingsDir = "config.yml/settings";
         ConfigurationSection settingsSection = config.getConfigurationSection("settings");
         boolean ratesSet = false;
         if (settingsSection != null) {
             requireGuessCommand = settingsSection.getBoolean("require-guess-command", requireGuessCommand);
             listenByDefault = settingsSection.getBoolean("listen-by-default", listenByDefault);
             debugMode = settingsSection.getBoolean("debug-mode", debugMode);
+
+            loadResetSettings(settingsSection, settingsDir);
+
             GameController.roundDelay = (int) (settingsSection.getDouble("seconds-between-rounds", 180) * 20);
 
             ConfigurationSection ratesSection = settingsSection.getConfigurationSection("rates");
@@ -64,6 +71,69 @@ public class ChatGameSettings extends WbsSettings {
         GeneratorManager.configureRegistered(generatorConfig, "generators.yml");
     }
 
+    private void loadResetSettings(ConfigurationSection section, String directory) {
+        String resetDayString = section.getString("reset-day", resetDay.name());
+        resetDay = WbsEnums.getEnumFromString(DayOfWeek.class, resetDayString);
+        if (resetDay == null) {
+            logError("Invalid reset day: " + resetDayString, directory + "/reset-day");
+            resetDay = DayOfWeek.SUNDAY;
+        }
+
+        String resetTimeString = section.getString("reset-time",
+                (resetTime.getHour() + 1) + ":" + (resetTime.getMinute() + 1));
+
+        String[] args = resetTimeString.split(":");
+
+        int hour;
+        int minutes = 0;
+        boolean pmTime = false;
+
+        try {
+            hour = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            logError("Invalid hour: " + args[0], directory + "/reset-time");
+            return;
+        }
+
+        if (hour < 1 || hour > 24) {
+            logError("Invalid hour: " + args[0], directory + "/reset-time");
+            return;
+        }
+
+        if (args.length > 1) {
+            String minutesString = args[1];
+            if (minutesString.length() > 2) {
+                String substring = minutesString.substring(0, minutesString.length() - 2);
+                if (minutesString.toLowerCase().endsWith("pm")) {
+                    pmTime = true;
+                    minutesString = substring;
+                } else  if (minutesString.toLowerCase().endsWith("am")) {
+                    minutesString = substring;
+                }
+            }
+
+            try {
+                minutes = Integer.parseInt(minutesString);
+            } catch (NumberFormatException e) {
+                logError("Invalid minutes: " + minutesString, directory + "/reset-time");
+                return;
+            }
+
+            if (minutes < 0 || minutes > 59) {
+                logError("Invalid minutes: " + minutesString, directory + "/reset-time");
+                return;
+            }
+        }
+
+        if (pmTime) {
+            hour += 12;
+        }
+
+        hour %= 24;
+
+        resetTime = LocalTime.of(hour, minutes);
+    }
+
     private void loadRates(ConfigurationSection ratesSection) {
         for (String gameName : ratesSection.getKeys(false)) {
             String directory = "config.yml/settings/rates/" + gameName;
@@ -83,6 +153,9 @@ public class ChatGameSettings extends WbsSettings {
     public boolean requireGuessCommand = false;
     public boolean listenByDefault = true;
     public boolean debugMode = false;
+
+    public DayOfWeek resetDay = DayOfWeek.SUNDAY;
+    public LocalTime resetTime = LocalTime.of(12, 0);
 
     private final List<File> gameFiles = new ArrayList<>();
 

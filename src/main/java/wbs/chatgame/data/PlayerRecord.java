@@ -133,4 +133,8 @@ public class PlayerRecord implements RecordProducer {
     public Collection<WbsRecord> getStatsRecords() {
         return this.stats.values().stream().map(RecordProducer::toRecord).collect(Collectors.toList());
     }
+
+    public Collection<GameStats> getAllStats() {
+        return stats.values();
+    }
 }
