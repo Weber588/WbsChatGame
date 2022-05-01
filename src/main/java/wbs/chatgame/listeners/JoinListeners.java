@@ -13,7 +13,6 @@ public class JoinListeners implements Listener {
 
     @EventHandler
     public void onJoinStart(PlayerJoinEvent event) {
-        StatsManager.loadTotalPoints(event.getPlayer().getUniqueId());
         ChatGameDB.getPlayerManager().loadOnlinePlayer(event.getPlayer(), record -> {
             if (record.isListening()) {
                 if (!GameController.isRunning() && !GameController.forceStopped()) {
@@ -26,7 +25,6 @@ public class JoinListeners implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        StatsManager.unload(event.getPlayer().getUniqueId());
         ChatGameDB.getPlayerManager().unloadPlayer(event.getPlayer().getUniqueId());
     }
 }

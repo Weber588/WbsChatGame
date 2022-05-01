@@ -19,7 +19,7 @@ public class TriviaPosition extends TriviaQuestionChallenge {
     @Override
     protected TriviaQuestion nextQuestion() {
         Game game = getGame();
-        List<LeaderboardEntry> top = StatsManager.getCachedTop(TrackedPeriod.TOTAL, game);
+        Leaderboard top = StatsManager.getCachedTop(TrackedPeriod.TOTAL, game);
 
         int position = new Random().nextInt(Math.min(MAX_POSITION, top.size() - 1));
 
@@ -47,7 +47,6 @@ public class TriviaPosition extends TriviaQuestionChallenge {
 
     @Override
     public boolean valid() {
-        List<LeaderboardEntry> top = StatsManager.getCachedTop(TrackedPeriod.TOTAL, getGame());
-        return top.size() >= 5;
+        return StatsManager.getCachedTop(TrackedPeriod.TOTAL, getGame()).size() >= 5;
     }
 }

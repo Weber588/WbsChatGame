@@ -1,6 +1,7 @@
 package wbs.chatgame;
 
 import org.bukkit.OfflinePlayer;
+import wbs.chatgame.data.Leaderboard;
 import wbs.chatgame.data.LeaderboardEntry;
 import wbs.chatgame.data.StatsManager;
 import wbs.chatgame.data.TrackedPeriod;
@@ -31,7 +32,7 @@ public class PlaceholderManager {
             String[] args = params.split("_");
 
             if (args.length == 1 || args[1].isEmpty()) {
-                List<LeaderboardEntry> top = StatsManager.getCachedTop(TrackedPeriod.TOTAL);
+                Leaderboard top = StatsManager.getCachedTop(TrackedPeriod.TOTAL);
                 if (top.isEmpty()) {
                     return NOT_FOUND;
                 } else {
@@ -75,7 +76,7 @@ public class PlaceholderManager {
             // Convert to 0-index
             place--;
 
-            List<LeaderboardEntry> top;
+            Leaderboard top;
             if (game != null) {
                 top = StatsManager.getCachedTop(period, game);
             } else {

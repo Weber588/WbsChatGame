@@ -80,7 +80,7 @@ public class TopCommand extends WbsSubcommand {
     }
 
 
-    private void showTop(List<LeaderboardEntry> top, TrackedPeriod period, @Nullable Game game, int amount, CommandSender sender) {
+    private void showTop(Leaderboard top, TrackedPeriod period, @Nullable Game game, int amount, CommandSender sender) {
         if (game != null) {
             sendMessage("Top " + Math.min(amount, top.size()) + " players for &h" + game.getGameName() + "&r (" + WbsEnums.toPrettyString(period) + "):", sender);
 

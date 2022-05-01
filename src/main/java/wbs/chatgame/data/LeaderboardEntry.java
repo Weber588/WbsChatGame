@@ -1,5 +1,7 @@
 package wbs.chatgame.data;
 
+import org.jetbrains.annotations.Nullable;
+import wbs.chatgame.games.Game;
 import wbs.utils.util.database.WbsRecord;
 
 import java.time.Instant;
@@ -17,24 +19,28 @@ public final class LeaderboardEntry {
     private int points;
     private final TrackedPeriod period;
     private final long createdTime;
+    @Nullable
+    private final Game game;
     private int position;
 
     /**
      *
      */
-    public LeaderboardEntry(UUID uuid, String name, int points, TrackedPeriod period, long createdTime) {
+    public LeaderboardEntry(UUID uuid, String name, int points, TrackedPeriod period, @Nullable Game game) {
         this.uuid = uuid;
         this.name = name;
         this.points = points;
         this.period = period;
-        this.createdTime = createdTime;
+        this.game = game;
+        createdTime = Instant.now().getEpochSecond();
     }
 
-    public LeaderboardEntry(WbsRecord record, TrackedPeriod period) {
+    public LeaderboardEntry(WbsRecord record, TrackedPeriod period, @Nullable Game game) {
         uuid = UUID.fromString(record.getValue(ChatGameDB.uuidField, String.class));
         name = record.getValue(ChatGameDB.nameField, String.class);
         points = (Integer) record.getAnonymousField(StatsManager.TOTAL_POINTS_NAME);
         this.period = period;
+        this.game = game;
         createdTime = Instant.now().getEpochSecond();
     }
 
@@ -52,6 +58,11 @@ public final class LeaderboardEntry {
 
     public TrackedPeriod period() {
         return period;
+    }
+
+    @Nullable
+    public Game game() {
+        return game;
     }
 
     public long createdTime() {

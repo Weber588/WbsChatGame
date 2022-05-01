@@ -10,6 +10,7 @@ import wbs.chatgame.data.PlayerRecord;
 import wbs.chatgame.data.TrackedPeriod;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
+import wbs.utils.util.WbsEnums;
 import wbs.utils.util.WbsMath;
 import wbs.utils.util.commands.WbsSubcommand;
 import wbs.utils.util.plugin.WbsPlugin;
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 public class StatsCommand extends WbsSubcommand {
     public StatsCommand(@NotNull WbsPlugin plugin) {
         super(plugin, "stats");
+        addAlias("points");
+        addAlias("info");
     }
 
     @Override
@@ -125,7 +128,8 @@ public class StatsCommand extends WbsSubcommand {
 
     private String getStatsBreakdownString(PlayerRecord player, TrackedPeriod period) {
         int totalPoints = player.getPoints(period);
-        return GameManager.getGames().stream()
+
+        return "&h" + WbsEnums.toPrettyString(period) + "\n" + GameManager.getGames().stream()
                 .map(game -> {
                     int points = player.getPoints(game, period);
                     double percent = (double) points / totalPoints * 100;

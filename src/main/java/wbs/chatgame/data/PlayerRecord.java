@@ -78,7 +78,7 @@ public class PlayerRecord implements RecordProducer {
     }
 
     @NotNull
-    public GameStats getStats(Game game) {
+    public GameStats getStats(@NotNull Game game) {
         String id = GameManager.getRegistrationId(game);
 
         if (id == null) throw new IllegalArgumentException("Game not registered: " + game.getClass().getCanonicalName());
@@ -95,7 +95,6 @@ public class PlayerRecord implements RecordProducer {
     public void addPoints(int points, Game game) {
         getStats(game).addPoints(points);
         StatsManager.updateCaches(this, game);
-        StatsManager.updateTotalCache(this);
     }
 
     public int getPoints() {
@@ -110,11 +109,11 @@ public class PlayerRecord implements RecordProducer {
         return total;
     }
 
-    public int getPoints(Game game) {
+    public int getPoints(@NotNull Game game) {
         return getPoints(game, TrackedPeriod.TOTAL);
     }
 
-    public int getPoints(Game game, TrackedPeriod period) {
+    public int getPoints(@NotNull Game game, TrackedPeriod period) {
         return getStats(game).getPoints(period);
     }
 

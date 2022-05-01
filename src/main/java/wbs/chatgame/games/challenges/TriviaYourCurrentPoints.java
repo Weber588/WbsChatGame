@@ -1,6 +1,7 @@
 package wbs.chatgame.games.challenges;
 
 import org.bukkit.entity.Player;
+import wbs.chatgame.data.ChatGameDB;
 import wbs.chatgame.data.StatsManager;
 import wbs.chatgame.games.trivia.TriviaGame;
 import wbs.chatgame.games.trivia.TriviaQuestion;
@@ -21,13 +22,13 @@ public class TriviaYourCurrentPoints extends TriviaQuestionChallenge {
                 "") {
             @Override
             public boolean checkGuess(String guess, Player player) {
-                int guessInt;
+                double guessVal;
                 try {
-                    guessInt = Integer.parseInt(guess);
+                    guessVal = Double.parseDouble(guess);
                 } catch (NumberFormatException e) {
                     return false;
                 }
-                return guessInt == StatsManager.getTotalCachedPoints(player.getUniqueId());
+                return guessVal == ChatGameDB.getPlayerManager().getOnlinePlayer(player.getUniqueId()).getPoints();
             }
         };
     }

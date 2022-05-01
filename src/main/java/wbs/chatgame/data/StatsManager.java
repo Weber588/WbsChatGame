@@ -21,103 +21,65 @@ public final class StatsManager {
 
     public static final int topListSize = 25;
 
-    private static final Map<TrackedPeriod, List<LeaderboardEntry>> periodTops = new HashMap<>();
-    private static final Map<Game, Map<TrackedPeriod, List<LeaderboardEntry>>> gameTops = new HashMap<>();
+    private static final Map<TrackedPeriod, Leaderboard> periodTops = new HashMap<>();
+    private static final Map<Game, Map<TrackedPeriod, Leaderboard>> gameTops = new HashMap<>();
 
-    // Maintain a constant cache of all player's total points for use in placeholders and
-    // challenges.
-    private static final Map<UUID, Integer> cachedTotalPoints = new HashMap<>();
-
-    public static boolean pointsUpdated = false;
-
-    public static void loadTotalPoints(UUID uuid) {
-        ChatGameDB.getPlayerManager().getAsync(uuid, record -> {
-            cachedTotalPoints.put(uuid, record.getPoints());
-        });
-    }
-
-    public static void unload(UUID uuid) {
-        cachedTotalPoints.remove(uuid);
-    }
-
-    public static int getTotalCachedPoints(UUID uuid) {
-        Integer cached = cachedTotalPoints.get(uuid);
-        return cached != null ? cached : 0;
-    }
-
-    public static void updateTotalCache(PlayerRecord playerRecord) {
-        cachedTotalPoints.put(playerRecord.getUUID(), playerRecord.getPoints());
-    }
+    public static boolean forceUpdate = false;
 
     /**
      * Update all leaderboard caches that contain an entry for the given player, updating leaderboard order accordingly.
      */
-    public static void updateCaches(PlayerRecord record, Game game) {
+    public static void updateCaches(PlayerRecord record, @Nullable Game game) {
         for (TrackedPeriod period : TrackedPeriod.values()) {
-            List<LeaderboardEntry> top = periodTops.get(period);
-            if (top != null) {
-                updateTop(top, record, null);
+            Leaderboard top = periodTops.get(period);
+            if (top == null) {
+                top = new Leaderboard(period);
             }
+
+            top.update(record);
+            periodTops.put(period, top);
         }
 
-        Map<TrackedPeriod, List<LeaderboardEntry>> gamePeriodTops = gameTops.get(game);
+        Map<TrackedPeriod, Leaderboard> gamePeriodTops = gameTops.get(game);
         if (gamePeriodTops != null) {
             for (TrackedPeriod period : TrackedPeriod.values()) {
-                List<LeaderboardEntry> top = gamePeriodTops.get(period);
-                if (top != null) {
-                    updateTop(top, record, game);
+                Leaderboard top = gamePeriodTops.get(period);
+                if (top == null) {
+                    top = new Leaderboard(period, game);
                 }
+
+                top.update(record);
             }
-        }
-    }
-
-    private static void updateTop(List<LeaderboardEntry> top, PlayerRecord record, @Nullable Game game) {
-        boolean updated = false;
-
-        for (LeaderboardEntry entry : top) {
-            if (entry.uuid().equals(record.getUUID())) {
-                updated = true;
-                if (game != null) {
-                    entry.setPoints(record.getPoints(game, entry.period()));
-                } else {
-                    entry.setPoints(record.getPoints(entry.period()));
-                }
-                break;
-            }
-        }
-
-        if (updated) {
-            sortLeaderboard(top);
         }
     }
 
     @NotNull
-    public static List<LeaderboardEntry> getCachedTop(TrackedPeriod stat) {
-        List<LeaderboardEntry> top = periodTops.get(stat);
+    public static Leaderboard getCachedTop(TrackedPeriod period) {
+        Leaderboard top = periodTops.get(period);
         if (top == null) {
-            top = new LinkedList<>();
+            top = new Leaderboard(period);
         }
         return top;
     }
 
     @NotNull
-    public static List<LeaderboardEntry> getCachedTop(Game game) {
+    public static Leaderboard getCachedTop(Game game) {
         return getCachedTop(TrackedPeriod.TOTAL, game);
     }
 
     @NotNull
-    public static List<LeaderboardEntry> getCachedTop(TrackedPeriod period, Game game) {
+    public static Leaderboard getCachedTop(TrackedPeriod period, Game game) {
         if (game == null) {
             return getCachedTop(period);
         }
-        Map<TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
+        Map<TrackedPeriod, Leaderboard> gamePeriods = gameTops.get(game);
         if (gamePeriods == null) {
             gamePeriods = new HashMap<>();
         }
 
-        List<LeaderboardEntry> top = gamePeriods.get(period);
+        Leaderboard top = gamePeriods.get(period);
         if (top == null) {
-            top = new LinkedList<>();
+            top = new Leaderboard(period, game);
         }
         return top;
     }
@@ -131,8 +93,8 @@ public final class StatsManager {
         }
     }
 
-    public static List<LeaderboardEntry> recalculate(TrackedPeriod period) {
-        List<LeaderboardEntry> topList = new LinkedList<>();
+    public static Leaderboard recalculate(TrackedPeriod period) {
+        Leaderboard leaderboard = new Leaderboard(period);
 
         String query =
                 "SELECT " +
@@ -142,7 +104,7 @@ public final class StatsManager {
                 "FROM " + ChatGameDB.statsTable.getName() + " AS s " +
                 "JOIN " + ChatGameDB.playerTable.getName() + " AS p " +
                     "ON s." + ChatGameDB.uuidField.getFieldName() + " = p." + ChatGameDB.uuidField.getFieldName() + " " +
-
+                    "AND s." + period.field.getFieldName() + " != 0 " +
                 "GROUP BY s." + ChatGameDB.uuidField.getFieldName() + " " +
                 "ORDER BY " + TOTAL_POINTS_NAME + " DESC " +
                 "LIMIT " + topListSize
@@ -155,41 +117,23 @@ public final class StatsManager {
             selected = db.select(statement);
         } catch (SQLException e) {
             e.printStackTrace();
-            return topList;
+            return leaderboard;
         }
 
         for (WbsRecord record : selected) {
-            LeaderboardEntry entry = new LeaderboardEntry(record, period);
-            topList.add(entry);
+            LeaderboardEntry entry = new LeaderboardEntry(record, period, null);
+            leaderboard.add(entry);
         }
 
-        sortLeaderboard(topList);
+        leaderboard.sort();
 
-        periodTops.put(period, topList);
-        return topList;
+        periodTops.put(period, leaderboard);
+        return leaderboard;
     }
 
-    private static void sortLeaderboard(List<LeaderboardEntry> topList) {
-        topList.sort(Comparator.comparing(LeaderboardEntry::points).reversed());
 
-        int position = -1;
-        int sharedPosition = 1;
-        int currentPoints = Integer.MIN_VALUE;
-        for (LeaderboardEntry entry : topList) {
-            if (entry.points() != currentPoints) {
-                position += sharedPosition;
-                sharedPosition = 1;
-            } else {
-                sharedPosition++;
-            }
-
-            entry.setPosition(position);
-            currentPoints = entry.points();
-        }
-    }
-
-    public static List<LeaderboardEntry> recalculate(@NotNull TrackedPeriod period, @NotNull Game game) {
-        List<LeaderboardEntry> topList = new LinkedList<>();
+    public static Leaderboard recalculate(@NotNull TrackedPeriod period, @NotNull Game game) {
+        Leaderboard leaderboard = new Leaderboard(period, game);
 
         String query =
                 "SELECT " +
@@ -199,6 +143,7 @@ public final class StatsManager {
                 "FROM " + ChatGameDB.statsTable.getName() + " AS s " +
                 "JOIN " + ChatGameDB.playerTable.getName() + " AS p " +
                         "ON s." + ChatGameDB.uuidField.getFieldName() + " = p." + ChatGameDB.uuidField.getFieldName() + " " +
+                        "AND s." + period.field.getFieldName() + " != 0 " +
 
                 "WHERE s." + ChatGameDB.gameField.getFieldName() + " = ? " +
                 "ORDER BY " + TOTAL_POINTS_NAME + " DESC " +
@@ -212,40 +157,41 @@ public final class StatsManager {
             statement.setString(1, game.getGameName());
             selected = db.select(statement);
         } catch (SQLException e) {
+            WbsChatGame.getInstance().logger.severe("Failed to select from ");
             e.printStackTrace();
-            return topList;
+            return leaderboard;
         }
 
         for (WbsRecord record : selected) {
-            LeaderboardEntry entry = new LeaderboardEntry(record, period);
-            topList.add(entry);
+            LeaderboardEntry entry = new LeaderboardEntry(record, period, game);
+            leaderboard.add(entry);
         }
 
-        sortLeaderboard(topList);
+        leaderboard.sort();
 
-        Map<TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
+        Map<TrackedPeriod, Leaderboard> gamePeriods = gameTops.get(game);
         if (gamePeriods == null) {
             gamePeriods = new HashMap<>();
         }
-        gamePeriods.put(period, topList);
+        gamePeriods.put(period, leaderboard);
         gameTops.put(game, gamePeriods);
-        return topList;
+        return leaderboard;
     }
 
-    public static List<LeaderboardEntry> getTop(TrackedPeriod period) {
-        List<LeaderboardEntry> top = periodTops.get(period);
+    public static Leaderboard getTop(TrackedPeriod period) {
+        Leaderboard top = periodTops.get(period);
 
-        if (top != null && !pointsUpdated) {
+        if (top != null && !forceUpdate) {
             return top;
         }
 
         return recalculate(period);
     }
 
-    public static int getTopAsync(TrackedPeriod period, Consumer<List<LeaderboardEntry>> callback) {
-        List<LeaderboardEntry> top = periodTops.get(period);
+    public static int getTopAsync(TrackedPeriod period, Consumer<Leaderboard> callback) {
+        Leaderboard top = periodTops.get(period);
 
-        if (top != null && !pointsUpdated) {
+        if (top != null && !forceUpdate) {
             callback.accept(top);
             return -1;
         }
@@ -256,17 +202,17 @@ public final class StatsManager {
         );
     }
 
-    public static List<LeaderboardEntry> getTop(Game game) {
+    public static Leaderboard getTop(Game game) {
         return getTop(TrackedPeriod.TOTAL, game);
     }
 
-    public static List<LeaderboardEntry> getTop(TrackedPeriod period, Game game) {
-        Map<TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
+    public static Leaderboard getTop(TrackedPeriod period, Game game) {
+        Map<TrackedPeriod, Leaderboard> gamePeriods = gameTops.get(game);
 
         if (gamePeriods != null) {
-            List<LeaderboardEntry> top = gamePeriods.get(period);
+            Leaderboard top = gamePeriods.get(period);
 
-            if (top != null && !pointsUpdated) {
+            if (top != null && !forceUpdate) {
                 return top;
             }
         }
@@ -274,17 +220,17 @@ public final class StatsManager {
         return recalculate(period);
     }
 
-    public static int getTopAsync(Game game, Consumer<List<LeaderboardEntry>> callback) {
+    public static int getTopAsync(Game game, Consumer<Leaderboard> callback) {
         return getTopAsync(TrackedPeriod.TOTAL, game, callback);
     }
 
-    public static int getTopAsync(TrackedPeriod period, Game game, Consumer<List<LeaderboardEntry>> callback) {
-        Map<TrackedPeriod, List<LeaderboardEntry>> gamePeriods = gameTops.get(game);
+    public static int getTopAsync(TrackedPeriod period, Game game, Consumer<Leaderboard> callback) {
+        Map<TrackedPeriod, Leaderboard> gamePeriods = gameTops.get(game);
 
         if (gamePeriods != null) {
-            List<LeaderboardEntry> top = gamePeriods.get(period);
+            Leaderboard top = gamePeriods.get(period);
 
-            if (top != null && !pointsUpdated) {
+            if (top != null && !forceUpdate) {
                 callback.accept(top);
                 return -1;
             }

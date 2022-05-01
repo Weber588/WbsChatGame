@@ -32,7 +32,6 @@ public class GameStats implements RecordProducer {
     }
 
     public void addPoints(int add) {
-        StatsManager.pointsUpdated = true;
         for (TrackedPeriod period : TrackedPeriod.values()) {
             int current = points.getOrDefault(period, 0);
             points.put(period, current + add);
