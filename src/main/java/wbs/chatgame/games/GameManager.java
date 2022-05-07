@@ -57,6 +57,11 @@ public class GameManager {
             gameClass = game.getClass();
         }
 
+        return getRegistrationId(gameClass);
+    }
+
+    @Nullable
+    public static String getRegistrationId(Class<? extends Game> gameClass) {
         for (String id : registeredGames.keySet()) {
             if (registeredGames.get(id).equals(gameClass)) {
                 return id;

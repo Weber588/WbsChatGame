@@ -4,14 +4,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import wbs.chatgame.WbsChatGame;
 import wbs.utils.util.database.WbsRecord;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.*;
-import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 public final class ResetManager {
     private ResetManager() {}
@@ -79,7 +74,7 @@ public final class ResetManager {
 
     public static void reset(TrackedPeriod period) {
         String query = "UPDATE " + ChatGameDB.statsTable.getName() + " " +
-                "SET " + period.field.getFieldName() + " = 0";
+                "SET " + period.pointsField.getFieldName() + " = 0";
 
         boolean updated = ChatGameDB.getDatabase().queryWithoutReturns(query);
         if (updated) {
@@ -96,16 +91,27 @@ public final class ResetManager {
             lastResetTime.setField(ChatGameDB.dateKeyField, getDateKey(period));
             lastResetTime.setField(ChatGameDB.dateField, LocalDateTime.now().atZone(ZoneId.systemDefault()).toEpochSecond());
 
+            int escape = 0;
+            int escapeThreshold = 3;
             // Upsert since we don't know if this is the first reset or not
-            lastResetTime.upsert(ChatGameDB.datesTable);
-
-            WbsChatGame.getInstance().logger.info("Stats have been reset in period " + period + "!");
-            LocalDateTime nextReset = period.getNextPeriodStart();
-            if (nextReset != null) {
-                scheduleReset(period, nextReset);
+            while (!lastResetTime.upsert(ChatGameDB.datesTable) && escape < escapeThreshold) {
+                // TODO: Make this wait longer between delays in case it's failing for a non-lockout reason?
+                escape++;
+                WbsChatGame.getInstance().logger.severe("Failed to save " + period + "! Trying again...");
             }
+
+            if (escape >= escapeThreshold) {
+                WbsChatGame.getInstance().logger.severe("Stats failed to reset in period " + period + "! Please report this issue.");
+            } else {
+                WbsChatGame.getInstance().logger.info("Stats have been reset in period " + period + "!");
+                LocalDateTime nextReset = period.getNextPeriodStart();
+                if (nextReset != null) {
+                    scheduleReset(period, nextReset);
+                }
+            }
+
         } else {
-            WbsChatGame.getInstance().logger.severe("Stats failed to reset in period " + period + "!");
+            WbsChatGame.getInstance().logger.severe("Stats failed to reset in period " + period + "! Please report this issue.");
         }
     }
 }

@@ -100,11 +100,11 @@ public final class StatsManager {
                 "SELECT " +
                         "p." + ChatGameDB.uuidField.getFieldName() + ", " +
                         "p." + ChatGameDB.nameField.getFieldName() + ", " +
-                        "SUM(s." + period.field.getFieldName() + ") AS " + TOTAL_POINTS_NAME + " " +
+                        "SUM(s." + period.pointsField.getFieldName() + ") AS " + TOTAL_POINTS_NAME + " " +
                 "FROM " + ChatGameDB.statsTable.getName() + " AS s " +
                 "JOIN " + ChatGameDB.playerTable.getName() + " AS p " +
                     "ON s." + ChatGameDB.uuidField.getFieldName() + " = p." + ChatGameDB.uuidField.getFieldName() + " " +
-                    "AND s." + period.field.getFieldName() + " != 0 " +
+                    "AND s." + period.pointsField.getFieldName() + " != 0 " +
                 "GROUP BY s." + ChatGameDB.uuidField.getFieldName() + " " +
                 "ORDER BY " + TOTAL_POINTS_NAME + " DESC " +
                 "LIMIT " + topListSize
@@ -139,11 +139,11 @@ public final class StatsManager {
                 "SELECT " +
                         "p." + ChatGameDB.uuidField.getFieldName() + ", " +
                         "p." + ChatGameDB.nameField.getFieldName() + ", " +
-                        "s." + period.field.getFieldName() + " AS " + TOTAL_POINTS_NAME + " " +
+                        "s." + period.pointsField.getFieldName() + " AS " + TOTAL_POINTS_NAME + " " +
                 "FROM " + ChatGameDB.statsTable.getName() + " AS s " +
                 "JOIN " + ChatGameDB.playerTable.getName() + " AS p " +
                         "ON s." + ChatGameDB.uuidField.getFieldName() + " = p." + ChatGameDB.uuidField.getFieldName() + " " +
-                        "AND s." + period.field.getFieldName() + " != 0 " +
+                        "AND s." + period.pointsField.getFieldName() + " != 0 " +
 
                 "WHERE s." + ChatGameDB.gameField.getFieldName() + " = ? " +
                 "ORDER BY " + TOTAL_POINTS_NAME + " DESC " +

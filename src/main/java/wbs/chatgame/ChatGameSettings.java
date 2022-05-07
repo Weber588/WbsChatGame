@@ -2,6 +2,8 @@ package wbs.chatgame;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import wbs.chatgame.data.ChatGameDB;
+import wbs.chatgame.data.LegacyDataAdapter;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
 import wbs.chatgame.games.word.generator.GeneratorManager;
@@ -43,6 +45,10 @@ public class ChatGameSettings extends WbsSettings {
             listenByDefault = settingsSection.getBoolean("listen-by-default", listenByDefault);
             debugMode = settingsSection.getBoolean("debug-mode", debugMode);
 
+            ChatGameDB.statsTable.setDebugMode(debugMode);
+            ChatGameDB.playerTable.setDebugMode(debugMode);
+            ChatGameDB.datesTable.setDebugMode(debugMode);
+
             loadResetSettings(settingsSection, settingsDir);
 
             GameController.roundDelay = (int) (settingsSection.getDouble("seconds-between-rounds", 180) * 20);
@@ -51,6 +57,11 @@ public class ChatGameSettings extends WbsSettings {
             if (ratesSection != null) {
                 ratesSet = true;
                 loadRates(ratesSection);
+            }
+
+            boolean loadLegacyData = settingsSection.getBoolean("load-legacy-data", false);
+            if (loadLegacyData) {
+                LegacyDataAdapter.loadLegacyData();
             }
         }
 

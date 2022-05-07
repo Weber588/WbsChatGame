@@ -53,7 +53,11 @@ public class PlayerManager extends AbstractDataManager<PlayerRecord, UUID> {
 
     @Override
     public void save(Collection<PlayerRecord> toInsert) {
-        if (toInsert.isEmpty()) return;
+        saveWithResult(toInsert);
+    }
+
+    public boolean saveWithResult(Collection<PlayerRecord> toInsert) {
+        if (toInsert.isEmpty()) return true;
         super.save(toInsert);
 
         List<WbsRecord> statsRecords = new LinkedList<>();
@@ -62,7 +66,7 @@ public class PlayerManager extends AbstractDataManager<PlayerRecord, UUID> {
             statsRecords.addAll(record.getStatsRecords());
         }
 
-        ChatGameDB.statsTable.upsert(statsRecords);
+        return ChatGameDB.statsTable.upsert(statsRecords);
     }
 
     @NotNull

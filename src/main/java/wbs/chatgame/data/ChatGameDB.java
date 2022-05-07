@@ -87,7 +87,8 @@ public final class ChatGameDB {
      */
     private static void addNewFields() {
         for (TrackedPeriod period : TrackedPeriod.values()) {
-            statsTable.addFieldIfNotExists(period.field);
+            statsTable.addFieldIfNotExists(period.pointsField);
+            statsTable.addFieldIfNotExists(period.speedField);
         }
     }
 

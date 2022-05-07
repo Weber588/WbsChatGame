@@ -13,6 +13,7 @@ public class GameStats implements RecordProducer {
     private final String gameId;
 
     private final Map<TrackedPeriod, Integer> points = new HashMap<>();
+    private final Map<TrackedPeriod, Double> speed = new HashMap<>();
 
     public GameStats(PlayerRecord player, String gameId) {
         this.uuid = player.getUUID();
@@ -24,9 +25,14 @@ public class GameStats implements RecordProducer {
         gameId = record.getValue(ChatGameDB.gameField, String.class);
 
         for (TrackedPeriod period : TrackedPeriod.values()) {
-            Integer current = record.getValue(period.field, Integer.class);
+            Integer current = record.getValue(period.pointsField, Integer.class);
             if (current != null) {
                 points.put(period, current);
+            }
+
+            Double currentSpeed = record.getValue(period.speedField, Double.class);
+            if (currentSpeed != null) {
+                speed.put(period, currentSpeed);
             }
         }
     }
@@ -51,6 +57,22 @@ public class GameStats implements RecordProducer {
         return pointsVal == null ? 0 : pointsVal;
     }
 
+    public void registerTime(double speed) {
+        for (TrackedPeriod period : TrackedPeriod.values()) {
+            double current = this.speed.getOrDefault(period, Double.MAX_VALUE);
+            this.speed.put(period, Math.min(speed, current));
+        }
+    }
+
+    public void registerTime(TrackedPeriod period, double speed) {
+        this.speed.put(period, speed);
+    }
+
+    public double getFastestTime(TrackedPeriod period) {
+        Double pointsVal = speed.get(period);
+        return pointsVal == null ? Double.MAX_VALUE : pointsVal;
+    }
+
     public String getGameId() {
         return gameId;
     }
@@ -67,8 +89,8 @@ public class GameStats implements RecordProducer {
         record.setField(ChatGameDB.gameField, gameId);
 
         for (TrackedPeriod period : TrackedPeriod.values()) {
-            Integer pointsVal = points.get(period);
-            record.setField(period.field, pointsVal == null ? 0 : pointsVal);
+            record.setField(period.pointsField, getPoints(period));
+            record.setField(period.speedField, getFastestTime(period));
         }
 
         return record;

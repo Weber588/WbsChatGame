@@ -197,11 +197,16 @@ public class GameController {
         currentGame.endWinner(winner, guess);
         lastAnswer = guess;
 
+        Duration duration = Duration.between(phaseStartTime, LocalDateTime.now());
+        long millis = duration.toMillis();
+        double speed = millis / (double) 1000;
+
         onRoundEnd(true);
 
         ChatGameDB.getPlayerManager().getAsync(winner.getUniqueId(), record -> {
             RewardManager.giveRewards(record, points);
             record.addPoints(points, finalGame);
+            record.registerTime(speed, finalGame);
 
             // TODO: Make it configurable, to save as batches or save after each win.
             ChatGameDB.getPlayerManager().saveAsync(Collections.singletonList(record));

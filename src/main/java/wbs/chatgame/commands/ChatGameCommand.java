@@ -11,6 +11,7 @@ public class ChatGameCommand extends WbsCommand {
         String perm = "chatgame";
 
         addSubcommand(new StatsCommand(plugin), perm + ".stats");
+        addSubcommand(new BreakdownCommand(plugin), perm + ".breakdown");
         addSubcommand(new CurrentCommand(plugin), perm + ".current");
         addSubcommand(new IgnoreCommand(plugin), perm + ".ignore");
         addSubcommand(new TopCommand(plugin), perm + ".top");

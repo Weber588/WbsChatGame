@@ -73,6 +73,11 @@ public class PlayerRecord implements RecordProducer {
     public String getName() {
         return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public UUID getUUID() {
         return uuid;
     }
@@ -115,6 +120,31 @@ public class PlayerRecord implements RecordProducer {
 
     public int getPoints(@NotNull Game game, TrackedPeriod period) {
         return getStats(game).getPoints(period);
+    }
+
+    public void registerTime(double speed, Game game) {
+        getStats(game).registerTime(speed);
+        StatsManager.updateCaches(this, game);
+    }
+
+    public double getFastestTime() {
+        return getFastestTime(TrackedPeriod.TOTAL);
+    }
+
+    public double getFastestTime(TrackedPeriod period) {
+        double fastest = Double.MAX_VALUE;
+        for (GameStats stat : stats.values()) {
+            fastest = Math.min(stat.getFastestTime(period), fastest);
+        }
+        return fastest;
+    }
+
+    public double getFastestTime(@NotNull Game game, TrackedPeriod period) {
+        return getStats(game).getFastestTime(period);
+    }
+
+    public double getFastestTime(@NotNull Game game) {
+        return getStats(game).getFastestTime(TrackedPeriod.TOTAL);
     }
 
     public void addStat(GameStats stats) {

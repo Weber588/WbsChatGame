@@ -8,22 +8,20 @@ import wbs.utils.util.database.WbsFieldType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.IsoFields;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Calendar;
 import java.util.Objects;
-import java.util.TimeZone;
 
 public enum TrackedPeriod {
     TOTAL,
     MONTHLY,
     WEEKLY;
 
-    public final WbsField field;
+    public final WbsField pointsField;
+    public final WbsField speedField;
 
     TrackedPeriod() {
-        field = new WbsField(toString().toLowerCase(), WbsFieldType.INT, 0);
+        pointsField = new WbsField(toString().toLowerCase(), WbsFieldType.INT, 0);
+        speedField = new WbsField(toString().toLowerCase() + "_speed", WbsFieldType.DOUBLE, Double.MAX_VALUE);
     }
 
     public boolean inSamePeriod(LocalDateTime date1, LocalDateTime date2) {
