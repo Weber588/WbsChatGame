@@ -3,7 +3,6 @@ package wbs.chatgame.games.math;
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.math.operators.Operator;
-import wbs.chatgame.games.math.operators.OperatorManager;
 
 import java.util.Collection;
 import java.util.LinkedList;

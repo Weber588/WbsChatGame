@@ -19,8 +19,6 @@ public final class ChatGameDB {
 
     private ChatGameDB() {}
 
-    private static WbsChatGame plugin;
-
     private static WbsDatabase database;
     public static WbsDatabase getDatabase() {
         return database;
@@ -44,9 +42,7 @@ public final class ChatGameDB {
     public static final WbsField dateField = new WbsField("epoch_second", WbsFieldType.LONG);
 
     public static void setupDatabase() {
-
-
-        plugin = WbsChatGame.getInstance();
+        WbsChatGame plugin = WbsChatGame.getInstance();
         database = new WbsDatabase(plugin, "data");
 
         // Player table

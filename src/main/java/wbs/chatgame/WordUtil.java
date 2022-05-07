@@ -3,7 +3,6 @@ package wbs.chatgame;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
 
 public final class WordUtil {
     private WordUtil() {}

@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import wbs.chatgame.GameController;
 import wbs.chatgame.games.Game;
-import wbs.chatgame.games.challenges.Challenge;
 import wbs.utils.util.plugin.WbsMessage;
 
 public class RevealGame extends WordGame {
+    @SuppressWarnings("unused") // Accessed reflectively
     public RevealGame(String gameName, ConfigurationSection section, String directory) {
         super(gameName, section, directory);
 

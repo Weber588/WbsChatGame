@@ -19,7 +19,7 @@ import java.util.List;
 
 public class GuessCommand extends WbsMessenger implements TabExecutor {
 
-    private WbsChatGame plugin;
+    private final WbsChatGame plugin;
     public GuessCommand(WbsChatGame plugin) {
         super(plugin);
         this.plugin = plugin;

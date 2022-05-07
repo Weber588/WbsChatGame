@@ -133,8 +133,6 @@ public final class EquationUtils {
 
                 int subindex = index + 1;
 
-
-
                 boolean foundEndOfNumber = false;
                 boolean foundDecimalPoint = false;
                 while (subindex < equationString.length() && !foundEndOfNumber) {
@@ -153,10 +151,6 @@ public final class EquationUtils {
                 }
 
                 index += valueString.length() - 1;
-
-
-
-
 
                 double value;
                 try {
@@ -264,7 +258,7 @@ public final class EquationUtils {
             toReturn.addValue(value);
         }
 
-        debug("Generated equation: " + toReturn.toString());
+        debug("Generated equation: " + toReturn);
 
         return toReturn;
     }

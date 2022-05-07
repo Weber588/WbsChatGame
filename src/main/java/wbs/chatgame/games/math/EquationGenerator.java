@@ -5,6 +5,7 @@ import wbs.chatgame.ChatGameSettings;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.math.operators.Operator;
 import wbs.chatgame.games.math.operators.OperatorManager;
+import wbs.chatgame.games.math.variables.RandomNumVariable;
 import wbs.chatgame.games.math.variables.StaticNumVariable;
 import wbs.chatgame.games.math.variables.StringVariable;
 import wbs.chatgame.games.math.variables.Variable;

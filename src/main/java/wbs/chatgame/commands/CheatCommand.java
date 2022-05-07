@@ -3,7 +3,6 @@ package wbs.chatgame.commands;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.GameController;
-import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.Game;
 import wbs.utils.util.commands.WbsSubcommand;
 import wbs.utils.util.plugin.WbsPlugin;

@@ -1,9 +1,9 @@
 package wbs.chatgame.games.word.generator;
 
 import org.bukkit.Material;
-import wbs.utils.util.WbsEnums;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class BlockWordGenerator extends MaterialWordGenerator {

@@ -6,7 +6,6 @@ import wbs.chatgame.games.Game;
 import wbs.chatgame.games.word.QuickTypeGame;
 import wbs.chatgame.games.word.Word;
 import wbs.utils.util.plugin.WbsMessage;
-import wbs.utils.util.plugin.WbsMessageBuilder;
 
 import static wbs.chatgame.WordUtil.reverseString;
 

@@ -1,7 +1,5 @@
 package wbs.chatgame.games;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -30,10 +28,6 @@ public class GameManager {
 
     private static final Map<String, Game> games = new HashMap<>();
     private static final Map<Game, Double> chances = new HashMap<>();
-    /**
-     * A map of a game's ID to a collection of it's challenges
-     */
-    private static final Multimap<String, Game> challenges = HashMultimap.create();
 
     public static void registerNativeGames() {
         registerGame("unscramble", UnscrambleGame.class);

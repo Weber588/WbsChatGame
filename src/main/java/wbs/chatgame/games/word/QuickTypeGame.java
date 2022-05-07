@@ -11,6 +11,7 @@ import wbs.chatgame.games.challenges.QuickTypeHover;
 import wbs.utils.util.plugin.WbsMessage;
 
 public class QuickTypeGame extends WordGame {
+    @SuppressWarnings("unused") // Accessed reflectively
     public QuickTypeGame(String gameName, ConfigurationSection section, String directory) {
         super(gameName, section, directory);
 

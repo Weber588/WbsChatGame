@@ -1,18 +1,18 @@
 package wbs.chatgame.games.math.functions;
 
-import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.WordUtil;
-import wbs.chatgame.games.Game;
 import wbs.chatgame.games.math.ConditionalPointsCalculator;
 import wbs.chatgame.games.math.Solvable;
-import wbs.chatgame.games.math.operators.Operator;
 import wbs.utils.exceptions.InvalidConfigurationException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class FunctionManager {
     private FunctionManager() {}

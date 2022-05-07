@@ -10,8 +10,6 @@ import wbs.chatgame.games.GameManager;
 import wbs.utils.util.WbsEnums;
 import wbs.utils.util.pluginhooks.PlaceholderAPIWrapper;
 
-import java.util.List;
-
 public class PlaceholderManager {
     private PlaceholderManager() {}
 

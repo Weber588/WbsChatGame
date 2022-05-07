@@ -9,7 +9,6 @@ import wbs.chatgame.data.ChatGameDB;
 import wbs.chatgame.data.ResetManager;
 import wbs.chatgame.data.StatsManager;
 import wbs.chatgame.games.GameManager;
-import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.chatgame.listeners.ChatGuessListener;
 import wbs.chatgame.listeners.JoinListeners;
 import wbs.utils.util.plugin.WbsPlugin;

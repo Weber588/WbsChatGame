@@ -1,7 +1,6 @@
 package wbs.chatgame.games.math;
 
 import wbs.utils.util.string.RomanNumerals;
-import wbs.utils.util.string.WbsStrings;
 
 /**
  * Wrapper class for a double (Solution) to make equations easier to solve

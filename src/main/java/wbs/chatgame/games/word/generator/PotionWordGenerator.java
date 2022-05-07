@@ -1,7 +1,6 @@
 package wbs.chatgame.games.word.generator;
 
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionEffectTypeWrapper;
 import wbs.utils.util.string.WbsStrings;
 
 import java.util.Arrays;
@@ -15,6 +14,7 @@ public class PotionWordGenerator extends SimpleWordGenerator {
     private final static Map<PotionEffectType, String> potionNameOverrides = new HashMap<>();
 
     static {
+        // TODO: Move this to a config?
         potionNameOverrides.put(PotionEffectType.SLOW, "SLOWNESS");
         potionNameOverrides.put(PotionEffectType.FAST_DIGGING, "HASTE");
         potionNameOverrides.put(PotionEffectType.SLOW_DIGGING, "MINING_FATIGUE");

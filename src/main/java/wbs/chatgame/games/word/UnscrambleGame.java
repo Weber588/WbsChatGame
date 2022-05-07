@@ -7,10 +7,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import wbs.chatgame.GameController;
 import wbs.chatgame.WordUtil;
 import wbs.chatgame.games.Game;
-import wbs.chatgame.games.challenges.Challenge;
 import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.chatgame.games.challenges.UnscrambleOnlinePlayer;
-import wbs.chatgame.games.math.ConditionalPointsCalculator;
 import wbs.chatgame.games.word.generator.GeneratedWord;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsEnums;
@@ -22,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UnscrambleGame extends WordGame {
+    @SuppressWarnings("unused") // Accessed reflectively
     public UnscrambleGame(String gameName, ConfigurationSection section, String directory) {
         super(gameName, section, directory);
 

@@ -14,19 +14,17 @@ import java.util.logging.Logger;
 public final class RewardManager {
     private RewardManager() {}
 
-    private static WbsChatGame plugin;
     private static ChatGameSettings settings;
-    private static Logger logger;
 
-    public static Map<String, Reward> rewards = new HashMap<>();
+    public static final Map<String, Reward> rewards = new HashMap<>();
     public static String rewardMessage = "Configure this message in &hrewards.yml";
 
     public static boolean doRewards = false;
 
     public static void reloadRewards(YamlConfiguration rewardsConfig) {
-        plugin = WbsChatGame.getInstance();
+        WbsChatGame plugin = WbsChatGame.getInstance();
         settings = plugin.settings;
-        logger = plugin.logger;
+        Logger logger = plugin.logger;
 
         String directory = "rewards.yml";
 

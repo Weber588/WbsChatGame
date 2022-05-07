@@ -22,16 +22,12 @@ public class ChatGameSettings extends WbsSettings {
         super(plugin);
     }
 
-    private YamlConfiguration config = null;
-    private YamlConfiguration generatorConfig = null;
-    private YamlConfiguration rewardsConfig = null;
-
     @Override
     public void reload() {
         errors.clear();
-        config = loadDefaultConfig("config.yml");
-        generatorConfig = this.loadConfigSafely(this.genConfig("generators.yml"));
-        rewardsConfig = this.loadConfigSafely(this.genConfig("rewards.yml"));
+        YamlConfiguration config = loadDefaultConfig("config.yml");
+        YamlConfiguration generatorConfig = this.loadConfigSafely(this.genConfig("generators.yml"));
+        YamlConfiguration rewardsConfig = this.loadConfigSafely(this.genConfig("rewards.yml"));
 
         GameManager.clear();
         loadGames();

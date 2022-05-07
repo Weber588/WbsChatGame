@@ -6,7 +6,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import wbs.chatgame.GameController;
 import wbs.chatgame.data.ChatGameDB;
-import wbs.chatgame.data.StatsManager;
 
 @SuppressWarnings("unused")
 public class JoinListeners implements Listener {

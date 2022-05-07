@@ -10,7 +10,6 @@ import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Fire;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.FurnaceRecipe;
-import org.bukkit.potion.PotionType;
 
 import java.util.LinkedList;
 import java.util.List;

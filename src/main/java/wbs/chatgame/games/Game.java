@@ -1,8 +1,5 @@
 package wbs.chatgame.games;
 
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -17,9 +14,11 @@ import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsMath;
 import wbs.utils.util.plugin.WbsMessage;
 import wbs.utils.util.plugin.WbsMessageBuilder;
-import wbs.utils.util.plugin.WbsPlugin;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class Game {
@@ -72,7 +71,7 @@ public abstract class Game {
     /** Duration in ticks */
     private final int duration;
 
-    private List<String> challengeHistory = new LinkedList<>();
+    private final List<String> challengeHistory = new LinkedList<>();
     /** A map of challenge ids to the chance */
     private final Map<String, Double> challengesWithChance = new HashMap<>();
 

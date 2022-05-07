@@ -1,12 +1,14 @@
 package wbs.chatgame.games.challenges;
 
 import org.jetbrains.annotations.Nullable;
-import wbs.chatgame.data.*;
+import wbs.chatgame.data.Leaderboard;
+import wbs.chatgame.data.LeaderboardEntry;
+import wbs.chatgame.data.StatsManager;
+import wbs.chatgame.data.TrackedPeriod;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.trivia.TriviaGame;
 import wbs.chatgame.games.trivia.TriviaQuestion;
 
-import java.util.List;
 import java.util.Random;
 
 public class TriviaPosition extends TriviaQuestionChallenge {

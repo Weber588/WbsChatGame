@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.GameController;
 import wbs.chatgame.games.Game;
-import wbs.chatgame.games.challenges.Challenge;
 import wbs.chatgame.games.math.ConditionalPointsCalculator;
 import wbs.chatgame.games.math.EquationGenerator;
 import wbs.chatgame.games.math.OperationSet;

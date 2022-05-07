@@ -3,22 +3,18 @@ package wbs.chatgame.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wbs.chatgame.data.ChatGameDB;
 import wbs.chatgame.data.PlayerRecord;
 import wbs.chatgame.data.TrackedPeriod;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
 import wbs.utils.util.WbsEnums;
 import wbs.utils.util.WbsMath;
-import wbs.utils.util.commands.WbsSubcommand;
 import wbs.utils.util.plugin.WbsPlugin;
 import wbs.utils.util.string.WbsStrings;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class StatsCommand extends AbstractLookupCommand {
