@@ -28,8 +28,17 @@ public abstract class Game {
         settings = plugin.settings;
         this.gameName = gameName;
 
-        duration = (int) (section.getDouble("duration", 120) * 20);
-        challengeChance = section.getDouble("challenge-chance", 0);
+        int defaultDuration = 120 * 20;
+        int duration = (int) (section.getDouble("duration", defaultDuration / 20.0) * 20);
+
+        if (duration <= 0) {
+            settings.logError("Invalid duration: " + duration + ". Duration must be positive.", directory + "/duration");
+            duration = defaultDuration;
+        }
+
+        this.duration = duration;
+
+        challengeChance = WbsMath.clamp(0, 100, section.getDouble("challenge-chance", 0));
 
         ConfigurationSection challengesSection = section.getConfigurationSection("challenges");
         if (challengesSection != null) {

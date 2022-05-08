@@ -180,6 +180,9 @@ public class GameController {
             return false;
         }
 
+        lastWinner = null;
+        lastAnswer = null;
+
         currentGame.endNoWinner();
 
         onRoundEnd(startNext);

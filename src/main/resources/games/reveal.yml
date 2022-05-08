@@ -10,6 +10,17 @@ reveal:
 
   duration-per-reveal: 30
 
+  # How much of the word should be revealed before the round ends?
+  # Set this to 100 to show as close to the word as possible before ending the round
+  # with no winner
+  percent-to-reveal: 75
+
+  # What percentage of the initial points should the last round be worth?
+  # Set this to 100 to make the score not change as more words are revealed
+  # Set this to 50 to make the final round be worth half the first
+  # Set this to 0 to make the score go all the way to 1 by the time the round ends (cannot become 0)
+  final-percent-of-points: 50
+
   # The chance to generate a word instead of using one from the
   # 'custom' list at the bottom of the file.
   # 100 = always generate, 0 = always use custom
