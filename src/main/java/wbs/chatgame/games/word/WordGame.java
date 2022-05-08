@@ -159,9 +159,11 @@ public abstract class WordGame extends Game {
         } else {
             String lastArg = options.get(options.size() - 1);
             int customPoints = Integer.MIN_VALUE;
-            try {
-                customPoints = Integer.parseInt(lastArg);
-            } catch (NumberFormatException ignored) {}
+            if (options.size() > 1) {
+                try {
+                    customPoints = Integer.parseInt(lastArg);
+                } catch (NumberFormatException ignored) {}
+            }
 
             String customWord;
             if (customPoints == Integer.MIN_VALUE) {
@@ -171,6 +173,7 @@ public abstract class WordGame extends Game {
                 customWord = String.join(" ", options.subList(0, options.size() - 1));
                 currentWord = new Word(customWord, customPoints, null);
             }
+            unformattedWord = currentWord.word;
         }
 
         currentPoints = currentWord.getPoints();
