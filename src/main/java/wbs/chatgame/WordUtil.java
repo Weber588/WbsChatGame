@@ -23,18 +23,31 @@ public final class WordUtil {
     }
 
     public static String scrambleString(String input) {
+        if (input.length() <= 1) {
+            return input;
+        }
+
         char[] letters = input.toCharArray();
+
+        boolean hasVariedCharacters = false;
+        char lastChar = letters[0];
 
         List<Character> lettersList = new ArrayList<>();
         for (char letter : letters) {
             lettersList.add(letter);
+            if (lastChar != letter) {
+                hasVariedCharacters = true;
+            }
         }
+
+        // The string is only one character - don't try shuffling
+        if (!hasVariedCharacters) {
+            return input;
+        }
+
         String output;
 
-        // If a word has n+2 spaces where n is the number of non-space characters, it will always have 2 spaces in a row.
-        int escape = 0;
         do {
-            escape++;
             Collections.shuffle(lettersList);
             int index = 0;
             for (char letter : lettersList) {
@@ -42,10 +55,7 @@ public final class WordUtil {
                 index++;
             }
             output = new String(letters);
-
-        } while ((output.contains("  ") || output.toLowerCase().equalsIgnoreCase(input)) && escape < 100);
-
-        // if escape is 100 here, it was likely impossible to make the string have no consecutive spaces, just return the string
+        } while (output.equals(input)); // Don't need an escape as we verified that it can be varied above
 
         return output;
     }

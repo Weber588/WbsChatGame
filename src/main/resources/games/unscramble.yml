@@ -62,10 +62,27 @@ unscramble:
     # to avoid confusion.
     random_player: 100
 
+  # Settings that affect how words are scrambled
+  scramble-settings:
+    # Should scrambling prevent 2 spaces in a row? (i.e. prevents "Flint And Steel" scrambling to "FlSee  tntlnAdi")
+    prevent-double-spaces: true
+    # Should spaces be prevented from appearing at the start & end of words? (i.e. prevent "Pink Dye" becoming " dyPknie")
+    prevent-spaces-on-ends: true
+
   # The chance to generate a word instead of using one from the
   # 'custom' list at the bottom of the file.
   # 100 = always generate, 0 = always use custom
   generation-chance: 98
+
+  # Words created by a generator are all lowercase by default, you can configure how
+  # capital letters are added here, to make it a bit easier to solve the unscramble.
+  # This only affects generated words - the formatting of custom words is unaffected.
+  generator-formatting:
+    # How many letters should a word have before the first letter (of the first word) is capitalized?
+    capitalize-first: 7
+
+    # How many letters should a word have before the first letter of ALL words is capitalized?
+    capitalize-all: 18
 
   # Word generators that use words from the game itself, so you don't need to
   # add a large amount of minecraft themed words.

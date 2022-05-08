@@ -14,6 +14,7 @@ import wbs.chatgame.games.word.generator.WordGenerator;
 import wbs.utils.exceptions.InvalidConfigurationException;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsMath;
+import wbs.utils.util.string.WbsStrings;
 
 import java.util.*;
 
@@ -21,7 +22,6 @@ public abstract class WordGame extends Game {
     public WordGame(String gameName, ConfigurationSection section, String directory) {
         super(gameName, section, directory);
 
-        generationChance = section.getDouble("generation-chance", 0);
         String pointsEquation = section.getString("points");
         if (pointsEquation != null) {
             pointsCalculator = new ConditionalPointsCalculator(new EquationGenerator(pointsEquation));
@@ -29,6 +29,13 @@ public abstract class WordGame extends Game {
             pointsCalculator = null;
         }
 
+        ConfigurationSection formattingSection = section.getConfigurationSection("generator-formatting");
+        if (formattingSection != null) {
+            capitalizeFirstThreshold = formattingSection.getInt("capitalize-first", capitalizeFirstThreshold);
+            capitalizeAllThreshold = formattingSection.getInt("capitalize-all", capitalizeAllThreshold);
+        }
+
+        generationChance = section.getDouble("generation-chance", 0);
         if (generationChance < 100) {
             for (String wordFormat : section.getStringList("custom")) {
                 String wordDirectory = directory + "/custom/" + wordFormat;
@@ -106,27 +113,30 @@ public abstract class WordGame extends Game {
     protected WordGame(WordGame copy) {
         super(copy);
 
-        generationChance = copy.generationChance;
-
         customWords.addAll(copy.customWords);
-        generators.putAll(copy.generators);
-
         history.addAll(copy.history);
+
+        generators.putAll(copy.generators);
+        generationChance = copy.generationChance;
+        capitalizeFirstThreshold = copy.capitalizeFirstThreshold;
+        capitalizeAllThreshold = copy.capitalizeAllThreshold;
 
         pointsCalculator = copy.pointsCalculator;
     }
 
     private final List<Word> customWords = new LinkedList<>();
-    private final Map<WordGenerator, Double> generators = new HashMap<>();
-
     // Track history to prevent repetition
     private final List<Word> history = new LinkedList<>();
 
+    private final Map<WordGenerator, Double> generators = new HashMap<>();
     private double generationChance;
+    private int capitalizeFirstThreshold = 0;
+    private int capitalizeAllThreshold = 0;
 
     private final ConditionalPointsCalculator pointsCalculator;
 
     private Word currentWord;
+    private String unformattedWord = null;
 
     @Override
     protected final Game start() {
@@ -169,7 +179,7 @@ public abstract class WordGame extends Game {
 
     @Override
     public List<String> getAnswers() {
-        return Collections.singletonList(currentWord.word);
+        return Collections.singletonList(unformattedWord);
     }
 
     protected Word getWord() {
@@ -179,6 +189,7 @@ public abstract class WordGame extends Game {
             word = generateWord();
         } else {
             word = getCustomWord();
+            unformattedWord = word.word;
         }
 
         return word;
@@ -209,7 +220,25 @@ public abstract class WordGame extends Game {
         GeneratedWord word = generator.getNext();
 
         int points = Math.max(1, calculatePoints(word.word) + generator.getPointsModifier());
-        word.setPoints(points);
+
+        unformattedWord = word.word;
+
+        GeneratedWord newWord = new GeneratedWord(formatWord(word.word), generator, word.getHint());
+        newWord.setPoints(points);
+
+        return newWord;
+    }
+
+    protected String formatWord(String word) {
+        word = word.toLowerCase();
+
+        if (word.length() >= capitalizeFirstThreshold) {
+            word = WbsStrings.capitalize(word);
+        }
+
+        if (word.length() >= capitalizeAllThreshold) {
+            word = WbsStrings.capitalizeAll(word);
+        }
 
         return word;
     }
@@ -248,12 +277,12 @@ public abstract class WordGame extends Game {
 
     @Override
     public void endWinner(Player player, String guess) {
-        GameController.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "! The answer was: &h" + currentWord.word);
+        GameController.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "! The answer was: &h" + unformattedWord);
     }
 
     @Override
     public void endNoWinner() {
-        GameController.broadcast("Nobody got the word in time! The word was: &h" + currentWord.word);
+        GameController.broadcast("Nobody got the word in time! The word was: &h" + unformattedWord);
     }
 
     @Override

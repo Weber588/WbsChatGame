@@ -70,6 +70,9 @@ public class UnscrambleGame extends WordGame {
         generatorHintsEnabled = copy.generatorHintsEnabled;
         enhancedGeneratorHints = copy.enhancedGeneratorHints;
 
+        preventDoubleSpaces = copy.preventDoubleSpaces;
+        preventSpacesOnEnds = copy.preventSpacesOnEnds;
+
         enabledHintTypes.addAll(copy.enabledHintTypes);
     }
 
@@ -79,6 +82,9 @@ public class UnscrambleGame extends WordGame {
     private final int hintThreshold;
     private final int hintDelay;
 
+    private boolean preventDoubleSpaces = true;
+    private boolean preventSpacesOnEnds = true;
+
     private final Set<HintType> enabledHintTypes = new HashSet<>();
 
     private String originalScramble = null;
@@ -87,7 +93,7 @@ public class UnscrambleGame extends WordGame {
 
     @Override
     public Game startGame(Word word) {
-        originalScramble = WordUtil.scrambleString(word.word);
+        originalScramble = scramble(word.word);
         broadcastScramble(originalScramble);
 
         if (hintsEnabled && getPoints() >= hintThreshold) {
@@ -95,6 +101,26 @@ public class UnscrambleGame extends WordGame {
         }
 
         return this;
+    }
+
+    protected String scramble(String word) {
+        String scrambled;
+
+        int escape = 0;
+
+        do {
+            scrambled = WordUtil.scrambleString(word);
+            escape++;
+        } while (!isScrambledNicely(scrambled) && escape < 15);
+
+        return scrambled;
+    }
+
+    private boolean isScrambledNicely(String string) {
+        if (preventDoubleSpaces && string.contains("  ")) return false;
+        if (preventSpacesOnEnds && !string.trim().equals(string)) return false;
+
+        return true;
     }
 
     protected void broadcastScramble(String scrambledWord) {
