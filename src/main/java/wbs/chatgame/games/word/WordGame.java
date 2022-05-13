@@ -140,7 +140,7 @@ public abstract class WordGame extends Game {
 
     @Override
     protected final Game start() {
-        currentWord = getWord();
+        setCurrentWord(getWord());
         currentPoints = currentWord.getPoints();
         return startGame(currentWord);
     }
@@ -155,7 +155,7 @@ public abstract class WordGame extends Game {
 
         WordGenerator generator = GeneratorManager.getGenerator(id);
         if (generator != null) {
-            currentWord = getGeneratedWord(generator);
+            setCurrentWord(getGeneratedWord(generator));
         } else {
             String lastArg = options.get(options.size() - 1);
             int customPoints = Integer.MIN_VALUE;
@@ -168,12 +168,11 @@ public abstract class WordGame extends Game {
             String customWord;
             if (customPoints == Integer.MIN_VALUE) {
                 customWord = String.join(" ", options);
-                currentWord = new Word(customWord, calculatePoints(customWord), null);
+                setCurrentWord(new Word(customWord, calculatePoints(customWord), null));
             } else {
                 customWord = String.join(" ", options.subList(0, options.size() - 1));
-                currentWord = new Word(customWord, customPoints, null);
+                setCurrentWord(new Word(customWord, customPoints, null));
             }
-            unformattedWord = currentWord.word;
         }
 
         currentPoints = currentWord.getPoints();
@@ -192,7 +191,6 @@ public abstract class WordGame extends Game {
             word = generateWord();
         } else {
             word = getCustomWord();
-            unformattedWord = word.word;
         }
 
         return word;
@@ -223,8 +221,6 @@ public abstract class WordGame extends Game {
         GeneratedWord word = generator.getNext();
 
         int points = Math.max(1, calculatePoints(word.word) + generator.getPointsModifier());
-
-        unformattedWord = word.word;
 
         GeneratedWord newWord = new GeneratedWord(formatWord(word.word), generator, word.getHint());
         newWord.setPoints(points);
@@ -276,6 +272,7 @@ public abstract class WordGame extends Game {
     protected void setCurrentWord(Word word) {
         this.currentWord = word;
         currentPoints = word.getPoints();
+        unformattedWord = word.word;
     }
 
     @Override

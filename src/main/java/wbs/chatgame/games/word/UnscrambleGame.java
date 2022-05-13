@@ -24,6 +24,12 @@ public class UnscrambleGame extends WordGame {
     public UnscrambleGame(String gameName, ConfigurationSection section, String directory) {
         super(gameName, section, directory);
 
+        ConfigurationSection scrambleSettings = section.getConfigurationSection("scramble-settings");
+        if (scrambleSettings != null) {
+            preventDoubleSpaces = scrambleSettings.getBoolean("prevent-double-spaces", preventDoubleSpaces);
+            preventSpacesOnEnds = scrambleSettings.getBoolean("prevent-spaces-on-ends", preventSpacesOnEnds);
+        }
+
         ConfigurationSection hintSection = section.getConfigurationSection("hints");
         if (hintSection == null) {
             hintsEnabled = false;

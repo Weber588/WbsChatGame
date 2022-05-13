@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.utils.util.database.AbstractDataManager;
+import wbs.utils.util.database.CollateFunction;
 import wbs.utils.util.database.WbsRecord;
 import wbs.utils.util.database.WbsTable;
 import wbs.utils.util.plugin.WbsPlugin;
@@ -71,7 +72,7 @@ public class PlayerManager extends AbstractDataManager<PlayerRecord, UUID> {
 
     @NotNull
     public List<UUID> getUUIDs(String username) {
-        List<WbsRecord> records = ChatGameDB.playerTable.selectOnField(ChatGameDB.nameField, username);
+        List<WbsRecord> records = ChatGameDB.playerTable.selectOnField(ChatGameDB.nameField, username, CollateFunction.NOCASE);
 
         return records.stream()
                 .map(record ->
