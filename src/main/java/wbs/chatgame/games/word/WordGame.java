@@ -222,10 +222,9 @@ public abstract class WordGame extends Game {
 
         int points = Math.max(1, calculatePoints(word.word) + generator.getPointsModifier());
 
-        GeneratedWord newWord = new GeneratedWord(formatWord(word.word), generator, word.getHint());
-        newWord.setPoints(points);
+        word.setPoints(points);
 
-        return newWord;
+        return word;
     }
 
     protected String formatWord(String word) {
@@ -271,8 +270,16 @@ public abstract class WordGame extends Game {
     }
     protected void setCurrentWord(Word word) {
         this.currentWord = word;
-        currentPoints = word.getPoints();
         unformattedWord = word.word;
+
+        if (this.currentWord instanceof GeneratedWord) {
+            WordGenerator generator = currentWord.generator;
+            assert generator != null;
+            currentWord = new GeneratedWord(formatWord(word.word), generator, ((GeneratedWord) word).getHint());
+            currentWord.setPoints(word.getPoints());
+        }
+
+        currentPoints = word.getPoints();
     }
 
     @Override
