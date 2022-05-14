@@ -1,7 +1,7 @@
 package wbs.chatgame.games.challenges;
 
 import org.bukkit.entity.Player;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.trivia.TriviaGame;
 import wbs.chatgame.games.trivia.TriviaQuestion;
 

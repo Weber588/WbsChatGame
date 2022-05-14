@@ -6,8 +6,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.ChatGameSettings;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.WbsChatGame;
+import wbs.chatgame.controller.GameMessenger;
 import wbs.chatgame.games.challenges.Challenge;
 import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.utils.util.WbsCollectionUtil;
@@ -105,7 +106,7 @@ public abstract class Game {
         }
 
         this.currentQuestion = currentQuestion;
-        GameController.broadcast(currentQuestion);
+        GameMessenger.broadcast(currentQuestion);
     }
 
     /**
@@ -198,6 +199,7 @@ public abstract class Game {
      */
     public abstract boolean checkGuess(String guess, Player guesser);
 
+    @NotNull
     protected abstract Game start();
 
     /**

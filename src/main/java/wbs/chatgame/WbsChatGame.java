@@ -5,6 +5,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import wbs.chatgame.commands.ChatGameCommand;
 import wbs.chatgame.commands.GuessCommand;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.data.ChatGameDB;
 import wbs.chatgame.data.ResetManager;
 import wbs.chatgame.data.StatsManager;

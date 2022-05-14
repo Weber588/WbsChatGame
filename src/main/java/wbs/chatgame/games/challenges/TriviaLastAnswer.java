@@ -1,6 +1,6 @@
 package wbs.chatgame.games.challenges;
 
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.trivia.TriviaGame;
 import wbs.chatgame.games.trivia.TriviaQuestion;
 

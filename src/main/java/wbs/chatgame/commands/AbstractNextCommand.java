@@ -2,7 +2,7 @@ package wbs.chatgame.commands;
 
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
 import wbs.chatgame.games.challenges.Challenge;
@@ -29,6 +29,10 @@ public abstract class AbstractNextCommand extends WbsSubcommand {
         sendMessage("Usage: &h/" + label + " " + args[0] + " <game> [options]", sender);
     }
     protected abstract void afterNext(CommandSender sender, String label, String[] args, Game game, List<String> options);
+
+    protected void noGameSpecified(CommandSender sender, String label, String[] args) {
+
+    }
 
     @Override
     protected boolean onCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
@@ -58,14 +62,14 @@ public abstract class AbstractNextCommand extends WbsSubcommand {
         }
 
         if (game != null) {
-            GameController.setNext(game);
+            if (!options.isEmpty()) {
+                GameController.getGameQueue().setNext(sender, game, options);
+            } else {
+                GameController.getGameQueue().setNext(sender, game, null);
+            }
+        } else {
+            noGameSpecified(sender, label, args);
         }
-
-        if (!options.isEmpty()) {
-            GameController.setNext(options);
-        }
-
-        GameController.setLastNextSender(sender);
 
         afterNext(sender, label, args, game, options);
         return true;

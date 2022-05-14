@@ -4,7 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import wbs.chatgame.GameController;
+import org.jetbrains.annotations.NotNull;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.Game;
 import wbs.utils.util.WbsMath;
 import wbs.utils.util.plugin.WbsMessage;
@@ -51,6 +52,7 @@ public class RevealGame extends WordGame {
     private String currentDisplay;
 
     @Override
+    @NotNull
     protected Game startGame(Word wordToGuess) {
         currentDisplay = conceal(wordToGuess.word);
         startRevealTimer();

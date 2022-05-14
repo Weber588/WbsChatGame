@@ -2,7 +2,8 @@ package wbs.chatgame.commands;
 
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
+import wbs.chatgame.controller.GameQueue;
 import wbs.chatgame.games.Game;
 import wbs.utils.util.plugin.WbsPlugin;
 
@@ -15,8 +16,9 @@ public class GameLockCommand extends AbstractNextCommand {
 
     @Override
     protected boolean beforeStart(CommandSender sender, String label, String[] args) {
-        if (GameController.isNextLocked()) {
-            sendMessage("Game is already locked as &h" + GameController.getNext() + "&r. Use &h/" + label + " unlock&r to change it.", sender);
+        GameQueue queue = GameController.getGameQueue();
+        if (queue.isLocked()) {
+            sendMessage("Game is already locked as &h" + queue.getLockedGame() + "&r. Use &h/" + label + " unlock&r to change it.", sender);
             return true;
         } else {
             return false;
@@ -32,7 +34,7 @@ public class GameLockCommand extends AbstractNextCommand {
 
     @Override
     protected void afterNext(CommandSender sender, String label, String[] args, Game game, List<String> options) {
-        GameController.lockNext();
+        GameController.getGameQueue().lockNext();
         sendMessage("All rounds will be &h" + game.getGameName() + "&r until &h/" + label + " unlock&r is used.", sender);
     }
 }

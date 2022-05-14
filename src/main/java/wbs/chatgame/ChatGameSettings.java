@@ -2,6 +2,7 @@ package wbs.chatgame;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.data.ChatGameDB;
 import wbs.chatgame.data.LegacyDataAdapter;
 import wbs.chatgame.games.Game;

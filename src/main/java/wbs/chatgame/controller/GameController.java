@@ -1,25 +1,18 @@
-package wbs.chatgame;
+package wbs.chatgame.controller;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.data.ChatGameDB;
-import wbs.chatgame.data.PlayerRecord;
 import wbs.chatgame.games.Game;
-import wbs.chatgame.games.GameManager;
 import wbs.chatgame.rewards.RewardManager;
-import wbs.utils.util.plugin.WbsMessage;
-import wbs.utils.util.plugin.WbsMessageBuilder;
 import wbs.utils.util.string.WbsStringify;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class GameController {
@@ -41,14 +34,7 @@ public class GameController {
     private static Player lastWinner;
     private static String lastAnswer;
 
-    @Nullable
-    private static Game nextGame;
-    @Nullable
-    private static List<String> nextOptions;
-    private static boolean nextLocked = false;
-    // The last command sender to set the next game & options above, to report any errors to.
-    @Nullable
-    private static CommandSender lastNextSender;
+    private static GameQueue gameQueue = new GameQueue();
 
     /**
      * The start of the current phase, whether it's the start of a round,
@@ -96,56 +82,15 @@ public class GameController {
     //   Round management   //
     // ==================== //
 
-    private static String startRound() {
+    private static void startRound() {
         phaseStartTime = LocalDateTime.now();
         cancelTasks();
 
-        if (Bukkit.getOnlinePlayers().size() == 0) {
-            return null;
+        if (GameMessenger.getListeningPlayers().size() == 0) {
+            return;
         }
 
-        Game chosenGame;
-
-        if (nextGame != null) {
-            chosenGame = nextGame;
-            if (!nextLocked) {
-                nextGame = null;
-            }
-        } else {
-            chosenGame = GameManager.getRandomGame();
-        }
-
-        String error = null;
-        if (nextOptions != null) {
-            try {
-                chosenGame = chosenGame.startWithOptionsOrChallenge(nextOptions);
-            } catch (IllegalArgumentException e) {
-                error = e.getMessage();
-                nextOptions = null;
-            }
-            if (!nextLocked) {
-                nextOptions = null;
-            }
-        } else {
-            chosenGame = chosenGame.startGame();
-        }
-
-        if (lastNextSender != null && error != null) {
-            plugin.sendMessage("&w" + error, lastNextSender);
-            plugin.sendMessage("Starting round without options.", lastNextSender);
-            lastNextSender = null;
-        }
-        if (error != null) {
-            chosenGame = GameManager.getRandomGame();
-            chosenGame = chosenGame.startGame();
-        }
-
-        if (chosenGame == null) {
-            plugin.logger.warning("Game failed to start: ");
-            return startRound();
-        } else {
-            currentGame = chosenGame;
-        }
+        currentGame = gameQueue.startNext();
 
         roundRunnableId = new BukkitRunnable() {
             @Override
@@ -153,21 +98,18 @@ public class GameController {
                 endRoundNoWinner(true);
             }
         }.runTaskLater(plugin, currentGame.getDuration()).getTaskId();
-
-        return error;
     }
 
     /**
      * Skip the current round if there is one, and then immediately start the next round.
-     * @return An error if one was encountered, or null if successful.
      */
-    public static String skip() {
+    public static void skip() {
         if (currentGame != null) {
             endRoundNoWinner(false);
         }
         cancelTasks();
 
-        return startRound();
+        startRound();
     }
 
     /**
@@ -305,22 +247,6 @@ public class GameController {
         return WbsStringify.toString(duration, false);
     }
 
-    public static void broadcast(String message) {
-        WbsMessageBuilder builder = plugin.buildMessage(message);
-        broadcast(builder.build());
-    }
-
-    public static void broadcast(WbsMessage message) {
-        List<Player> listeningPlayers = new LinkedList<>();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerRecord record = ChatGameDB.getPlayerManager().getOnlinePlayer(player);
-            if (record.isListening()) {
-                listeningPlayers.add(player);
-            }
-        }
-        message.send(listeningPlayers);
-    }
-
     public static String pointsDisplay(int points) {
         if (points == -1 || points == 1) {
             return points + " point";
@@ -360,55 +286,11 @@ public class GameController {
         return lastWinner;
     }
 
-    public static void setNext(Game game, List<String> options) {
-        nextGame = game;
-        nextOptions = options;
-    }
-
-    public static void setNext(Game game) {
-        nextGame = game;
-        unlockNext();
-    }
-
-    public static void setNext(List<String> options) {
-        nextOptions = options;
-        unlockNext();
-    }
-
-    @NotNull
-    public static List<String> getNextOptions() {
-        if (nextOptions == null) {
-            return new LinkedList<>();
-        }
-        return new LinkedList<>(nextOptions);
-    }
-
-    public static Game getNext() {
-        return nextGame;
-    }
-
-    public static boolean hasNextOptions() {
-        return nextOptions != null && !nextOptions.isEmpty();
-    }
-
-    public static boolean isNextLocked() {
-        return nextLocked;
-    }
-
-    public static void lockNext() {
-        nextLocked = true;
-    }
-
-    public static void unlockNext() {
-        nextLocked = false;
-    }
-
-    @SuppressWarnings("NullableProblems")
-    public static void setLastNextSender(CommandSender sender) {
-        lastNextSender = sender;
-    }
-
     public static String getLastAnswer() {
         return lastAnswer;
+    }
+
+    public static GameQueue getGameQueue() {
+        return gameQueue;
     }
 }

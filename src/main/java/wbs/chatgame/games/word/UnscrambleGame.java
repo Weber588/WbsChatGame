@@ -4,7 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import wbs.chatgame.GameController;
+import org.jetbrains.annotations.NotNull;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.WordUtil;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.ChallengeManager;
@@ -99,6 +100,7 @@ public class UnscrambleGame extends WordGame {
     private int hintTaskId = -1;
 
     @Override
+    @NotNull
     public Game startGame(Word word) {
         originalScramble = scramble(word.word);
         broadcastScramble(originalScramble);

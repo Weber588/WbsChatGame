@@ -2,8 +2,10 @@ package wbs.chatgame.games.word;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import wbs.chatgame.GameController;
+import org.jetbrains.annotations.NotNull;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.WordUtil;
+import wbs.chatgame.controller.GameMessenger;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.chatgame.games.challenges.QuickTypeBackwards;
@@ -30,6 +32,7 @@ public class QuickTypeGame extends WordGame {
     private final boolean matchCase;
 
     @Override
+    @NotNull
     protected Game startGame(Word wordToGuess) {
         WbsMessage message = plugin.buildMessage("Quick! Type \"")
                 .appendRaw(wordToGuess.word)
@@ -44,12 +47,12 @@ public class QuickTypeGame extends WordGame {
 
     @Override
     public void endWinner(Player player, String guess) {
-        GameController.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "!");
+        GameMessenger.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "!");
     }
 
     @Override
     public void endNoWinner() {
-        GameController.broadcast("Nobody answered in time!");
+        GameMessenger.broadcast("Nobody answered in time!");
     }
 
     @Override

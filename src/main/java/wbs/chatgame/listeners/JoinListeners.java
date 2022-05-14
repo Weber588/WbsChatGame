@@ -4,7 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.data.ChatGameDB;
 
 @SuppressWarnings("unused")

@@ -3,7 +3,8 @@ package wbs.chatgame.games.trivia;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
+import wbs.chatgame.controller.GameMessenger;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.*;
 import wbs.utils.util.VersionUtil;
@@ -109,6 +110,7 @@ public class TriviaGame extends Game {
     }
 
     @Override
+    @NotNull
     protected Game start() {
         question = nextQuestion();
         currentPoints = question.points();
@@ -180,7 +182,7 @@ public class TriviaGame extends Game {
 
     @Override
     public void endWinner(Player player, String guess) {
-        GameController.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "! The answer was: &h" + formatAnswer(guess));
+        GameMessenger.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "! The answer was: &h" + formatAnswer(guess));
     }
 
     @Override
@@ -189,7 +191,7 @@ public class TriviaGame extends Game {
         if (question.showAnswer()) {
             endMessage += " The answer was: &h" + question.answers()[0];
         }
-        GameController.broadcast(endMessage);
+        GameMessenger.broadcast(endMessage);
     }
 
     @Override

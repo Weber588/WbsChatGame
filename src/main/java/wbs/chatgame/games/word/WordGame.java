@@ -3,7 +3,8 @@ package wbs.chatgame.games.word;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
+import wbs.chatgame.controller.GameMessenger;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.math.ConditionalPointsCalculator;
 import wbs.chatgame.games.math.EquationGenerator;
@@ -139,6 +140,7 @@ public abstract class WordGame extends Game {
     private String unformattedWord = null;
 
     @Override
+    @NotNull
     protected final Game start() {
         setCurrentWord(getWord());
         currentPoints = currentWord.getPoints();
@@ -146,7 +148,8 @@ public abstract class WordGame extends Game {
     }
 
     @Override
-    public @NotNull Game startWithOptions(@NotNull List<String> options) {
+    @NotNull
+    public Game startWithOptions(@NotNull List<String> options) {
         if (options.isEmpty()) {
             return start();
         }
@@ -246,6 +249,7 @@ public abstract class WordGame extends Game {
         return guess.equalsIgnoreCase(currentWord.word);
     }
 
+    @NotNull
     protected abstract Game startGame(Word wordToGuess);
 
     protected int calculatePoints(String word) {
@@ -284,12 +288,12 @@ public abstract class WordGame extends Game {
 
     @Override
     public void endWinner(Player player, String guess) {
-        GameController.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "! The answer was: &h" + unformattedWord);
+        GameMessenger.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "! The answer was: &h" + unformattedWord);
     }
 
     @Override
     public void endNoWinner() {
-        GameController.broadcast("Nobody got the word in time! The word was: &h" + unformattedWord);
+        GameMessenger.broadcast("Nobody got the word in time! The word was: &h" + unformattedWord);
     }
 
     @Override

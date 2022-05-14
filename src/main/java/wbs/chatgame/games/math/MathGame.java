@@ -5,8 +5,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.ChatGameSettings;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.WbsChatGame;
+import wbs.chatgame.controller.GameMessenger;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.chatgame.games.challenges.MathRomanNumeralAnswer;
@@ -136,11 +137,13 @@ public class MathGame extends Game {
     }
 
     @Override
+    @NotNull
     protected Game start() {
         return startWithOptions(new LinkedList<>());
     }
 
     @Override
+    @NotNull
     public Game startWithOptions(@NotNull List<String> options) {
         if (options.isEmpty()) {
             currentEquation = generateQuestion();
@@ -148,6 +151,7 @@ public class MathGame extends Game {
             for (EquationGenerator generator : generatorsWithChances.keySet()) {
                 if (generator.getGeneratorName().equalsIgnoreCase(options.get(0))) {
                     currentEquation = generator.getEquation(operationSet);
+                    break;
                 }
             }
 
@@ -162,8 +166,9 @@ public class MathGame extends Game {
         }
 
         if (currentEquation == null) {
-            return null;
+            throw new IllegalArgumentException("Equation failed to populate.");
         }
+
         try {
             currentSolution = currentEquation.equation().solve(true);
         } catch (IllegalStateException e) {
@@ -185,14 +190,14 @@ public class MathGame extends Game {
         }
     }
 
-    @Nullable
-    private ViewableEquation generateQuestion() {
+    @NotNull
+    private ViewableEquation generateQuestion() throws IllegalArgumentException {
         ViewableEquation equation;
         try {
             equation = WbsCollectionUtil.getRandomWeighted(generatorsWithChances).getEquation(operationSet);
         } catch (InvalidConfigurationException e) {
             settings.logError(e.getMessage(), "Game config: " + getGameName());
-            return null;
+            throw new IllegalArgumentException("Equation failed to generate: " + e.getMessage());
         }
         return equation;
     }
@@ -200,7 +205,7 @@ public class MathGame extends Game {
     @Override
     public void endNoWinner() {
         if (currentEquation != null) {
-            GameController.broadcast("Nobody answered in time. The answer was: &h"
+            GameMessenger.broadcast("Nobody answered in time. The answer was: &h"
                     + formatAnswer());
         }
         currentEquation = null;
@@ -208,7 +213,7 @@ public class MathGame extends Game {
 
     @Override
     public void endWinner(Player player, String guess) {
-        GameController.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "! The answer was: &h" + formatAnswer());
+        GameMessenger.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "! The answer was: &h" + formatAnswer());
         currentEquation = null;
     }
 

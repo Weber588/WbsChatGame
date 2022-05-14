@@ -2,7 +2,7 @@ package wbs.chatgame.games.challenges;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.math.MathGame;
 import wbs.chatgame.games.math.ViewableEquation;
 import wbs.utils.util.string.RomanNumerals;

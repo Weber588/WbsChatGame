@@ -2,17 +2,13 @@ package wbs.chatgame.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.WbsChatGame;
-import wbs.utils.util.commands.WbsCommand;
 import wbs.utils.util.plugin.WbsMessenger;
-import wbs.utils.util.plugin.WbsPlugin;
-import wbs.utils.util.string.WbsStrings;
 
 import java.util.Collections;
 import java.util.List;

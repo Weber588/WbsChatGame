@@ -3,7 +3,7 @@ package wbs.chatgame.games.challenges;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.word.UnscrambleGame;
 import wbs.chatgame.games.word.Word;
 import wbs.utils.util.WbsCollectionUtil;

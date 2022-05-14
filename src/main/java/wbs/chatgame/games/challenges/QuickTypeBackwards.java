@@ -1,7 +1,7 @@
 package wbs.chatgame.games.challenges;
 
 import org.jetbrains.annotations.NotNull;
-import wbs.chatgame.GameController;
+import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.word.QuickTypeGame;
 import wbs.chatgame.games.word.Word;
@@ -15,6 +15,7 @@ public class QuickTypeBackwards extends QuickTypeGame implements Challenge<Quick
     }
 
     @Override
+    @NotNull
     protected Game startGame(Word wordToGuess) {
         setCurrentWord(new Word(reverseString(wordToGuess.word), wordToGuess.getPoints() + 1, wordToGuess.generator));
 
