@@ -20,6 +20,8 @@ math:
 
       points-conditions:
         - "abs(%val1%) + abs(%val2%) > 10"
+        - "abs(%val1%) > 2"
+        - "abs(%val2%) > 2"
 
     # /
     division:

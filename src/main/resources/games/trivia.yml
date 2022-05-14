@@ -247,6 +247,12 @@ trivia:
         - 'Red Dye'
       points: 1
 
+    MusicDisc11:
+      question: 'What level of redstone power does a jukebox emit via comparator when playing music disc 11?'
+      answers:
+        - '11'
+      points: 1
+
     ShulkerSlots:
       question: 'How many slots does a shulker box have?'
       answers:
@@ -558,6 +564,12 @@ trivia:
         - 'Green'
       points: 2
 
+    ChainmailCrafting:
+      question: 'Prior to Java Edition 1.8, what could you use to craft chainmail armour?'
+      answers:
+        - 'Fire'
+      points: 2
+
     WorstFuel:
       required-version: 1.14
       question: 'What is the worst fuel to use in a furnace?'
@@ -689,4 +701,14 @@ trivia:
       answers:
         - 'ZYXWVUTSRQPONMLKJIHGFEDCBA'
         - 'Z Y X W V U T S R Q P O N M L K J I H G F E D C B A'
+      points: 3
+
+    ShulkerItemCount:
+      question: 'With shulker boxes, how many items can a player carry?'
+      use-regex: true
+      answers:
+        - '63,?936( items)?' # Not including armour or shulker boxes
+        - '63,?940( items)?' # Including armour but not shulker boxes
+        - '63,?973( items)?' # Including shulker boxes but not armour
+        - '63,?977( items)?' # Including both
       points: 3

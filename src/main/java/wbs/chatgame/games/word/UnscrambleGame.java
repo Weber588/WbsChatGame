@@ -13,6 +13,7 @@ import wbs.chatgame.games.word.generator.GeneratedWord;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsEnums;
 import wbs.utils.util.plugin.WbsMessage;
+import wbs.utils.util.plugin.WbsMessageBuilder;
 import wbs.utils.util.string.WbsStrings;
 
 import java.util.Arrays;
@@ -197,26 +198,45 @@ public class UnscrambleGame extends WordGame {
                         words[i] = WordUtil.scrambleString(words[i]);
                     }
                     String hint = String.join(" ", words);
-                    broadcastQuestion("Too hard? Here are the words scrambled individually: \"&h" + hint + "&r\" (" + GameController.pointsDisplay(getPoints()) + ")");
+
+                    WbsMessage message = plugin.buildMessage("Too hard? Here are the words scrambled individually: \"")
+                            .appendRaw(hint)
+                                .setFormatting("&h")
+                            .append("\" (" + GameController.pointsDisplay(getPoints()) + ")")
+                            .build();
+
+                    broadcastQuestion(message);
                 }
                 case CAPITALIZE_FIRST -> {
                     char firstLetter = Character.toUpperCase(current.charAt(0));
 
-                    String rescrambled = WordUtil.scrambleString(WbsStrings.capitalize(getCurrentWord().word));
-                    broadcastQuestion("Too hard? The first letter is " + firstLetter + "! \"&h" + rescrambled + "&r\" (" + GameController.pointsDisplay(getPoints()) + ")");
+                    WbsMessage message = plugin.buildMessage("Too hard? The first letter is " + firstLetter + "! \"")
+                            .appendRaw(originalScramble)
+                                .setFormatting("&h")
+                            .append("\" (" + GameController.pointsDisplay(getPoints()) + ")")
+                            .build();
+
+                    broadcastQuestion(message);
                 }
                 case SCRAMBLE_MULTIPLE -> {
                     int scrambles = 3;
 
-                    String[] rescrambles = new String[scrambles];
+                    WbsMessageBuilder message = plugin.buildMessage("Too hard? Here it is scrambled a few ways differently: \"");
 
                     for (int i = 0; i < scrambles; i++) {
-                        rescrambles[i] = WordUtil.scrambleString(WbsStrings.capitalize(getCurrentWord().word));
+                        String rescramble = WordUtil.scrambleString(WbsStrings.capitalize(getCurrentWord().word));
+
+                        message.appendRaw(rescramble)
+                                .setFormatting("&h");
+
+                        if (i < scrambles - 1) {
+                            message.append("\", \"");
+                        }
                     }
 
-                    String rescrambleString = String.join("&r\", \"&h", rescrambles);
+                    message.append(" (" + GameController.pointsDisplay(getPoints()) + ")");
 
-                    broadcastQuestion("Too hard? Here it is scrambled a few ways differently: \"&h" + rescrambleString + "&r\" (" + GameController.pointsDisplay(getPoints()) + ")");
+                    broadcastQuestion(message.build());
                 }
                 case REVEAL_ENDS -> {
                     int amountAtStart = 1;
@@ -228,7 +248,17 @@ public class UnscrambleGame extends WordGame {
                     String end = current.substring(current.length() - 2);
                     String hintString = start + current.substring(amountAtStart, current.length() - 2).replaceAll(".?", "_") + end;
 
-                    broadcastQuestion("Hint: \"&h" + hintString + "&r\" (" + GameController.pointsDisplay(getPoints()) + ")");
+                    WbsMessage message = plugin.buildMessage("Unscramble \"")
+                            .appendRaw(originalScramble)
+                            .setFormatting("&h")
+                            .append("\" for "
+                                    + GameController.pointsDisplay(getPoints()) + "! (Hint: \"")
+                            .appendRaw(hintString)
+                                .setFormatting("&h")
+                            .append("\")")
+                            .build();
+
+                    broadcastQuestion(message);
                 }
                 case GENERATOR_HINTS -> {
                     if (word instanceof GeneratedWord generatedWord) {
@@ -240,7 +270,13 @@ public class UnscrambleGame extends WordGame {
                             return;
                         }
 
-                        broadcastQuestion("Hint: " + hint + "! \"&h" + originalScramble + "&r\" (" + GameController.pointsDisplay(getPoints()) + ")");
+                        WbsMessage message = plugin.buildMessage("Hint: " + hint + "! \"")
+                                .appendRaw(originalScramble)
+                                    .setFormatting("&h")
+                                .append("\" (" + GameController.pointsDisplay(getPoints()) + ")")
+                                .build();
+
+                        broadcastQuestion(message);
                     } else {
                         plugin.logger.severe("Internal error. Generator hints was chosen as a hint type for a non-generated word.");
                         possibleTypes.remove(HintType.GENERATOR_HINTS);
