@@ -27,27 +27,28 @@ public class GameQueue {
 
     @NotNull
     public Game startNext() {
+        RunnableInstance toStart = next();
         try {
-            Game gameRun = next().start();
+            Game gameRun = toStart.start();
             startAttempts = 0;
             return gameRun;
         } catch (IllegalArgumentException e) {
             startAttempts++;
-            if (forceNext != null) {
-                WbsPlugin plugin = WbsChatGame.getInstance();
-                if (forceNext.sender() != null) {
-                    plugin.sendMessage("&w" + e.getMessage(), forceNext.sender());
-                    plugin.sendMessage("Starting round without options.", forceNext.sender());
-                } else {
-                    plugin.logger.warning("Game failed to start: " + forceNext.game());
-                }
-                forceNext = new RunnableInstance(forceNext.sender(), forceNext.game(), null);
+            WbsPlugin plugin = WbsChatGame.getInstance();
+            if (toStart.sender() != null) {
+                plugin.sendMessage("&w" + e.getMessage(), toStart.sender());
+                plugin.sendMessage("Starting round without options.", toStart.sender());
+            } else {
+                plugin.logger.warning("Game failed to start: " + toStart.game());
+            }
+            if (toStart.options() != null) {
+                forceNext = new RunnableInstance(toStart.sender(), toStart.game(), null);
             }
 
             if (startAttempts < MAX_START_ATTEMPTS) {
                 return startNext();
             } else {
-                throw new IllegalArgumentException("Failed to start game.");
+                throw new IllegalStateException("Failed to start game.");
             }
         }
     }
@@ -112,7 +113,7 @@ public class GameQueue {
     public static record RunnableInstance(@Nullable CommandSender sender, @NotNull Game game, @Nullable List<String> options) {
         public Game start() throws IllegalArgumentException {
             if (options != null) {
-                return game.startWithOptions(options);
+                return game.startWithOptionsOrChallenge(options);
             }
             return game.startGame();
         }

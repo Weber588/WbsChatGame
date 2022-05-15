@@ -236,7 +236,7 @@ public class UnscrambleGame extends WordGame {
                         }
                     }
 
-                    message.append(" (" + GameController.pointsDisplay(getPoints()) + ")");
+                    message.append("\" (" + GameController.pointsDisplay(getPoints()) + ")");
 
                     broadcastQuestion(message.build());
                 }

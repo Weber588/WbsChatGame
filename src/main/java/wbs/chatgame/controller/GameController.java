@@ -32,7 +32,7 @@ public class GameController {
     private static int betweenRoundsRunnableId = -1;
 
     private static Player lastWinner;
-    private static String lastAnswer;
+    private static Game lastGame;
 
     private static GameQueue gameQueue = new GameQueue();
 
@@ -123,7 +123,6 @@ public class GameController {
         }
 
         lastWinner = null;
-        lastAnswer = null;
 
         currentGame.endNoWinner();
 
@@ -141,7 +140,6 @@ public class GameController {
 
         lastWinner = winner;
         currentGame.endWinner(winner, guess);
-        lastAnswer = guess;
 
         Duration duration = Duration.between(phaseStartTime, LocalDateTime.now());
         long millis = duration.toMillis();
@@ -163,6 +161,7 @@ public class GameController {
     private static void onRoundEnd(boolean startNext) {
         phaseStartTime = LocalDateTime.now();
 
+        lastGame = currentGame;
         currentGame = null;
         cancelTasks();
 
@@ -286,8 +285,9 @@ public class GameController {
         return lastWinner;
     }
 
-    public static String getLastAnswer() {
-        return lastAnswer;
+    @Nullable
+    public static Game getLastGame() {
+        return lastGame;
     }
 
     public static GameQueue getGameQueue() {

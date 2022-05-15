@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.ChatGameSettings;
-import wbs.chatgame.controller.GameController;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.controller.GameMessenger;
 import wbs.chatgame.games.challenges.Challenge;
@@ -184,6 +183,7 @@ public abstract class Game {
      * Start this game with a given set of options.
      * @param options The options to use.
      * @return The game itself, or null if the game failed to start.
+     * @throws IllegalArgumentException If the options were invalid
      */
     @Nullable
     public Game startWithOptions(@NotNull List<String> options) throws IllegalArgumentException {
