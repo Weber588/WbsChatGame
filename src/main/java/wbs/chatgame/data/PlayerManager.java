@@ -116,7 +116,12 @@ public class PlayerManager extends AbstractDataManager<PlayerRecord, UUID> {
      * @param uuid The UUID of the player to unload
      */
     public void unloadPlayer(UUID uuid) {
-        onlinePlayers.remove(uuid);
+        if (onlinePlayers.containsKey(uuid)) {
+            PlayerRecord player = onlinePlayers.get(uuid);
+
+            player.invalidatePlayer();
+            onlinePlayers.remove(uuid);
+        }
     }
 
     /**

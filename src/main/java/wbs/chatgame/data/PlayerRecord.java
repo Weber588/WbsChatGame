@@ -67,6 +67,9 @@ public class PlayerRecord implements RecordProducer {
     }
 
     public Player getPlayer() {
+        if (player == null) {
+            tryGetPlayer();
+        }
         return player;
     }
 
@@ -165,5 +168,9 @@ public class PlayerRecord implements RecordProducer {
 
     public Collection<GameStats> getAllStats() {
         return stats.values();
+    }
+
+    public void invalidatePlayer() {
+        player = null;
     }
 }
