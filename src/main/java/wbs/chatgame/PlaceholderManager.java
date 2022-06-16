@@ -22,7 +22,11 @@ public class PlaceholderManager {
     private static final String NOT_FOUND = "N/A";
 
     public static void registerPlaceholders() {
-        PlaceholderAPIWrapper.registerSimplePlaceholder(WbsChatGame.getInstance(), "Weber588", PlaceholderManager::parseParams);
+        if (PlaceholderAPIWrapper.isActive()) {
+            PlaceholderAPIWrapper.registerSimplePlaceholder(WbsChatGame.getInstance(), "Weber588", PlaceholderManager::parseParams);
+        } else {
+            WbsChatGame.getInstance().logger.info("PlaceholderAPI not found; placeholders will not be used.");
+        }
     }
 
     private static String parseParams(OfflinePlayer player, String params) {
