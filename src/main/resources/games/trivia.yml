@@ -4,7 +4,7 @@ trivia:
 
   # The chance to use a challenge instead of a normal game.
   # 0 = never use challenges, 100 = always use challenges
-  challenge-chance: 5
+  challenge-chance: 10
 
   challenges:
     # Chance that a trivia question will be replaced with
@@ -28,6 +28,11 @@ trivia:
     # Chance that a trivia question will be replaced with "How many points do you currently have?",
     # where the answer is different depending on who answers.
     current-points: 0.5
+
+    # Chance that a trivia question will be replaced with "How many [item]s do
+    # you need to craft [item]?"
+    # Does not include recipes that only contain one item & item type
+    crafting-recipe: 5
 
   questions:
     # The unique name of the question. It's not used, but must be unique
@@ -61,34 +66,6 @@ trivia:
 
     Dimensions:
       question: 'How many dimensions are there in minecraft?'
-      answers:
-        - '3'
-        - 'Three'
-      points: 1
-
-    CakeEggs:
-      question: 'How many eggs do you need to craft a cake?'
-      answers:
-        - '1'
-        - 'One'
-      points: 1
-
-    CakeSugar:
-      question: 'How much sugar do you need to craft a cake?'
-      answers:
-        - '2'
-        - 'Two'
-      points: 1
-
-    CakeWheat:
-      question: 'How much wheat do you need to craft a cake?'
-      answers:
-        - '3'
-        - 'Three'
-      points: 1
-
-    CakeMilk:
-      question: 'How many buckets of milk do you need to craft a cake?'
       answers:
         - '3'
         - 'Three'
