@@ -276,10 +276,11 @@ public abstract class WordGame extends Game {
         this.currentWord = word;
         unformattedWord = word.word;
 
-        if (this.currentWord instanceof GeneratedWord) {
-            WordGenerator generator = currentWord.generator;
-            assert generator != null;
-            currentWord = new GeneratedWord(formatWord(word.word), generator, ((GeneratedWord) word).getHint());
+        if (this.currentWord instanceof GeneratedWord generatedWord
+                && !generatedWord.isFormatted()) {
+            WordGenerator generator = generatedWord.getGenerator();
+
+            currentWord = new GeneratedWord(formatWord(word.word), generator, generatedWord.getHint());
             currentWord.setPoints(word.getPoints());
         }
 

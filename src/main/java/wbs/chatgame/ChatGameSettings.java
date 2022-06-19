@@ -1,5 +1,6 @@
 package wbs.chatgame;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import wbs.chatgame.controller.GameController;
@@ -14,9 +15,12 @@ import wbs.utils.util.WbsEnums;
 import wbs.utils.util.plugin.WbsSettings;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.logging.Level;
 
 public class ChatGameSettings extends WbsSettings {
     protected ChatGameSettings(WbsChatGame plugin) {
@@ -41,6 +45,11 @@ public class ChatGameSettings extends WbsSettings {
             requireGuessCommand = settingsSection.getBoolean("require-guess-command", requireGuessCommand);
             listenByDefault = settingsSection.getBoolean("listen-by-default", listenByDefault);
             debugMode = settingsSection.getBoolean("debug-mode", debugMode);
+            String langFileName = settingsSection.getString("minecraft-lang", "");
+
+            if (!langFileName.isBlank()) {
+                loadLanguageFile(langFileName);
+            }
 
             ChatGameDB.statsTable.setDebugMode(debugMode);
             ChatGameDB.playerTable.setDebugMode(debugMode);
@@ -77,6 +86,21 @@ public class ChatGameSettings extends WbsSettings {
         }
 
         GeneratorManager.configureRegistered(generatorConfig, "generators.yml");
+    }
+
+    private void loadLanguageFile(String langFileName) {
+        File langFile = new File(plugin.getDataFolder(), langFileName);
+
+        if (!langFile.exists()) {
+            plugin.logger.info("Language file not found: \"" + langFileName +
+                    "\". Consider creating it for more reliable word generators!");
+            return;
+        }
+
+        // YAML is a superset of JSON; we can just use the standard config loading methods
+        YamlConfiguration langConfig = loadConfigSafely(langFile);
+
+        GeneratorManager.registerLangMap(langConfig);
     }
 
     private void loadResetSettings(ConfigurationSection section, String directory) {

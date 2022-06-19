@@ -29,6 +29,17 @@ settings:
   # At what time should resets occur?
   reset-time: '12:00'
 
+  # Optionally, under plugins/WbsChatGame/lang/, you can add a language file from
+  # your minecraft client ([version].jar\assets\minecraft\lang\[language].json),
+  # and words generated will pull from that json language file.
+  #
+  # Doing this ensures that words are shown correctly (i.e. "Jack o'Lantern instead of
+  # "Jack O Lantern" or "Bucket of Pufferfish" instead of "Pufferfish Bucket")
+  #
+  # The plugin doesn't include the English lang file by default,
+  # so you'll need to retrieve it from your client jar yourself.
+  minecraft-lang: 'lang/en_us.json'
+
   # Choose how frequently a given category comes up.
   # To disable a game, set the percentage to 0.
   rates:

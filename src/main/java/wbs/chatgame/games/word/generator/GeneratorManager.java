@@ -1,11 +1,13 @@
 package wbs.chatgame.games.word.generator;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.WordUtil;
 
+import java.io.File;
 import java.util.*;
 
 public final class GeneratorManager {
@@ -13,6 +15,8 @@ public final class GeneratorManager {
 
     private static final Map<String, WordGenerator> generators = new HashMap<>();
     private static final Map<WordGenerator, String> generatorIds = new HashMap<>();
+
+    private static YamlConfiguration langConfig;
 
     static {
         registerGenerator("animal", new AnimalWordGenerator());
@@ -72,5 +76,14 @@ public final class GeneratorManager {
 
             generator.configure(genSection);
         }
+    }
+
+    public static void registerLangMap(YamlConfiguration langConfig) {
+        GeneratorManager.langConfig = langConfig;
+    }
+
+    @Nullable
+    public static ConfigurationSection getLangConfig() {
+        return langConfig;
     }
 }

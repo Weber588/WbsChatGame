@@ -1,6 +1,8 @@
 package wbs.chatgame.games.word.generator;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsEnums;
@@ -17,15 +19,34 @@ public abstract class MaterialWordGenerator extends WordGenerator {
         //noinspection deprecation
         return generateMaterials().stream()
                 .filter(Predicate.not(Material::isLegacy))
-                .map(material ->
-                        new GeneratedWord(WbsEnums.toPrettyString(material), this, getHint(material)))
+                .map(this::toWord)
                 .collect(Collectors.toList());
     }
 
     public abstract List<Material> generateMaterials();
+    protected abstract String getLangPrefix();
+
+    protected GeneratedWord toWord(Material material) {
+        ConfigurationSection lang = GeneratorManager.getLangConfig();
+
+        String defaultString = WbsEnums.toPrettyString(material);
+
+        if (lang == null) {
+            return new GeneratedWord(defaultString, this, getHint(material));
+        }
+
+        NamespacedKey key = material.getKey();
+        String nameKey = getLangPrefix() + "." + key.getNamespace() + "." + key.getKey();
+
+        if (!lang.isString(nameKey)) {
+            return new GeneratedWord(defaultString, this, getHint(material));
+        }
+
+        return new GeneratedWord(lang.getString(nameKey), this, getHint(material), true);
+    }
 
     @Nullable
-    private String getHint(Material material) {
+    protected String getHint(Material material) {
         List<MaterialProperty> properties = new ArrayList<>();
         for (MaterialProperty property : MaterialProperty.values()) {
             if (property.hasProperty(material)) {

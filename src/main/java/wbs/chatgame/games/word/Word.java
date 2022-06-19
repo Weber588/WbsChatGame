@@ -50,4 +50,8 @@ public class Word {
         return word;
     }
 
+    @Nullable
+    public WordGenerator getGenerator() {
+        return generator;
+    }
 }

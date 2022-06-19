@@ -7,9 +7,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EnchantmentWordGenerator extends SimpleWordGenerator {
+public class EnchantmentWordGenerator extends KeyedWordGenerator {
     @Override
-    public List<String> generateStrings() {
+    protected String getLangPrefix() {
+        return "enchantment.minecraft";
+    }
+
+    @Override
+    protected List<GeneratedWord> getDefault() {
         return Arrays.stream(Enchantment.values())
                 .map(ench ->
                         WbsStrings.capitalizeAll(
@@ -17,7 +22,7 @@ public class EnchantmentWordGenerator extends SimpleWordGenerator {
                                         .getKey()
                                         .replace('_', ' ')
                         )
-                )
+                ).map(word -> new GeneratedWord(word, this))
                 .collect(Collectors.toList());
     }
 }

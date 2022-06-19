@@ -1,15 +1,16 @@
 package wbs.chatgame.games.word.generator;
 
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.potion.PotionEffectType;
+import wbs.utils.util.WbsEnums;
 import wbs.utils.util.string.WbsStrings;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class PotionWordGenerator extends SimpleWordGenerator {
+public class PotionWordGenerator extends KeyedWordGenerator {
 
     private final static Map<PotionEffectType, String> potionNameOverrides = new HashMap<>();
 
@@ -25,11 +26,17 @@ public class PotionWordGenerator extends SimpleWordGenerator {
     }
 
     @Override
-    public List<String> generateStrings() {
+    protected String getLangPrefix() {
+        return "effect";
+    }
+
+    @Override
+    protected List<GeneratedWord> getDefault() {
         return Arrays.stream(PotionEffectType.values())
                 .map(potion -> potionNameOverrides.getOrDefault(potion, potion.getName()))
                 .map(name -> name.replace("_", " "))
                 .map(WbsStrings::capitalizeAll)
+                .map(word -> new GeneratedWord(word, this))
                 .collect(Collectors.toList());
     }
 }
