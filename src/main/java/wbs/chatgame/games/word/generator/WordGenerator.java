@@ -88,4 +88,8 @@ public abstract class WordGenerator {
     public String getGenericHint() {
         return "This word is a type of " + GeneratorManager.getRegisteredId(this);
     }
+
+    public Set<GeneratedWord> getAll() {
+        return generated;
+    }
 }

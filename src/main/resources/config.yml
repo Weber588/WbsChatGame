@@ -29,7 +29,7 @@ settings:
   # At what time should resets occur?
   reset-time: '12:00'
 
-  # Optionally, under plugins/WbsChatGame/lang/, you can add a language file from
+  # Optionally, you can add a language file from
   # your minecraft client ([version].jar\assets\minecraft\lang\[language].json),
   # and words generated will pull from that json language file.
   #

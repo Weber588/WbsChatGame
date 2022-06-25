@@ -16,7 +16,7 @@ public final class GeneratorManager {
     private static final Map<String, WordGenerator> generators = new HashMap<>();
     private static final Map<WordGenerator, String> generatorIds = new HashMap<>();
 
-    private static YamlConfiguration langConfig;
+    private static Map<String, String> langConfig;
 
     static {
         registerGenerator("animal", new AnimalWordGenerator());
@@ -78,12 +78,12 @@ public final class GeneratorManager {
         }
     }
 
-    public static void registerLangMap(YamlConfiguration langConfig) {
+    public static void registerLangMap(Map<String, String> langConfig) {
         GeneratorManager.langConfig = langConfig;
     }
 
     @Nullable
-    public static ConfigurationSection getLangConfig() {
+    public static Map<String, String> getLangConfig() {
         return langConfig;
     }
 }

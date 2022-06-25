@@ -5,33 +5,27 @@ import wbs.utils.util.string.WbsStrings;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class KeyedWordGenerator extends WordGenerator {
 
     @Override
     protected List<GeneratedWord> generateWords() {
-        ConfigurationSection lang = GeneratorManager.getLangConfig();
+        Map<String, String> lang = GeneratorManager.getLangConfig();
 
         List<GeneratedWord> words = new LinkedList<>();
 
         if (lang != null) {
-            ConfigurationSection langSection = lang.getConfigurationSection(getLangPrefix());
+            String prefix = getLangPrefix().toLowerCase() + ".";
 
-            if (langSection != null) {
-                for (String key : langSection.getKeys(true)) {
-                    if (langSection.isConfigurationSection(key)) continue;
+            for (String key : lang.keySet()) {
+                if (key.toLowerCase().startsWith(prefix)) {
+                    String postPrefix = key.substring(prefix.length());
 
-                    String defaultName = key.replace('_', ' ');
-                    int lastIndex = defaultName.lastIndexOf('.');
-                    if (lastIndex != -1) {
-                        defaultName = defaultName.substring(lastIndex);
+                    if (!postPrefix.contains(".")) { // Ignore child nodes; only get leaves
+                        String word = lang.get(key);
+                        words.add(new GeneratedWord(word, this, true));
                     }
-
-                    defaultName = WbsStrings.capitalizeAll(defaultName);
-
-                    String name = langSection.getString(key, defaultName);
-
-                    words.add(new GeneratedWord(name, this, true));
                 }
             }
         }

@@ -1,6 +1,9 @@
 package wbs.chatgame;
 
-import org.bukkit.Bukkit;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import wbs.chatgame.controller.GameController;
@@ -14,13 +17,11 @@ import wbs.utils.exceptions.InvalidConfigurationException;
 import wbs.utils.util.WbsEnums;
 import wbs.utils.util.plugin.WbsSettings;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.logging.Level;
 
 public class ChatGameSettings extends WbsSettings {
     protected ChatGameSettings(WbsChatGame plugin) {
@@ -97,10 +98,18 @@ public class ChatGameSettings extends WbsSettings {
             return;
         }
 
-        // YAML is a superset of JSON; we can just use the standard config loading methods
-        YamlConfiguration langConfig = loadConfigSafely(langFile);
+        Map<String, String> langConfig;
+        try {
+            JsonReader reader = new JsonReader(new FileReader(langFile));
+            Type type = new TypeToken<Map<String, String>>(){}.getType();
 
-        GeneratorManager.registerLangMap(langConfig);
+            langConfig = new Gson().fromJson(reader, type);
+
+            GeneratorManager.registerLangMap(langConfig);
+        } catch (IOException e) {
+            plugin.logger.info("Failed to load language file!");
+            e.printStackTrace();
+        }
     }
 
     private void loadResetSettings(ConfigurationSection section, String directory) {

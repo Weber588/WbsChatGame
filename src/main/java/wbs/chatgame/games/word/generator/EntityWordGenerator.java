@@ -9,6 +9,7 @@ import wbs.utils.util.WbsEnums;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class EntityWordGenerator<T extends Entity> extends WordGenerator {
@@ -30,7 +31,7 @@ public abstract class EntityWordGenerator<T extends Entity> extends WordGenerato
     protected abstract Class<T> getEntityClass();
 
     private GeneratedWord getWord(EntityType type) {
-        ConfigurationSection lang = GeneratorManager.getLangConfig();
+        Map<String, String> lang = GeneratorManager.getLangConfig();
 
         String defaultString = WbsEnums.toPrettyString(type);
 
@@ -41,10 +42,12 @@ public abstract class EntityWordGenerator<T extends Entity> extends WordGenerato
         NamespacedKey key = type.getKey();
         String nameKey = "entity." + key.getNamespace() + "." + key.getKey();
 
-        if (!lang.isString(nameKey)) {
+        String name = lang.get(nameKey);
+
+        if (name == null) {
             return new GeneratedWord(defaultString, this);
         }
 
-        return new GeneratedWord(lang.getString(nameKey), this, true);
+        return new GeneratedWord(name, this, true);
     }
 }

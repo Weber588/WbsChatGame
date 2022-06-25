@@ -27,7 +27,7 @@ public class PotionWordGenerator extends KeyedWordGenerator {
 
     @Override
     protected String getLangPrefix() {
-        return "effect";
+        return "effect.minecraft";
     }
 
     @Override

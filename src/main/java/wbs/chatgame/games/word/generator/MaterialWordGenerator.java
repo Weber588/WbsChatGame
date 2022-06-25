@@ -9,6 +9,7 @@ import wbs.utils.util.WbsEnums;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public abstract class MaterialWordGenerator extends WordGenerator {
     protected abstract String getLangPrefix();
 
     protected GeneratedWord toWord(Material material) {
-        ConfigurationSection lang = GeneratorManager.getLangConfig();
+        Map<String, String> lang = GeneratorManager.getLangConfig();
 
         String defaultString = WbsEnums.toPrettyString(material);
 
@@ -38,11 +39,13 @@ public abstract class MaterialWordGenerator extends WordGenerator {
         NamespacedKey key = material.getKey();
         String nameKey = getLangPrefix() + "." + key.getNamespace() + "." + key.getKey();
 
-        if (!lang.isString(nameKey)) {
+        String name = lang.get(nameKey);
+
+        if (name == null) {
             return new GeneratedWord(defaultString, this, getHint(material));
         }
 
-        return new GeneratedWord(lang.getString(nameKey), this, getHint(material), true);
+        return new GeneratedWord(name, this, getHint(material), true);
     }
 
     @Nullable
