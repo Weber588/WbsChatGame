@@ -22,7 +22,7 @@ public class EnchantmentWordGenerator extends KeyedWordGenerator {
                                         .getKey()
                                         .replace('_', ' ')
                         )
-                ).map(word -> new GeneratedWord(word, this))
+                ).map(word -> new GeneratedWord(word, 0, this))
                 .collect(Collectors.toList());
     }
 }

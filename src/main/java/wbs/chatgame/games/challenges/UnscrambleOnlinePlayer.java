@@ -27,7 +27,7 @@ public class UnscrambleOnlinePlayer extends UnscrambleGame implements Challenge<
 
         Player randomPlayer = WbsCollectionUtil.getRandom(online);
 
-        return new Word(randomPlayer.getName(), 2, null);
+        return new Word(randomPlayer.getName(), 2, true);
     }
 
     @Override

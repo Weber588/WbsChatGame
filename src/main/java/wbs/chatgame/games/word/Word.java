@@ -1,31 +1,26 @@
 package wbs.chatgame.games.word;
 
-import org.jetbrains.annotations.Nullable;
-import wbs.chatgame.games.word.generator.WordGenerator;
+import wbs.chatgame.games.word.generator.GeneratedWord;
 
 import java.util.Objects;
 
 public class Word {
     public final String word;
-    private int points;
-    @Nullable
-    public final WordGenerator generator;
+    private final int points;
+    protected final boolean isFormatted;
 
-    public Word(String word, int points, @Nullable WordGenerator generator) {
+    public Word(String word, int points) {
         this.word = word;
         this.points = points;
-        this.generator = generator;
+        this.isFormatted = false;
     }
 
-    public Word(String word, @Nullable WordGenerator generator) {
+    public Word(String word, int points, boolean isFormatted) {
         this.word = word;
-        this.generator = generator;
+        this.points = points;
+        this.isFormatted = isFormatted;
     }
 
-    public Word setPoints(int points) {
-        this.points = points;
-        return this;
-    }
     public int getPoints() {
         return points;
     }
@@ -36,13 +31,12 @@ public class Word {
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (Word) obj;
         return Objects.equals(this.word, that.word) &&
-                Objects.equals(this.generator, that.generator) &&
                 this.points == that.points;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(word, points, generator);
+        return Objects.hash(word, points);
     }
 
     @Override
@@ -50,8 +44,11 @@ public class Word {
         return word;
     }
 
-    @Nullable
-    public WordGenerator getGenerator() {
-        return generator;
+    public boolean isFormatted() {
+        return isFormatted;
+    }
+
+    public Word setPoints(int points) {
+        return new Word(word, points, isFormatted);
     }
 }

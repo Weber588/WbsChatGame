@@ -61,7 +61,7 @@ public abstract class WordGame extends Game {
                     continue;
                 }
 
-                customWords.add(new Word(word, points, null));
+                customWords.add(new Word(word, points));
             }
         }
 
@@ -171,10 +171,10 @@ public abstract class WordGame extends Game {
             String customWord;
             if (customPoints == Integer.MIN_VALUE) {
                 customWord = String.join(" ", options);
-                setCurrentWord(new Word(customWord, calculatePoints(customWord), null));
+                setCurrentWord(new Word(customWord, calculatePoints(customWord)));
             } else {
                 customWord = String.join(" ", options.subList(0, options.size() - 1));
-                setCurrentWord(new Word(customWord, customPoints, null));
+                setCurrentWord(new Word(customWord, customPoints));
             }
         }
 
@@ -221,13 +221,7 @@ public abstract class WordGame extends Game {
     }
 
     protected GeneratedWord getGeneratedWord(@NotNull WordGenerator generator) {
-        GeneratedWord word = generator.getNext();
-
-        int points = Math.max(1, calculatePoints(word.word) + generator.getPointsModifier());
-
-        word.setPoints(points);
-
-        return word;
+        return generator.getNext(this::calculatePoints);
     }
 
     protected String formatWord(GeneratedWord word) {
@@ -252,6 +246,10 @@ public abstract class WordGame extends Game {
                     newWord.append(word.word.charAt(index))
                             .append(subword.substring(1));
                     index += subword.length() + 1;
+
+                    if (index - 1 > 0 && index - 1 < word.word.length()) {
+                        newWord.append(word.word.charAt(index - 1));
+                    }
                 }
 
                 display = newWord.toString();
@@ -298,8 +296,11 @@ public abstract class WordGame extends Game {
         if (this.currentWord instanceof GeneratedWord generatedWord) {
             WordGenerator generator = generatedWord.getGenerator();
 
-            currentWord = new GeneratedWord(formatWord((GeneratedWord) word), generator, generatedWord.getHint());
-            currentWord.setPoints(word.getPoints());
+            String displayFormatted = formatWord((GeneratedWord) word);
+            currentWord = new GeneratedWord(displayFormatted,
+                    word.getPoints(),
+                    generator,
+                    generatedWord.getHint());
         }
 
         currentPoints = word.getPoints();

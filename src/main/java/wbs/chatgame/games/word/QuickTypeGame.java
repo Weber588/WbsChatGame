@@ -77,7 +77,7 @@ public class QuickTypeGame extends WordGame {
     private Word conditionalScramble(Word word) {
         if (scramble) {
             String scrambled = WordUtil.scrambleString(word.word);
-            return new Word(scrambled, word.getPoints(), word.generator);
+            return new Word(scrambled, word.getPoints());
         } else {
             return word;
         }

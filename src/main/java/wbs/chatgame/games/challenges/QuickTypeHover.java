@@ -15,7 +15,7 @@ public class QuickTypeHover extends QuickTypeGame implements Challenge<QuickType
     @Override
     @NotNull
     protected Game startGame(Word wordToGuess) {
-        setCurrentWord(new Word(wordToGuess.word, wordToGuess.getPoints() + 1, wordToGuess.generator));
+        setCurrentWord(new Word(wordToGuess.word, wordToGuess.getPoints() + 1, wordToGuess.isFormatted()));
 
         WbsMessage message = plugin.buildMessage("Quick! &hHover&r over this message to see the word to type! ("
                         + GameController.pointsDisplay(getPoints()) + ")")

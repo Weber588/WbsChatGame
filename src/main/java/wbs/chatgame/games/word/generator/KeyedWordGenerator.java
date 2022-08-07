@@ -24,7 +24,7 @@ public abstract class KeyedWordGenerator extends WordGenerator {
 
                     if (!postPrefix.contains(".")) { // Ignore child nodes; only get leaves
                         String word = lang.get(key);
-                        words.add(new GeneratedWord(word, this, true));
+                        words.add(new GeneratedWord(word, 0, this, true));
                     }
                 }
             }

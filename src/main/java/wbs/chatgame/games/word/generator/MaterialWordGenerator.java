@@ -33,7 +33,7 @@ public abstract class MaterialWordGenerator extends WordGenerator {
         String defaultString = WbsEnums.toPrettyString(material);
 
         if (lang == null) {
-            return new GeneratedWord(defaultString, this, getHint(material));
+            return new GeneratedWord(defaultString, 0, this, getHint(material), false);
         }
 
         NamespacedKey key = material.getKey();
@@ -42,10 +42,10 @@ public abstract class MaterialWordGenerator extends WordGenerator {
         String name = lang.get(nameKey);
 
         if (name == null) {
-            return new GeneratedWord(defaultString, this, getHint(material));
+            return new GeneratedWord(defaultString, 0, this, getHint(material), false);
         }
 
-        return new GeneratedWord(name, this, getHint(material), true);
+        return new GeneratedWord(name, 0, this, getHint(material), true);
     }
 
     @Nullable

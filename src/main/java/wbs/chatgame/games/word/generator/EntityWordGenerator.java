@@ -36,7 +36,7 @@ public abstract class EntityWordGenerator<T extends Entity> extends WordGenerato
         String defaultString = WbsEnums.toPrettyString(type);
 
         if (lang == null) {
-            return new GeneratedWord(defaultString, this);
+            return new GeneratedWord(defaultString, 0, this, false);
         }
 
         NamespacedKey key = type.getKey();
@@ -45,9 +45,9 @@ public abstract class EntityWordGenerator<T extends Entity> extends WordGenerato
         String name = lang.get(nameKey);
 
         if (name == null) {
-            return new GeneratedWord(defaultString, this);
+            return new GeneratedWord(defaultString, 0, this, false);
         }
 
-        return new GeneratedWord(name, this, true);
+        return new GeneratedWord(name, 0, this, true);
     }
 }

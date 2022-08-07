@@ -36,7 +36,7 @@ public class PotionWordGenerator extends KeyedWordGenerator {
                 .map(potion -> potionNameOverrides.getOrDefault(potion, potion.getName()))
                 .map(name -> name.replace("_", " "))
                 .map(WbsStrings::capitalizeAll)
-                .map(word -> new GeneratedWord(word, this))
+                .map(word -> new GeneratedWord(word, 0, this))
                 .collect(Collectors.toList());
     }
 }

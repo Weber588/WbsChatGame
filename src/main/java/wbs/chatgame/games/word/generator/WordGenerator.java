@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import wbs.utils.util.WbsCollectionUtil;
 
 import java.util.*;
+import java.util.function.Function;
 
 public abstract class WordGenerator {
 
@@ -24,7 +25,7 @@ public abstract class WordGenerator {
     }
 
     @NotNull
-    public GeneratedWord getNext() {
+    public GeneratedWord getNext(Function<String, Integer> pointsCalculator) {
         Set<GeneratedWord> words = generated;
 
         GeneratedWord word;
@@ -36,7 +37,10 @@ public abstract class WordGenerator {
         if (history.size() > words.size() / 2) {
             history.remove(0);
         }
-        return word;
+
+        int points = Math.max(1, pointsCalculator.apply(word.word) + getPointsModifier());
+
+        return word.setPoints(points);
     }
 
     public int size() {
@@ -77,7 +81,7 @@ public abstract class WordGenerator {
         }
 
         toRemove.forEach(generated::remove); // Faster, according to IntelliJ.
-        include.forEach(word -> generated.add(new GeneratedWord(word, this)));
+        include.forEach(word -> generated.add(new GeneratedWord(word, 1, this, true)));
     }
 
     public int getPointsModifier() {

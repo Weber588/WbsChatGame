@@ -174,7 +174,7 @@ public class UnscrambleGame extends WordGame {
             }
         }
 
-        if (word.generator != null && generatorHintsEnabled) {
+        if (word instanceof GeneratedWord && generatorHintsEnabled) {
             addHintIfEnabled(possibleTypes, HintType.GENERATOR_HINTS);
         }
 
