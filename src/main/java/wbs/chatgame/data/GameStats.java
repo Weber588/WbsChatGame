@@ -95,4 +95,24 @@ public class GameStats implements RecordProducer {
 
         return record;
     }
+
+    public boolean needsSaving() {
+        for (Map.Entry<TrackedPeriod, Integer> entry : points.entrySet()) {
+            Integer pointsInPeriod = entry.getValue();
+
+            if (pointsInPeriod != null && pointsInPeriod != 0) {
+                return true;
+            }
+        }
+
+        for (Map.Entry<TrackedPeriod, Double> entry : speed.entrySet()) {
+            Double speedInPeriod = entry.getValue();
+
+            if (speedInPeriod != null && speedInPeriod != Double.MAX_VALUE) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
