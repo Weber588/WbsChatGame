@@ -30,8 +30,8 @@ public class OperatorManager {
         registerOperation("*", "multiplication", MultiplicationOperator.class);
         registerOperation("/", "division", DivisionOperator.class);
         registerOperation("%", "modulo", ModuloOperator.class);
-        registerOperation("+", "addition", AdditionOperator.class);
         registerOperation("-", "subtraction", SubtractionOperator.class);
+        registerOperation("+", "addition", AdditionOperator.class);
 
         defaultOperator = "+";
     }
