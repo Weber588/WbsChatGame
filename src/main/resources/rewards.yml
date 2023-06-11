@@ -8,18 +8,16 @@ message:
   - '&h> &r10% of questions worth 3 or more points will give you some iron!'
   - '&h> &rReaching 100 points will give you $100!'
 
-
 rewards:
   # Random rewards occur with a chance for every question answered over a certain amount of points.
   random:
-    givemoney10: # This is the name of the reward - It isn't used, but needs to be unique.
+    giveiron10: # This is the name of the reward - It isn't used, but needs to be unique.
       chance: 10
       points-needed: 3 # The question answered must have been worth this many points (or more).
       money: 5
       message: 'Congratulations!'
       commands:
         - 'minecraft:give %player% minecraft:iron_ingot 1'
-        - 'minecraft:say This is the default ChatGame reward!'
       broadcast: '%player% just got some money and an iron ingot!'
 
   # Recurring rewards occur every X points. An example has been provided.
