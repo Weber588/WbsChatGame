@@ -10,19 +10,19 @@ import java.util.UUID;
 public class GameStats implements RecordProducer {
 
     private final UUID uuid;
-    private final String gameId;
+    private final String gameName;
 
     private final Map<TrackedPeriod, Integer> points = new HashMap<>();
     private final Map<TrackedPeriod, Double> speed = new HashMap<>();
 
-    public GameStats(PlayerRecord player, String gameId) {
+    public GameStats(PlayerRecord player, String gameName) {
         this.uuid = player.getUUID();
-        this.gameId = gameId;
+        this.gameName = gameName;
     }
 
     public GameStats(WbsRecord record) {
         uuid = UUID.fromString(record.getValue(ChatGameDB.uuidField, String.class));
-        gameId = record.getValue(ChatGameDB.gameField, String.class);
+        gameName = record.getValue(ChatGameDB.gameField, String.class);
 
         for (TrackedPeriod period : TrackedPeriod.values()) {
             Integer current = record.getValue(period.pointsField, Integer.class);
@@ -73,8 +73,8 @@ public class GameStats implements RecordProducer {
         return pointsVal == null ? Double.MAX_VALUE : pointsVal;
     }
 
-    public String getGameId() {
-        return gameId;
+    public String getGameName() {
+        return gameName;
     }
 
     public UUID getUUID() {
@@ -86,7 +86,7 @@ public class GameStats implements RecordProducer {
         WbsRecord record = new WbsRecord(ChatGameDB.getDatabase());
 
         record.setField(ChatGameDB.uuidField, uuid);
-        record.setField(ChatGameDB.gameField, gameId);
+        record.setField(ChatGameDB.gameField, gameName);
 
         for (TrackedPeriod period : TrackedPeriod.values()) {
             record.setField(period.pointsField, getPoints(period));

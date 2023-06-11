@@ -74,6 +74,7 @@ public abstract class Game {
     protected final WbsChatGame plugin;
     protected final ChatGameSettings settings;
 
+    @NotNull
     protected final String gameName;
     private double challengeChance;
 
@@ -222,6 +223,7 @@ public abstract class Game {
         return duration;
     }
 
+    @NotNull
     public String getGameName() {
         return gameName;
     }

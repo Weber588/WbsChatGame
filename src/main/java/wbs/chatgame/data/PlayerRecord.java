@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.Game;
-import wbs.chatgame.games.GameManager;
 import wbs.utils.util.database.RecordProducer;
 import wbs.utils.util.database.WbsRecord;
 
@@ -87,14 +86,12 @@ public class PlayerRecord implements RecordProducer {
 
     @NotNull
     public GameStats getStats(@NotNull Game game) {
-        String id = GameManager.getRegistrationId(game);
+        String name = game.getGameName();
 
-        if (id == null) throw new IllegalArgumentException("Game not registered: " + game.getClass().getCanonicalName());
-
-        GameStats toReturn = stats.get(id);
+        GameStats toReturn = stats.get(name);
         if (toReturn == null) {
-            toReturn = new GameStats(this, id);
-            stats.put(id, toReturn);
+            toReturn = new GameStats(this, name);
+            stats.put(name, toReturn);
         }
 
         return toReturn;
@@ -151,7 +148,7 @@ public class PlayerRecord implements RecordProducer {
     }
 
     public void addStat(GameStats stats) {
-        this.stats.put(stats.getGameId(), stats);
+        this.stats.put(stats.getGameName(), stats);
     }
 
     public boolean isListening() {
