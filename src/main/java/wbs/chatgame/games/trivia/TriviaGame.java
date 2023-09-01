@@ -221,5 +221,6 @@ public class TriviaGame extends Game {
         ChallengeManager.buildAndRegisterChallenge("player-in-game-position", this, TriviaGamePosition.class);
         ChallengeManager.buildAndRegisterChallenge("current-points", this, TriviaYourCurrentPoints.class);
         ChallengeManager.buildAndRegisterChallenge("crafting-recipe", this, TriviaCraftingAmount.class);
+        ChallengeManager.buildAndRegisterChallenge("crafting-ingredient", this, TriviaRecipeIncluding.class);
     }
 }

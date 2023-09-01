@@ -34,6 +34,9 @@ trivia:
     # Does not include recipes that only contain one item & item type
     crafting-recipe: 5
 
+    # Chance that a trivia question will be replaced with "Name a crafting recipe that includes [item]."
+    crafting-ingredient: 5
+
   questions:
     # The unique name of the question. It's not used, but must be unique
     Notch:
