@@ -16,8 +16,6 @@ public final class GeneratorManager {
     private static final Map<String, WordGenerator> generators = new HashMap<>();
     private static final Map<WordGenerator, String> generatorIds = new HashMap<>();
 
-    private static Map<String, String> langConfig;
-
     static {
         registerGenerator("animal", new AnimalWordGenerator());
         registerGenerator("biome", new BiomeWordGenerator());
@@ -76,14 +74,5 @@ public final class GeneratorManager {
 
             generator.configure(genSection);
         }
-    }
-
-    public static void registerLangMap(Map<String, String> langConfig) {
-        GeneratorManager.langConfig = langConfig;
-    }
-
-    @Nullable
-    public static Map<String, String> getLangConfig() {
-        return langConfig;
     }
 }

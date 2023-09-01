@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
+import wbs.chatgame.LangUtil;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsEnums;
 
@@ -28,24 +29,7 @@ public abstract class MaterialWordGenerator extends WordGenerator {
     protected abstract String getLangPrefix();
 
     protected GeneratedWord toWord(Material material) {
-        Map<String, String> lang = GeneratorManager.getLangConfig();
-
-        String defaultString = WbsEnums.toPrettyString(material);
-
-        if (lang == null) {
-            return new GeneratedWord(defaultString, 0, this, getHint(material), false);
-        }
-
-        NamespacedKey key = material.getKey();
-        String nameKey = getLangPrefix() + "." + key.getNamespace() + "." + key.getKey();
-
-        String name = lang.get(nameKey);
-
-        if (name == null) {
-            return new GeneratedWord(defaultString, 0, this, getHint(material), false);
-        }
-
-        return new GeneratedWord(name, 0, this, getHint(material), true);
+        return new GeneratedWord(LangUtil.getMaterialName(material), 0, this, getHint(material), false);
     }
 
     @Nullable

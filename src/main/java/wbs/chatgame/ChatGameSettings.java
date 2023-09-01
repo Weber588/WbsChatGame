@@ -98,14 +98,13 @@ public class ChatGameSettings extends WbsSettings {
             return;
         }
 
-        Map<String, String> langConfig;
         try {
             JsonReader reader = new JsonReader(new FileReader(langFile));
             Type type = new TypeToken<Map<String, String>>(){}.getType();
 
-            langConfig = new Gson().fromJson(reader, type);
+            Map<String, String> langConfig = new Gson().fromJson(reader, type);
 
-            GeneratorManager.registerLangMap(langConfig);
+            LangUtil.registerLangMap(langConfig);
         } catch (IOException e) {
             plugin.logger.info("Failed to load language file!");
             e.printStackTrace();
