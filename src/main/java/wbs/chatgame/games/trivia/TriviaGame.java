@@ -32,15 +32,40 @@ public class TriviaGame extends Game {
                     continue;
                 }
 
-                String requiredVersion = qSection.getString("required-version");
-                if (requiredVersion != null) {
-                    if (requiredVersion.startsWith("1.")) {
-                        requiredVersion = requiredVersion.substring(2);
+                String minVersion = qSection.getString("required-version");
+                minVersion = qSection.getString("min-ver", minVersion);
+                minVersion = qSection.getString("min-version", minVersion);
+                if (minVersion != null) {
+                    if (minVersion.startsWith("1.")) {
+                        minVersion = minVersion.substring(2);
                     }
 
                     double versionAsDouble = -1;
                     try {
-                        versionAsDouble = Double.parseDouble(requiredVersion);
+                        versionAsDouble = Double.parseDouble(minVersion);
+                    } catch (NumberFormatException ignored) {}
+
+                    if (versionAsDouble != -1) {
+                        if (versionAsDouble > VersionUtil.getVersion()) {
+                            continue;
+                        }
+                    } else {
+                        settings.logError("Invalid min-version: \"" + minVersion + "\". Skipping.",
+                                qDir + "/min-version");
+                        continue;
+                    }
+                }
+
+                String maxVersion = qSection.getString("max-ver");
+                maxVersion = qSection.getString("max-version", maxVersion);
+                if (maxVersion != null) {
+                    if (maxVersion.startsWith("1.")) {
+                        maxVersion = maxVersion.substring(2);
+                    }
+
+                    double versionAsDouble = -1;
+                    try {
+                        versionAsDouble = Double.parseDouble(maxVersion);
                     } catch (NumberFormatException ignored) {}
 
                     if (versionAsDouble != -1) {
@@ -48,8 +73,8 @@ public class TriviaGame extends Game {
                             continue;
                         }
                     } else {
-                        settings.logError("Invalid required-version: \"" + requiredVersion + "\". Skipping.",
-                                qDir + "/required-version");
+                        settings.logError("Invalid max-version: \"" + maxVersion + "\". Skipping.",
+                                qDir + "/max-version");
                         continue;
                     }
                 }

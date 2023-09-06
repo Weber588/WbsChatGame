@@ -118,12 +118,16 @@ item:
     - 'Spawn Egg'
     - 'Music Disc'
     - 'Banner Pattern'
+    - 'Sherd'
+    - 'Smithing Template'
 
   include:
     - 'Dye'
     - 'Spawn Egg'
     - 'Music Disc'
     - 'Banner Pattern'
+    - 'Sherd'
+    - 'Smithing Template'
 
 monster: {}
 potion: {}

@@ -4,7 +4,7 @@ trivia:
 
   # The chance to use a challenge instead of a normal game.
   # 0 = never use challenges, 100 = always use challenges
-  challenge-chance: 10
+  challenge-chance: 20
 
   challenges:
     # Chance that a trivia question will be replaced with
@@ -56,9 +56,18 @@ trivia:
 
     RarestOre:
       question: 'What is the rarest ore in Minecraft?'
+      max-version: 1.16.4
       use-regex: true # You can enable regex for the answers to condense answers.
       answers:
         - 'Emerald(s|\sOre)?' # Catches Emerald, Emeralds, and Emerald Ore!
+      points: 1
+
+    RarestOre1_17+:
+      question: 'What is the rarest ore in Minecraft?'
+      min-version: 1.17
+      use-regex: true
+      answers:
+        - 'Deepslate Emerald(\sOre)?'
       points: 1
 
     Fatigue:
@@ -102,13 +111,13 @@ trivia:
       points: 1
 
     EndermenEyes:
-      question: 'What colour are endermen''s eyes?'
+      question: 'What colour are an endermen''s eyes?'
       answers:
         - 'Purple'
       points: 1
 
     CreeperModel:
-      question: 'Which entity was Notch trying to make when he accidentally created the creeper model?'
+      question: 'Which entity was being worked on when they accidentally created the creeper model?'
       answers:
         - 'Pig'
         - 'A pig'
@@ -168,6 +177,8 @@ trivia:
 
     OlBetsyDescription:
       question: 'What is the description for the advancement "Ol'' Betsy"?'
+      # The minimum version this question will appear on.
+      # This lets you make questions that are version-specific if needed!
       required-version: 1.14
       answers:
         - 'Shoot a Crossbow'
@@ -175,21 +186,51 @@ trivia:
 
     FletchingTableCategory:
       question: 'In which tab of the Creative Menu does the Fletching Table appear?'
-      required-version: 1.14
+      min-version: 1.14 # Same thing as required-version
+      max-version: 1.19.3
+      answers:
+        - 'Decoration Blocks'
+      points: 1
+
+    FletchingTableCategory1_19_4+:
+      question: 'In which tab of the Creative Menu does the Fletching Table appear?'
+      min-version: 1.19.4 # Same thing as required-version
       answers:
         - 'Decoration Blocks'
       points: 1
 
     PhantomMembraneCategory:
       question: 'In which tab of the Creative Menu does Phantom Membrane appear?'
+      # The maximum version that a question may appear in.
+      # This lets you keep old questions for backwards compatibility, and specify
+      # the new version's question without having an inaccurate version
+      # You can also use this & min-version to prepare questions for new versions in advance,
+      # so they'll automatically switch when the server upgrades!
+      max-version: 1.19.3
       answers:
         - 'Brewing'
       points: 1
 
+    PhantomMembraneCategory1_19_4+:
+      question: 'In which tab of the Creative Menu does Phantom Membrane appear?'
+      min-version: 1.19.4
+      answers:
+        - 'Ingredients'
+      points: 1
+
     SmallestMenuCategory:
       question: 'Which tab of the Creative Menu has the fewest items?'
+      max-version: 1.19.3
       answers:
         - 'Transportation'
+      points: 1
+
+    SmallestMenuCategory1_19_4+:
+      question: 'Which tab of the Creative Menu has the fewest items?'
+      min-version: 1.19.4
+      answers:
+        - 'Redstone'
+        - 'Redstone Blocks'
       points: 1
 
     MinecartTypes:
@@ -221,16 +262,51 @@ trivia:
         - 'Seventeen'
       points: 1
 
-    BeetrootRedDye:
-      question: 'Crafting a single beetroot will give you which item?'
-      answers:
-        - 'Red Dye'
-      points: 1
-
     MusicDisc11:
       question: 'What level of redstone power does a jukebox emit via comparator when playing music disc 11?'
       answers:
         - '11'
+      points: 1
+
+    EnchantingLapis:
+      question: 'Which type of item is consumed when enchanting?'
+      answers:
+        - 'Lapis'
+        - 'Lapis Lazuli'
+      points: 1
+
+    BookPageLimit:
+      question: 'In vanilla, how many pages can a written book have?'
+      use-regex: true
+      answers:
+        - '100'
+        - '((One|A|1)\s)?Hundred'
+      points: 1
+
+    Herobrine:
+      question: 'Who is the mythical character with the Steve skin that has white eyes?'
+      answers:
+        - 'Herobrine'
+      points: 1
+
+    MusicDiscName:
+      question: 'Name a music disc.'
+      answers:
+        - '13'
+        - 'cat'
+        - 'blocks'
+        - 'chirp'
+        - 'far'
+        - 'mall'
+        - 'mellohi'
+        - 'stal'
+        - 'strad'
+        - 'ward'
+        - '11'
+        - 'wait'
+        - 'otherside'
+        - 'Pigstep'
+        - 'Relic'
       points: 1
 
     ShulkerSlots:
@@ -383,12 +459,25 @@ trivia:
       points: 2
 
     Version1_19:
-      # TODO: Update this manually when 1.19 is released.
-      question: 'What will the 1.19 release of Minecraft: Java Edition be called?'
+      question: 'What was the 1.19 release of Minecraft: Java Edition called?'
       answers:
         - 'The Wild Update'
         - 'Wild Update'
         - 'Wild'
+      points: 2
+
+    Version1_20:
+      question: 'What was the 1.20 release of Minecraft: Java Edition called?'
+      use-regex: true
+      answers:
+        - 'Trails\s?(and|&)\s?Tales'
+      points: 2
+
+    NoReleaseYear:
+      question: 'What is the only year since the release of Minecraft that had no major deployment?'
+      answers:
+        - '2015'
+        - '''15'
       points: 2
 
     Johnny:
@@ -468,6 +557,7 @@ trivia:
     GhastSounds:
       question: 'Ghast sounds were created by distorting the sounds of which animal?'
       answers:
+        - 'A cat'
         - 'Cat'
       points: 2
 
@@ -490,7 +580,6 @@ trivia:
       question: 'What item is used to craft a Mojang Banner Pattern?'
       answers:
         - 'Enchanted Golden Apple'
-        - 'Notch Apple'
       points: 2
 
     CaveGame:
@@ -550,8 +639,166 @@ trivia:
         - 'Fire'
       points: 2
 
+    BookshelvesEnchanting:
+      question: 'How many bookshelves do you need for a level 30 enchanting table?'
+      answers:
+        - '15'
+        - 'Fifteen'
+      points: 2
+
+    EndermanTeleport:
+      question: 'How far can an enderman teleport (in a given axis)?'
+      answers:
+        - '32'
+        - '32 blocks'
+      points: 2
+
+    GhastHealth:
+      question: 'How many hearts does a ghast have?'
+      answers:
+        - '5'
+        - '5 hearts'
+      points: 2
+
+    OldestMob:
+      question: 'Other than the player, what''s the oldest mob in Minecraft (that''s still in the game)?'
+      use-regex: true
+      answers:
+        - '(A\s)?Creeper\s?'
+      points: 2
+
+    SnifferGrow:
+      question: 'Placing a sniffer egg on which block will make it hatch faster?'
+      min-version: 1.20
+      answers:
+        - 'Moss'
+        - 'Moss Block'
+        - 'A Moss Block'
+      points: 2
+
+    BabyHeadSize:
+      question: 'Which baby mob does not have a large head in comparison to its body?'
+      answers:
+        - 'Villager'
+        - 'Villagers'
+      points: 2
+
+    EndStoneTexture:
+      question: 'End Stone is an altered version of which block''s texture?'
+      answers:
+        - 'Cobble'
+        - 'Cobblestone'
+      points: 2
+
+    HalloweenBats:
+      question: 'Which mob spawns more frequently between 20 October and 3 November?'
+      answers:
+        - 'Bat'
+        - 'Bats'
+      points: 2
+
+    UnusedMob:
+      question: 'Name a mob that can only be spawned through commands.'
+      answers:
+        - 'Giant'
+        - 'Illusioner'
+        # Not zombie horses - they can be spawned through spawn eggs
+      points: 2
+
+    Minceraft:
+      question: 'What has a 1 in 10,000 chance of replacing "Minecraft" on the title screen?'
+      answers:
+        - 'Minceraft'
+      points: 2
+
+    LodestoneFire:
+      question: 'Which item can be crafted with a netherite ingot that is NOT immune to lava/fire?'
+      answers:
+        - 'Lodestone'
+      points: 2
+
+    PotterySherdName:
+      question: 'Name a Pottery Sherd.'
+      min-version: 1.20
+      answers:
+        - 'Angler'
+        - 'Archer'
+        - 'Arms Up'
+        - 'Blade'
+        - 'Brewer'
+        - 'Burn'
+        - 'Danger'
+        - 'Explorer'
+        - 'Friend'
+        - 'Heart'
+        - 'Heartbreak'
+        - 'Howl'
+        - 'Miner'
+        - 'Mourner'
+        - 'Plenty'
+        - 'Prize'
+        - 'Sheaf'
+        - 'Shelter'
+        - 'Skull'
+        - 'Snort'
+      points: 2
+
+    PotterySherdWardenDepiction:
+      question: 'Which pottery sherd depicts an early design for the Warden?'
+      min-version: 1.20
+      answers:
+        - 'Mourner'
+      points: 2
+
+    MobVote:
+      question: 'Name a mob that was added to Minecraft as a result of a Mob Vote.'
+      answers:
+        - 'Phantom'
+        - 'Panda'
+        - 'Glow Squid'
+        - 'Allay'
+        - 'Sniffer'
+      points: 2
+
+    MobVoteLoss:
+      question: 'Name a mob that lost its Mob Vote, and was NOT added to the game.'
+      use-regex: true
+      answers:
+        # 2017
+        - '(The )?Barnacle' # Mob A
+        - '(The )?Monster of the Ocean Depths' # Mob A alias
+        - '(The )?Great Hunger' # Mob B
+        - '(The )?Wildfire' # Mob D
+        - '(The )?Hovering Inferno' # Mob D alias
+
+        # China Edition release 2018
+        - 'Crocodile'
+        - 'Golden Monkey'
+        - 'Deer'
+        - 'Pink Dolphin' # Also called Baiji sometimes - worth including that too?
+
+        # 2020
+        - 'Moobloom'
+        - 'Iceologer'
+
+        # 2021
+        - 'Glare'
+        - 'Copper Golem'
+
+        # 2022
+        - 'Rascal'
+        - 'Tuff Golem'
+      points: 3
+
     WorstFuel:
-      required-version: 1.14
+      max-version: 1.13.2
+      question: 'What is the worst fuel to use in a furnace?'
+      answers:
+        - 'Carpet'
+      points: 3
+
+    WorstFuel1_14:
+      min-version: 1.14
       question: 'What is the worst fuel to use in a furnace?'
       answers:
         - 'Scaffolding'
@@ -564,17 +811,11 @@ trivia:
         - '36'
       points: 3
 
-    AnvilCrafting:
-      question: 'How many iron ingots are required to craft an anvil?'
-      answers:
-        - '31'
-      points: 3
-
     NoteBlockStartingNote:
       question: 'When a note block is placed, which note does it start on?'
       use-regex: true
       answers:
-        - 'F\s?(♯|#|sharp)3?'
+        - 'F\s?(♯|#|sharp)\s?3?'
       points: 3
 
     CoalBlockFuelTime:
@@ -595,6 +836,7 @@ trivia:
 
     Armorer:
       question: 'Which type of villager will sell you a shield?'
+      min-version: 1.14
       answers:
         - 'Armorer'
         - 'Armourer'
@@ -602,30 +844,35 @@ trivia:
 
     Butcher:
       question: 'Which type of villager will sell you rabbit stew?'
+      min-version: 1.14
       answers:
         - 'Butcher'
       points: 3
 
     Cartographer:
       question: 'Which type of villager will sell you an item frame?'
+      min-version: 1.14
       answers:
         - 'Cartographer'
       points: 3
 
     Cleric:
       question: 'Which type of villager will sell you an ender pearl?'
+      min-version: 1.14
       answers:
         - 'Cleric'
       points: 3
 
     Farmer:
       question: 'Which type of villager will sell you a cake?'
+      min-version: 1.14
       answers:
         - 'Farmer'
       points: 3
 
     Fisherman:
       question: 'Which type of villager will sell you a campfire?'
+      min-version: 1.14
       answers:
         - 'Fisherman'
         - 'Fisher'
@@ -633,12 +880,14 @@ trivia:
 
     Fletcher:
       question: 'Which type of villager will sell you a crossbow?'
+      min-version: 1.14
       answers:
         - 'Fletcher'
       points: 3
 
     Leatherworker:
       question: 'Which type of villager will sell you a saddle?'
+      min-version: 1.14
       answers:
         - 'Leatherworker'
         - 'Leather Worker'
@@ -646,24 +895,28 @@ trivia:
 
     Librarian:
       question: 'Which type of villager will sell you a lantern?'
+      min-version: 1.14
       answers:
         - 'Librarian'
       points: 3
 
     Mason:
       question: 'Which type of villager will sell you a block of quartz?'
+      min-version: 1.14
       answers:
         - 'Mason'
       points: 3
 
     Shepherd:
       question: 'Which type of villager will sell you a painting?'
+      min-version: 1.14
       answers:
         - 'Shepherd'
       points: 3
 
     Toolsmith:
       question: 'Which type of villager will sell you an iron pickaxe?'
+      min-version: 1.14
       answers:
         - 'Toolsmith'
         - 'Tool Smith'
@@ -671,6 +924,7 @@ trivia:
 
     Weaponsmith:
       question: 'Which type of villager will sell you an iron sword?'
+      min-version: 1.14
       answers:
         - 'Weaponsmith'
         - 'Weapon Smith'
@@ -687,8 +941,109 @@ trivia:
       question: 'With shulker boxes, how many items can a player carry?'
       use-regex: true
       answers:
-        - '63,?936( items)?' # Not including armour or shulker boxes
-        - '63,?940( items)?' # Including armour but not shulker boxes
-        - '63,?973( items)?' # Including shulker boxes but not armour
-        - '63,?977( items)?' # Including both
+        - '63(,|.)?936( items)?' # Not including armour or shulker boxes
+        - '63(,|.)?940( items)?' # Including armour but not shulker boxes
+        - '63(,|.)?973( items)?' # Including shulker boxes but not armour
+        - '63(,|.)?977( items)?' # Including both
+      points: 3
+
+    BlazePowderBrewing:
+      question: 'How many potions can be brewed with a single blaze powder as fuel?'
+      answers:
+        - '20'
+        - '20 potions'
+      points: 3
+
+    MostUsedIngredient:
+      question: 'Which item is used in the most crafting recipes?'
+      use-regex: true
+      answers:
+        - '(A\s)?Stick\s?'
+      points: 3
+
+    HoglinBreeding:
+      question: 'What is the only naturally spawning hostile mob that can be bred?'
+      answers:
+        - 'Hoglin'
+        - 'Hoglins'
+      points: 3
+
+    Grimstone:
+      question: 'What was Deepslate originally called (during development)?'
+      min-version: 1.17
+      answers:
+        - 'Grimstone'
+      points: 3
+
+    EvokerWololo:
+      question: 'Aside from the player, which mob can change the colour of sheep?'
+      answers:
+        - 'Evoker'
+        - 'Evokers'
+        - 'An Evoker'
+      points: 3
+
+    MostBlocksAndItems:
+      question: 'Aside from 1.0, which version of Minecraft added the most blocks/items?'
+      use-regex: true
+      answers:
+        - 'Caves (and|&) Cliffs(:? Part (1|I))?'
+        - '1\.17'
+      points: 3
+
+    MostMobs:
+      question: 'Aside from 1.0, which version of Minecraft added the most mobs?'
+      answers:
+        - 'The Update Aquatic'
+        - 'Update Aquatic'
+        - '1.13'
+      points: 3
+
+    FewestItemsAdded:
+      question: 'Which version of Minecraft added the fewest items/blocks?'
+      use-regex: true
+      answers:
+        - 'Caves (and|&) Cliffs(:? Part (2|II))?'
+        - '1\.18'
+      points: 3
+
+    SuperflatPreset:
+      question: 'Other than "Classic Flat" and "Desert", name a superflat level generation preset.'
+      answers:
+        - 'Tunnelers'' Dream'
+        - 'Water World'
+        - 'Overworld'
+        - 'Snowy Kingdom'
+        - 'Bottomless Pit'
+        - 'Redstone Ready'
+        - 'The Void'
+      points: 3
+
+    SongwriterPigstep:
+      question: 'Who wrote the song "Pigstep" for Minecraft?'
+      min-version: 1.16
+      answers:
+        - 'Lena Reine'
+      points: 3
+
+    SongwriterOtherside:
+      question: 'Who wrote the song "otherside" for Minecraft?'
+      min-version: 1.18
+      answers:
+        - 'Lena Reine'
+      points: 3
+
+    SongwriterOtherside:
+      question: 'Who wrote the song "5" for Minecraft?'
+      min-version: 1.19
+      answers:
+        - 'Samuel Åberg'
+        - 'Samuel Aberg'
+      points: 3
+
+    SongwriterRelic:
+      question: 'Who wrote the song "Relic" for Minecraft?'
+      min-version: 1.20
+      answers:
+        - 'Aaron Cherof'
       points: 3
