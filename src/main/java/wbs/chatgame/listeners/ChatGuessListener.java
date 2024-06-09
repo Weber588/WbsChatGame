@@ -26,7 +26,7 @@ public class ChatGuessListener extends WbsMessenger implements Listener {
 
         String message = event.getMessage();
 
-        Game currentGame = GameController.getCurrentGame();
+        Game currentGame = GameController.getCurrentQuestion();
 
         if (currentGame == null) return;
 

@@ -1,20 +1,20 @@
-package wbs.chatgame.games.challenges;
+package wbs.chatgame.games.challenges.quicktype;
 
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.controller.GameController;
-import wbs.chatgame.games.Game;
-import wbs.chatgame.games.word.QuickTypeGame;
+import wbs.chatgame.games.challenges.ChallengeGenerator;
+import wbs.chatgame.games.word.quicktype.QuickTypeGame;
 import wbs.chatgame.games.word.Word;
+import wbs.chatgame.games.word.WordGameQuestion;
 import wbs.utils.util.plugin.WbsMessage;
 
-public class QuickTypeHover extends QuickTypeGame implements Challenge<QuickTypeGame> {
+public class QuickTypeHover extends QuickTypeGame implements ChallengeGenerator<QuickTypeGame> {
     public QuickTypeHover(QuickTypeGame parent) {
         super(parent);
     }
 
     @Override
-    @NotNull
-    protected Game startGame(Word wordToGuess) {
+    protected @NotNull WordGameQuestion generateQuestion(Word wordToGuess) {
         setCurrentWord(new Word(wordToGuess.word, wordToGuess.getPoints() + 1, wordToGuess.isFormatted()));
 
         WbsMessage message = plugin.buildMessage("Quick! &hHover&r over this message to see the word to type! ("

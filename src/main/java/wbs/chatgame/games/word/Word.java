@@ -1,7 +1,5 @@
 package wbs.chatgame.games.word;
 
-import wbs.chatgame.games.word.generator.GeneratedWord;
-
 import java.util.Objects;
 
 public class Word {

@@ -3,11 +3,14 @@ package wbs.chatgame.games.trivia;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.controller.GameController;
 import wbs.chatgame.controller.GameMessenger;
 import wbs.chatgame.games.Game;
+import wbs.chatgame.games.GameQuestion;
+import wbs.chatgame.games.QuestionGenerator;
 import wbs.chatgame.games.challenges.*;
-import wbs.utils.util.VersionUtil;
+import wbs.chatgame.games.challenges.trivia.*;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.string.WbsStrings;
 
@@ -16,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TriviaGame extends Game {
+public class TriviaGame extends Game<TriviaGame> {
 
     public TriviaGame(String gameName, ConfigurationSection section, String directory) {
         super(gameName, section, directory);
@@ -32,76 +35,25 @@ public class TriviaGame extends Game {
                     continue;
                 }
 
-                String minVersion = qSection.getString("required-version");
-                minVersion = qSection.getString("min-ver", minVersion);
-                minVersion = qSection.getString("min-version", minVersion);
-                if (minVersion != null) {
-                    if (minVersion.startsWith("1.")) {
-                        minVersion = minVersion.substring(2);
-                    }
+                TriviaQuestion triviaQuestion = TriviaQuestion.fromConfig(qSection, directory, key);
 
-                    double versionAsDouble = -1;
-                    try {
-                        versionAsDouble = Double.parseDouble(minVersion);
-                    } catch (NumberFormatException ignored) {}
-
-                    if (versionAsDouble != -1) {
-                        if (versionAsDouble > VersionUtil.getVersion()) {
-                            continue;
-                        }
-                    } else {
-                        settings.logError("Invalid min-version: \"" + minVersion + "\". Skipping.",
-                                qDir + "/min-version");
-                        continue;
-                    }
+                if (triviaQuestion != null && triviaQuestion.isVersionValid()) {
+                    questions.add(triviaQuestion);
                 }
-
-                String maxVersion = qSection.getString("max-ver");
-                maxVersion = qSection.getString("max-version", maxVersion);
-                if (maxVersion != null) {
-                    if (maxVersion.startsWith("1.")) {
-                        maxVersion = maxVersion.substring(2);
-                    }
-
-                    double versionAsDouble = -1;
-                    try {
-                        versionAsDouble = Double.parseDouble(maxVersion);
-                    } catch (NumberFormatException ignored) {}
-
-                    if (versionAsDouble != -1) {
-                        if (versionAsDouble < VersionUtil.getVersion()) {
-                            continue;
-                        }
-                    } else {
-                        settings.logError("Invalid max-version: \"" + maxVersion + "\". Skipping.",
-                                qDir + "/max-version");
-                        continue;
-                    }
-                }
-
-                List<String> answers = qSection.getStringList("answers");
-                if (answers.isEmpty()) {
-                    settings.logError("No answers provided.", qDir + "/answers");
-                    continue;
-                }
-
-                String question = qSection.getString("question");
-                if (question == null) {
-                    settings.logError("Question is a required field.", qDir + "/answers");
-                    continue;
-                }
-
-
-                int points = qSection.getInt("points");
-                boolean showAnswer = qSection.getBoolean("show-answer", false);
-                boolean useRegex = qSection.getBoolean("use-regex", false);
-                boolean fillPlaceholders = qSection.getBoolean("fill-placeholders", false);
-
-                questions.add(new TriviaQuestion(key, question, points, showAnswer, fillPlaceholders, useRegex, answers.toArray(new String[0])));
             }
         }
 
         plugin.logger.info("Loaded " + questions.size() + " questions for " + gameName);
+    }
+
+    @Override
+    protected TriviaGame getThis() {
+        return this;
+    }
+
+    @Override
+    protected @NotNull QuestionGenerator<TriviaGame> getDefaultGenerator() {
+        return new TriviaGameGenerator();
     }
 
     public TriviaGame(TriviaGame copy) {
@@ -113,7 +65,6 @@ public class TriviaGame extends Game {
 
     private final List<TriviaQuestion> questions = new LinkedList<>();
     private final List<TriviaQuestion> history = new LinkedList<>();
-    private TriviaQuestion question;
 
     /**
      * Get the correct format for an answer from a successful guess
@@ -135,18 +86,17 @@ public class TriviaGame extends Game {
     }
 
     @Override
-    @NotNull
-    protected Game start() {
+    protected GameQuestion generateQuestion() {
         question = nextQuestion();
         currentPoints = question.points();
         broadcastQuestion(question.question() + "&h (" + GameController.pointsDisplay(question.points()) + ")");
-        return this;
+        return question;
     }
 
     @Override
-    public Game startWithOptions(@NotNull List<String> options) {
+    public @Nullable GameQuestion generateWithOptions(@NotNull List<String> options) {
         if (options.isEmpty()) {
-            return start();
+            return generateQuestion();
         }
 
         String id = options.get(0);

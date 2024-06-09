@@ -141,3 +141,8 @@ structure:
     - 'End City'
     - 'Nether Fortress'
 
+advancements:
+  # Since advancements can be added via data pack, any advancement title can be used. Sometimes you might
+  # not want them to be usable though, such as if the advancement isn't really an advancement, b
+  ignore-namespace:
+    - 'vanillatweaks'

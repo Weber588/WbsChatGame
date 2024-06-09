@@ -1,4 +1,4 @@
-package wbs.chatgame.games.challenges;
+package wbs.chatgame.games.challenges.trivia;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

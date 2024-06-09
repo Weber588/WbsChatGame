@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.data.ChatGameDB;
 import wbs.chatgame.games.Game;
+import wbs.chatgame.games.GameQuestion;
 import wbs.chatgame.rewards.RewardManager;
 import wbs.utils.util.string.WbsStringify;
 
@@ -27,14 +28,13 @@ public class GameController {
     public static int roundDelay = 180 * 20;
 
     // Round info
-    private static Game currentGame;
+    private static GameQuestion currentQuestion;
     private static int roundRunnableId = -1;
     private static int betweenRoundsRunnableId = -1;
 
-    private static Player lastWinner;
-    private static Game lastGame;
+    private static GameQuestion lastQuestion;
 
-    private static GameQueue gameQueue = new GameQueue();
+    private static final GameQueue gameQueue = new GameQueue();
 
     /**
      * The start of the current phase, whether it's the start of a round,
@@ -90,21 +90,22 @@ public class GameController {
             return;
         }
 
-        currentGame = gameQueue.startNext();
+        currentQuestion = gameQueue.getNext();
+        currentQuestion.start();
 
         roundRunnableId = new BukkitRunnable() {
             @Override
             public void run() {
                 endRoundNoWinner(true);
             }
-        }.runTaskLater(plugin, currentGame.getDuration()).getTaskId();
+        }.runTaskLater(plugin, currentQuestion.getDuration()).getTaskId();
     }
 
     /**
      * Skip the current round if there is one, and then immediately start the next round.
      */
     public static void skip() {
-        if (currentGame != null) {
+        if (currentQuestion != null) {
             endRoundNoWinner(false);
         }
         cancelTasks();
@@ -118,39 +119,36 @@ public class GameController {
      * @return Whether or not there was a round running.
      */
     public static synchronized boolean endRoundNoWinner(boolean startNext) {
-        if (currentGame == null) {
+        if (currentQuestion == null) {
             return false;
         }
 
-        lastWinner = null;
-
-        currentGame.endNoWinner();
+        currentQuestion.endNoWinner();
 
         onRoundEnd(startNext);
         return true;
     }
 
     public static boolean endRoundWithWinner(Player winner, String guess) {
-        if (currentGame == null) {
+        if (currentQuestion == null) {
             return false;
         }
-
-        final int points = currentGame.getPoints();
-        final Game finalGame = currentGame;
-
-        lastWinner = winner;
-        currentGame.endWinner(winner, guess);
 
         Duration duration = Duration.between(phaseStartTime, LocalDateTime.now());
         long millis = duration.toMillis();
         double speed = millis / (double) 1000;
 
+        final int points = currentQuestion.getPoints();
+        final GameQuestion finalQuestion = currentQuestion;
+
+        currentQuestion.endWinner(winner, guess, speed);
+
         onRoundEnd(true);
 
         ChatGameDB.getPlayerManager().getAsync(winner.getUniqueId(), record -> {
             RewardManager.giveRewards(record, points);
-            record.addPoints(points, finalGame);
-            record.registerTime(speed, finalGame);
+            record.addPoints(points, finalQuestion.getGame());
+            record.registerTime(speed, finalQuestion.getGame());
 
             // TODO: Make it configurable, to save as batches or save after each win.
             ChatGameDB.getPlayerManager().saveAsync(Collections.singletonList(record));
@@ -161,8 +159,8 @@ public class GameController {
     private static void onRoundEnd(boolean startNext) {
         phaseStartTime = LocalDateTime.now();
 
-        lastGame = currentGame;
-        currentGame = null;
+        lastQuestion = currentQuestion;
+        currentQuestion = null;
         cancelTasks();
 
         if (startNext) {
@@ -203,7 +201,7 @@ public class GameController {
                     return;
                 }
 
-                boolean won = currentGame.checkGuess(guess, guesser);
+                boolean won = currentQuestion.checkGuess(guess, guesser);
 
                 if (won) {
                     GameController.endRoundWithWinner(guesser, guess);
@@ -226,7 +224,7 @@ public class GameController {
      * actually won if their guess was correct. To check if the player won, use the callback.
      */
     public static boolean guessAfterCheck(Player guesser, String guess, Consumer<Boolean> callback, Runnable alreadyWon) {
-        if (currentGame.checkGuess(guess, guesser)) {
+        if (currentQuestion.checkGuess(guess, guesser)) {
             GameController.guess(guesser, guess, callback, alreadyWon);
             return true;
         }
@@ -254,8 +252,8 @@ public class GameController {
     }
 
     @Nullable
-    public static Game getCurrentGame() {
-        return currentGame;
+    public static GameQuestion getCurrentQuestion() {
+        return currentQuestion;
     }
 
     public static boolean forceStopped() {
@@ -278,16 +276,12 @@ public class GameController {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean inRound() {
-        return currentGame != null;
-    }
-
-    public static Player getLastWinner() {
-        return lastWinner;
+        return currentQuestion != null;
     }
 
     @Nullable
-    public static Game getLastGame() {
-        return lastGame;
+    public static GameQuestion getLastQuestion() {
+        return lastQuestion;
     }
 
     public static GameQueue getGameQueue() {

@@ -1,7 +1,5 @@
-package wbs.chatgame.games.challenges;
+package wbs.chatgame.games.challenges.trivia;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.EnchantmentTarget;

@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 public final class WordUtil {
+
+    private static final int NICE_SCRAMBLE_TRIES = 15;
+
     private WordUtil() {}
 
     public static String stripSyntax(String toStrip) {
@@ -20,6 +23,26 @@ public final class WordUtil {
                         Math.log(word.length() / 2.5) / Math.log(2) // log_2(length/3)
                 )
         );
+    }
+
+    public static String scrambleNicely(String word, boolean preventDoubleSpaces, boolean preventSpacesOnEnds) {
+        String scrambled;
+
+        int escape = 0;
+
+        do {
+            scrambled = WordUtil.scrambleString(word);
+            escape++;
+        } while (!isScrambledNicely(scrambled, preventDoubleSpaces, preventSpacesOnEnds) && escape < NICE_SCRAMBLE_TRIES);
+
+        return scrambled;
+    }
+
+    public static boolean isScrambledNicely(String string, boolean preventDoubleSpaces, boolean preventSpacesOnEnds) {
+        if (preventDoubleSpaces && string.contains("  ")) return false;
+        if (preventSpacesOnEnds && !string.trim().equals(string)) return false;
+
+        return true;
     }
 
     public static String scrambleString(String input) {

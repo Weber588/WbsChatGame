@@ -6,10 +6,12 @@ import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
+import wbs.chatgame.games.GameQuestion;
 import wbs.utils.util.plugin.WbsPlugin;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 
 public class GameQueue {
@@ -26,28 +28,29 @@ public class GameQueue {
     private int startAttempts = 0;
 
     @NotNull
-    public Game startNext() {
-        RunnableInstance toStart = next();
+    public GameQuestion getNext() {
+        RunnableInstance toBuild = next();
         try {
-            Game gameRun = toStart.start();
+            GameQuestion questionGenerated = toBuild.generateQuestion();
             startAttempts = 0;
-            return gameRun;
+            return questionGenerated;
         } catch (IllegalArgumentException e) {
             startAttempts++;
             WbsPlugin plugin = WbsChatGame.getInstance();
-            if (toStart.sender() != null) {
-                plugin.sendMessage("&w" + e.getMessage(), toStart.sender());
-                plugin.sendMessage("Starting round without options.", toStart.sender());
+            if (toBuild.sender() != null) {
+                plugin.sendMessage("&w" + e.getMessage(), toBuild.sender());
+                plugin.sendMessage("Starting round without options.", toBuild.sender());
             } else {
-                plugin.logger.warning("Game failed to start: " + toStart.game());
+                plugin.logger.warning("Game failed to start: " + toBuild.game());
             }
-            if (toStart.options() != null) {
-                forceNext = new RunnableInstance(toStart.sender(), toStart.game(), null);
+            if (toBuild.options() != null) {
+                forceNext = new RunnableInstance(toBuild.sender(), toBuild.game(), null);
             }
 
             if (startAttempts < MAX_START_ATTEMPTS) {
-                return startNext();
+                return getNext();
             } else {
+                startAttempts = 0;
                 throw new IllegalStateException("Failed to start game.");
             }
         }
@@ -64,7 +67,8 @@ public class GameQueue {
         }
 
         while (queue.size() < QUEUE_SIZE) {
-            queue.add(new RunnableInstance(null, GameManager.getRandomGame(), null));
+            Game game = GameManager.getRandomGame();
+            queue.add(new RunnableInstance(null, game, null));
         }
 
         if (toStart == null) {
@@ -110,12 +114,13 @@ public class GameQueue {
         }
     }
 
-    public static record RunnableInstance(@Nullable CommandSender sender, @NotNull Game game, @Nullable List<String> options) {
-        public Game start() throws IllegalArgumentException {
+    public record RunnableInstance(@Nullable CommandSender sender, @NotNull Game game,
+                                                      @Nullable List<String> options) {
+        public GameQuestion generateQuestion() throws IllegalArgumentException {
             if (options != null) {
-                return game.startWithOptionsOrChallenge(options);
+                return game.generateWithOptionsOrChallenge(options);
             }
-            return game.startGame();
+            return game.generateQuestion();
         }
     }
 

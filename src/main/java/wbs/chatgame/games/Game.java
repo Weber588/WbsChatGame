@@ -1,19 +1,15 @@
 package wbs.chatgame.games;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.ChatGameSettings;
 import wbs.chatgame.WbsChatGame;
-import wbs.chatgame.controller.GameMessenger;
-import wbs.chatgame.games.challenges.Challenge;
+import wbs.chatgame.games.challenges.ChallengeGenerator;
 import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.WbsMath;
-import wbs.utils.util.plugin.WbsMessage;
-import wbs.utils.util.plugin.WbsMessageBuilder;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -23,7 +19,28 @@ import java.util.stream.Collectors;
 
 public abstract class Game {
 
-    public Game(String gameName, ConfigurationSection section, String directory) {
+    @NotNull
+    protected final WbsChatGame plugin;
+    @NotNull
+    protected final ChatGameSettings settings;
+
+    @NotNull
+    protected final String gameName;
+    private double challengeChance;
+
+    private final QuestionGenerator<?> defaultGenerator;
+
+    /** Duration in ticks */
+    private final int duration;
+
+    @NotNull
+    private final List<String> challengeHistory = new LinkedList<>();
+
+    /** A map of challenge ids to the chance */
+    @NotNull
+    private final Map<String, Double> challengesWithChance = new HashMap<>();
+
+    public Game(@NotNull String gameName, ConfigurationSection section, String directory) {
         plugin = WbsChatGame.getInstance();
         settings = plugin.settings;
         this.gameName = gameName;
@@ -61,6 +78,8 @@ public abstract class Game {
                 plugin.logger.info("Loaded " + challengesWithChance.size() + " challenges for " + getGameName());
             }
         }
+
+        defaultGenerator = getDefaultGenerator();
     }
 
     protected Game(Game copy) {
@@ -69,86 +88,53 @@ public abstract class Game {
         this.gameName = copy.gameName;
         this.challengeChance = copy.challengeChance;
         this.duration = copy.duration;
-    }
-
-    protected final WbsChatGame plugin;
-    protected final ChatGameSettings settings;
-
-    @NotNull
-    protected final String gameName;
-    private double challengeChance;
-
-    /** Duration in ticks */
-    private final int duration;
-
-    private final List<String> challengeHistory = new LinkedList<>();
-    /** A map of challenge ids to the chance */
-    private final Map<String, Double> challengesWithChance = new HashMap<>();
-
-    private WbsMessage currentQuestion;
-    protected int currentPoints;
-
-    public void broadcastQuestion(String currentQuestion) {
-        WbsMessageBuilder builder = plugin.buildMessage(currentQuestion);
-        broadcastQuestion(builder.build());
-    }
-
-    public void broadcastQuestion(WbsMessage currentQuestion) {
-        if (settings.debugMode) {
-            String lineBreak = "___________________________________________________________";
-            plugin.logger.info(lineBreak);
-            currentQuestion.send(Bukkit.getConsoleSender());
-            plugin.logger.info("Answers: ");
-            for (String answer : getAnswers()) {
-                plugin.logger.info(" - " + answer);
-            }
-            plugin.logger.info(lineBreak);
-        }
-
-        this.currentQuestion = currentQuestion;
-        GameMessenger.broadcast(currentQuestion);
+        defaultGenerator = getDefaultGenerator();
     }
 
     /**
      * Start the game, or a challenge, and return the game that was started.
-     * @return The game that was started; either this object, or the challenge
-     * that was started instead.
+     * @return A game question, or null if the question failed to generate.
      */
-    @NotNull
-    public final Game startGame() {
-        if (!(this instanceof Challenge)) {
-            if (WbsMath.chance(challengeChance) && !challengesWithChance.isEmpty()) {
-                Challenge<?> challenge;
-                String id = WbsCollectionUtil.pseudoRandomAvoidRepeats(challengesWithChance, challengeHistory, 2);
-                challenge = ChallengeManager.getChallenge(id, this);
+    @Nullable
+    public final GameQuestion getNewQuestion() {
+        QuestionGenerator<?> toUse = defaultGenerator;
 
-                if (challenge == null) {
-                    plugin.logger.info("Invalid challenge in game " + gameName + ": " + id);
-                }
+        if (WbsMath.chance(challengeChance) && !challengesWithChance.isEmpty()) {
+            QuestionGenerator<?> challenge;
+            String id = WbsCollectionUtil.pseudoRandomAvoidRepeats(challengesWithChance, challengeHistory, 2);
+            challenge = ChallengeManager.getChallenge(id, this);
 
-                if (challenge != null) {
-                    if (challenge.valid()) {
-                        Game started = challenge.startChallenge();
-                        if (started != null) {
-                            return started;
-                        }
-                    }
+            if (challenge == null) {
+                plugin.logger.info("Invalid challenge in game " + gameName + ": " + id);
+            }
+
+            if (challenge != null) {
+                if (challenge.valid()) {
+                    toUse = challenge;
                 }
             }
         }
 
-        return start();
+        return toUse.generateQuestion();
     }
 
-    public final Game startWithOptionsOrChallenge(@NotNull List<String> options) throws IllegalArgumentException {
+    @NotNull
+    protected abstract QuestionGenerator<?> getDefaultGenerator();
+
+    public GameQuestion generateQuestion() {
+        return defaultGenerator.generateQuestion();
+    }
+
+    public final GameQuestion generateWithOptionsOrChallenge(@NotNull List<String> options) throws IllegalArgumentException {
         if (options.size() > 0) {
             String checkForChallenge = options.get(0);
             if (checkForChallenge.equalsIgnoreCase("-c")) {
                 if (options.size() == 1) {
-                    List<String> challengeIds = ChallengeManager.listChallenges(this)
+                    List<String> challengeIds = ChallengeManager.getGameChallenges(this)
+                            .getGenerators()
                             .stream()
-                            .filter(Challenge::valid)
-                            .map(Challenge::getId)
+                            .filter(QuestionGenerator::valid)
+                            .map(QuestionGenerator::getId)
                             .collect(Collectors.toList());
                     if (challengeIds.isEmpty()) {
                         throw new IllegalArgumentException("There are currently no valid challenges for this game type.");
@@ -159,65 +145,27 @@ public abstract class Game {
 
                 String challengeString = options.get(1);
 
-                Challenge<?> nextChallenge = ChallengeManager.getChallenge(challengeString, this);
+                QuestionGenerator<?> nextChallenge = ChallengeManager.getChallenge(challengeString, this);
                 if (nextChallenge == null) {
                     throw new IllegalArgumentException("Invalid challenge: " + challengeString + ". Valid challenges: " +
-                            ChallengeManager.listChallenges(this)
+                            ChallengeManager.getGameChallenges(this)
+                                    .getGenerators()
                                     .stream()
-                                    .filter(Challenge::valid)
-                                    .map(Challenge::getId)
+                                    .filter(QuestionGenerator::valid)
+                                    .map(QuestionGenerator::getId)
                                     .collect(Collectors.joining(", ")));
                 } else {
                     if (!nextChallenge.valid()) {
                         throw new IllegalArgumentException("That challenge isn't available at the moment.");
                     } else {
-                        return ((Game) nextChallenge).startWithOptions(options.subList(2, options.size()));
+                        return nextChallenge.generateWithOptions(options.subList(2, options.size()));
                     }
                 }
             }
         }
 
-        return startWithOptions(options);
+        return defaultGenerator.generateWithOptions(options);
     }
-
-    /**
-     * Start this game with a given set of options.
-     * @param options The options to use.
-     * @return The game itself, or null if the game failed to start.
-     * @throws IllegalArgumentException If the options were invalid
-     */
-    @Nullable
-    public Game startWithOptions(@NotNull List<String> options) throws IllegalArgumentException {
-        return startGame();
-    }
-
-    /**
-     * Checks if a string guess was correct.
-     * @param guess Checks if a given guess is correct.
-     * @param guesser The player making the guess. Rewards should not be applied,
-     *                but this allows player specific guesses.
-     * @return Whether or not the guess is a valid answer.
-     */
-    public abstract boolean checkGuess(String guess, Player guesser);
-
-    @NotNull
-    protected abstract Game start();
-
-    /**
-     * Called when the game ends without a winner, usually by the round
-     * being skipped or stopped.
-     */
-    public abstract void endNoWinner();
-
-    /**
-     * Called when the game is won by a given player.
-     * Points are handled in the game controller,
-     * so usually this method only needs to send the round end
-     * message.
-     * @param player The player who guessed successfully
-     * @param guess The guess that was triggered the player to win
-     */
-    public abstract void endWinner(Player player, String guess);
 
     public int getDuration() {
         return duration;
@@ -227,22 +175,6 @@ public abstract class Game {
     public String getGameName() {
         return gameName;
     }
-
-    public abstract List<String> getAnswers();
-
-    public WbsMessage getCurrentQuestion() {
-        return currentQuestion;
-    }
-
-    public int getPoints() {
-        return currentPoints;
-    }
-
-    /**
-     * Register this games' challenges using
-     * {@link ChallengeManager#registerChallenge(String, Game, Challenge)}
-     */
-    public void registerChallenges() {}
 
     /**
      * Returns a list of strings to use as suggestions when entering options for

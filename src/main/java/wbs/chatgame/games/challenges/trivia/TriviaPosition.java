@@ -1,4 +1,4 @@
-package wbs.chatgame.games.challenges;
+package wbs.chatgame.games.challenges.trivia;
 
 import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.data.Leaderboard;

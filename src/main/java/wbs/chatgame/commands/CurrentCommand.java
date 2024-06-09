@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.Game;
+import wbs.chatgame.games.GameQuestion;
 import wbs.utils.util.commands.WbsSubcommand;
 import wbs.utils.util.plugin.WbsPlugin;
 
@@ -15,9 +16,9 @@ public class CurrentCommand extends WbsSubcommand {
 
     @Override
     protected boolean onCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        Game currentGame = GameController.getCurrentGame();
+        GameQuestion currentQuestion = GameController.getCurrentQuestion();
 
-        if (currentGame == null) {
+        if (currentQuestion == null) {
             if (GameController.isRunning()) {
                 sendMessage("There is no question pending right now.", sender);
                 sendMessage("There are &h" + GameController.timeToNextRound() + "&r until the next round starts.", sender);
@@ -25,7 +26,7 @@ public class CurrentCommand extends WbsSubcommand {
                 sendMessage("The game is not running right now.", sender);
             }
         } else {
-            currentGame.getCurrentQuestion().send(sender);
+            currentQuestion.sendTo(sender);
         }
 
         return true;

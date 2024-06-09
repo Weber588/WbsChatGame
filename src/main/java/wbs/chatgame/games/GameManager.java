@@ -7,12 +7,12 @@ import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.ChatGameSettings;
 import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.WordUtil;
-import wbs.chatgame.games.challenges.Challenge;
+import wbs.chatgame.games.challenges.ChallengeGenerator;
 import wbs.chatgame.games.math.MathGame;
 import wbs.chatgame.games.trivia.TriviaGame;
-import wbs.chatgame.games.word.QuickTypeGame;
-import wbs.chatgame.games.word.RevealGame;
-import wbs.chatgame.games.word.UnscrambleGame;
+import wbs.chatgame.games.word.quicktype.QuickTypeGame;
+import wbs.chatgame.games.word.reveal.RevealGame;
+import wbs.chatgame.games.word.unscramble.UnscrambleGame;
 import wbs.utils.exceptions.InvalidConfigurationException;
 import wbs.utils.util.WbsCollectionUtil;
 
@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 public class GameManager {
-    private static final Map<String, Class<? extends Game>> registeredGames = new HashMap<>();
+    private static final Map<String, Class<? extends Game<?>>> registeredGames = new HashMap<>();
 
-    private static final Map<String, Game> games = new HashMap<>();
-    private static final Map<Game, Double> chances = new HashMap<>();
+    private static final Map<String, Game<?>> games = new HashMap<>();
+    private static final Map<Game<?>, Double> chances = new HashMap<>();
 
     public static void registerNativeGames() {
         registerGame("unscramble", UnscrambleGame.class);
@@ -37,21 +37,8 @@ public class GameManager {
         registerGame("math", MathGame.class);
     }
 
-    public static void registerGame(String id, Class<? extends Game> clazz) {
+    public static void registerGame(String id, Class<? extends Game<?>> clazz) {
         registeredGames.put(WordUtil.stripSyntax(id), clazz);
-    }
-
-    @Nullable
-    public static String getRegistrationId(Game game) {
-        Class<? extends Game> gameClass;
-
-        if (game instanceof Challenge) {
-            gameClass = ((Challenge<?>) game).getGameClass();
-        } else {
-            gameClass = game.getClass();
-        }
-
-        return getRegistrationId(gameClass);
     }
 
     @Nullable
@@ -125,7 +112,7 @@ public class GameManager {
     }
 
     @NotNull
-    public static Game getRandomGame() {
+    public static Game<?> getRandomGame() {
         return WbsCollectionUtil.getRandomWeighted(chances);
     }
 

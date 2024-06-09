@@ -1,76 +1,42 @@
-package wbs.chatgame.games.word;
+package wbs.chatgame.games.word.reveal;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.controller.GameController;
-import wbs.chatgame.games.Game;
+import wbs.chatgame.games.word.Word;
+import wbs.chatgame.games.word.WordGameQuestion;
 import wbs.utils.util.WbsMath;
 import wbs.utils.util.plugin.WbsMessage;
 
-public class RevealGame extends WordGame {
-    @SuppressWarnings("unused") // Accessed reflectively
-    public RevealGame(String gameName, ConfigurationSection section, String directory) {
-        super(gameName, section, directory);
+public class RevealQuestion extends WordGameQuestion<RevealGame> {
 
-        double defaultPerReveal = getDuration() / 5.0;
-        int durationPerReveal = (int) (section.getDouble("duration-per-reveal", defaultPerReveal / 20.0) * 20);
-        if (durationPerReveal <= 0) {
-            settings.logError("Duration per reveal must be positive: " + durationPerReveal, directory + "/duration-per-reveal");
-            durationPerReveal = (int) defaultPerReveal;
-        }
-
-        this.durationPerReveal = durationPerReveal;
-
-        numberOfReveals = (getDuration() / (double) durationPerReveal); // +1 since the last reveal ends the round
-
-        fractionToReveal = section.getDouble("percent-to-reveal", 100) / 100.0;
-        finalFractionOfPoints = section.getDouble("final-percent-of-points", 0) / 100.0;
-    }
-
-    protected RevealGame(RevealGame copy) {
-        super(copy);
-        durationPerReveal = copy.durationPerReveal;
-        numberOfReveals = copy.numberOfReveals;
-        fractionToReveal = copy.fractionToReveal;
-        finalFractionOfPoints = copy.finalFractionOfPoints;
-    }
-
-    // How long should there be between each round?
-    private final int durationPerReveal;
-    // Store as a double for precision with multiple divisions
-    private final double numberOfReveals;
-
-    // How much of the word should be revealed?
-    private final double fractionToReveal;
-    // On the last round, what fraction of the initial points should the question be worth?
-    private final double finalFractionOfPoints;
-
+    private String currentText;
     private int revealTaskId = -1;
-    private String currentDisplay;
+
+    public RevealQuestion(RevealGame parent, Word word, int duration) {
+        super(parent, word, duration);
+    }
 
     @Override
-    @NotNull
-    protected Game startGame(Word wordToGuess) {
-        currentDisplay = conceal(wordToGuess.word);
+    public void start() {
+        currentText = conceal(currentWord.word);
         startRevealTimer();
-        return this;
     }
 
     private void startRevealTimer() {
-        String answer = getCurrentWord().word;
+        String answer = currentWord.word;
 
         int numOfSpaces = answer.length() - answer.replaceAll(" ", "").length();
         int lenWithoutSpaces = answer.length() - numOfSpaces;
 
-        int amountToReveal = (int) Math.ceil(lenWithoutSpaces * fractionToReveal);
+        int amountToReveal = (int) Math.ceil(lenWithoutSpaces * getFractionToReveal());
 
-        int amountPerReveal = (int) Math.max(1, amountToReveal / numberOfReveals);
+        int amountPerReveal = (int) Math.max(1, amountToReveal / getNumberOfReveals());
 
         // How many letters were remaining after the int divide to calculate amount
-        int remaining = amountToReveal - (int) (amountPerReveal * numberOfReveals);
+        int remaining = amountToReveal - (int) (amountPerReveal * getNumberOfReveals());
 
         int firstAmount = amountPerReveal;
         if (remaining > 0) {
@@ -78,14 +44,13 @@ public class RevealGame extends WordGame {
             remaining--;
         }
 
-        final int initialPoints = calculatePoints(getCurrentWord().word);
-        currentPoints = initialPoints;
+        final int initialPoints = parent.calculatePoints(currentWord.word);
 
-        currentDisplay = reveal(currentDisplay, answer, firstAmount);
+        currentText = reveal(currentText, answer, firstAmount);
 
         WbsMessage message = plugin.buildMessage("Guess the word! \"")
-                .appendRaw(currentDisplay)
-                    .setFormatting("&h")
+                .appendRaw(currentText)
+                .setFormatting("&h")
                 .append("\" ("
                         + GameController.pointsDisplay(currentPoints) + ")")
                 .build();
@@ -99,7 +64,7 @@ public class RevealGame extends WordGame {
 
             int missing = initialMissing;
 
-            final int finalPoints = (int) Math.floor(initialPoints * finalFractionOfPoints);
+            final int finalPoints = (int) Math.floor(initialPoints * getFinalFractionOfPoints());
 
             @Override
             public void run() {
@@ -121,9 +86,9 @@ public class RevealGame extends WordGame {
                 }
                 revealedSoFar += amountThisRound;
 
-                currentDisplay = reveal(currentDisplay, answer, amountThisRound);
+                currentText = reveal(currentText, answer, amountThisRound);
 
-                if (currentDisplay.equals(getCurrentWord().word) || revealsSoFar >= (int) numberOfReveals) {
+                if (currentText.equals(currentWord.word) || revealsSoFar >= (int) getNumberOfReveals()) {
                     GameController.endRoundNoWinner(true);
                 } else {
                     double fractionRevealed = revealedSoFar / (double) amountToReveal;
@@ -133,8 +98,8 @@ public class RevealGame extends WordGame {
                     currentPoints = Math.max(1, (int) Math.round(pointsAsDouble));
 
                     WbsMessage message = plugin.buildMessage(amountDisplay + "! \"")
-                            .appendRaw(currentDisplay)
-                                .setFormatting("&h")
+                            .appendRaw(currentText)
+                            .setFormatting("&h")
                             .append("\" ("
                                     + GameController.pointsDisplay(currentPoints) + ")")
                             .build();
@@ -142,7 +107,7 @@ public class RevealGame extends WordGame {
                     revealsSoFar++;
                 }
             }
-        }.runTaskTimer(plugin, durationPerReveal, durationPerReveal).getTaskId();
+        }.runTaskTimer(plugin, getDurationPerReveal(), getDurationPerReveal()).getTaskId();
     }
 
     private String reveal(String current, String answer, int reveal) {
@@ -175,18 +140,9 @@ public class RevealGame extends WordGame {
     }
 
     @Override
-    public void endNoWinner() {
-        super.endNoWinner();
-        onEnd();
-    }
+    protected void onRoundEnd(@Nullable Player winner, @Nullable String guess, @Nullable Double finalDuration) {
+        super.onRoundEnd(winner, guess, finalDuration);
 
-    @Override
-    public void endWinner(Player player, String guess) {
-        super.endWinner(player, guess);
-        onEnd();
-    }
-
-    private void onEnd() {
         if (revealTaskId != -1) {
             Bukkit.getScheduler().cancelTask(revealTaskId);
             revealTaskId = -1;
@@ -194,8 +150,19 @@ public class RevealGame extends WordGame {
         currentDisplay = null;
     }
 
-    @Override
-    protected int calculateDefaultPoints(String word) {
-        return Math.max(1, (word.length()/4));
+    protected int getDurationPerReveal() {
+        return parent.durationPerReveal;
+    }
+
+    protected double getNumberOfReveals() {
+        return parent.numberOfReveals;
+    }
+
+    protected double getFinalFractionOfPoints() {
+        return parent.finalFractionOfPoints;
+    }
+
+    protected double getFractionToReveal() {
+        return parent.fractionToReveal;
     }
 }

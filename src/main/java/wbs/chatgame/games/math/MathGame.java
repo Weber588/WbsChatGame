@@ -1,29 +1,31 @@
 package wbs.chatgame.games.math;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.ChatGameSettings;
-import wbs.chatgame.controller.GameController;
 import wbs.chatgame.WbsChatGame;
-import wbs.chatgame.controller.GameMessenger;
 import wbs.chatgame.games.Game;
+import wbs.chatgame.games.GameQuestion;
+import wbs.chatgame.games.QuestionGenerator;
 import wbs.chatgame.games.challenges.ChallengeManager;
-import wbs.chatgame.games.challenges.MathRomanNumeralAnswer;
-import wbs.chatgame.games.challenges.MathRomanNumeralBoth;
-import wbs.chatgame.games.challenges.MathRomanNumeralQuestion;
+import wbs.chatgame.games.challenges.math.MathRomanNumeralAnswer;
+import wbs.chatgame.games.challenges.math.MathRomanNumeralBoth;
+import wbs.chatgame.games.challenges.math.MathRomanNumeralQuestion;
 import wbs.chatgame.games.math.functions.CGFunction;
 import wbs.chatgame.games.math.functions.FunctionManager;
-import wbs.chatgame.games.math.operators.*;
+import wbs.chatgame.games.math.operators.Operator;
+import wbs.chatgame.games.math.operators.OperatorManager;
 import wbs.utils.exceptions.InvalidConfigurationException;
 import wbs.utils.util.WbsCollectionUtil;
-import wbs.utils.util.WbsMath;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class MathGame extends Game {
+public class MathGame extends Game<MathGame> {
 
     public MathGame(String gameName, ConfigurationSection section, String directory) {
         super(gameName, section, directory);
@@ -108,127 +110,20 @@ public class MathGame extends Game {
         }
     }
 
+    @Override
+    protected @NotNull QuestionGenerator<MathGame> getDefaultGenerator() {
+        return new MathQuestionGenerator(this);
+    }
+
     public MathGame(MathGame copy) {
         super(copy);
         this.operationSet = copy.operationSet;
         generatorsWithChances.putAll(copy.generatorsWithChances);
     }
 
-    protected ViewableEquation currentEquation;
-    protected Solution currentSolution;
     private final Map<EquationGenerator, Double> generatorsWithChances = new HashMap<>();
 
     private final OperationSet operationSet;
-
-    @Override
-    public boolean checkGuess(String guess, Player guesser) {
-        double numberGuess;
-        try {
-            numberGuess = Double.parseDouble(guess);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-
-        return checkAnswer(numberGuess);
-    }
-
-    public boolean checkAnswer(double guess) {
-        return WbsMath.roundTo(guess, 2) == WbsMath.roundTo(currentSolution.value(), 2);
-    }
-
-    @Override
-    @NotNull
-    protected Game start() {
-        return startWithOptions(new LinkedList<>());
-    }
-
-    @Override
-    @NotNull
-    public Game startWithOptions(@NotNull List<String> options) {
-        if (options.isEmpty()) {
-            currentEquation = generateQuestion();
-        } else {
-            for (EquationGenerator generator : generatorsWithChances.keySet()) {
-                if (generator.getGeneratorName().equalsIgnoreCase(options.get(0))) {
-                    currentEquation = generator.getEquation(operationSet);
-                    break;
-                }
-            }
-
-            if (currentEquation == null) {
-                EquationGenerator generator = new EquationGenerator(options);
-                try {
-                    currentEquation = generator.getEquation(operationSet);
-                } catch (InvalidConfigurationException e) {
-                    throw new IllegalArgumentException(e.getMessage());
-                }
-            }
-        }
-
-        if (currentEquation == null) {
-            throw new IllegalArgumentException("Equation failed to populate.");
-        }
-
-        try {
-            currentSolution = currentEquation.equation().solve(true);
-        } catch (IllegalStateException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
-        currentPoints = currentSolution.points();
-
-        broadcastEquation(currentEquation);
-
-        return this;
-    }
-
-    public void broadcastEquation(ViewableEquation currentEquation) {
-        String equationString = currentEquation.asString();
-        if (currentEquation.customEquation()) {
-            broadcastQuestion(equationString + " &h(" + GameController.pointsDisplay(currentPoints) + ")");
-        } else {
-            broadcastQuestion("Solve \"&h" + equationString + "&r\" for " + GameController.pointsDisplay(currentPoints) + "!");
-        }
-    }
-
-    @NotNull
-    private ViewableEquation generateQuestion() throws IllegalArgumentException {
-        ViewableEquation equation;
-        try {
-            equation = WbsCollectionUtil.getRandomWeighted(generatorsWithChances).getEquation(operationSet);
-        } catch (InvalidConfigurationException e) {
-            settings.logError(e.getMessage(), "Game config: " + getGameName());
-            throw new IllegalArgumentException("Equation failed to generate: " + e.getMessage());
-        }
-        return equation;
-    }
-
-    @Override
-    public void endNoWinner() {
-        if (currentEquation != null) {
-            GameMessenger.broadcast("Nobody answered in time. The answer was: &h"
-                    + formatAnswer());
-        }
-        currentEquation = null;
-    }
-
-    @Override
-    public void endWinner(Player player, String guess) {
-        GameMessenger.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "! The answer was: &h" + formatAnswer());
-        currentEquation = null;
-    }
-
-    protected String formatAnswer() {
-        double rounded = WbsMath.roundTo(currentSolution.value(), 2);
-        if (currentSolution.value() == rounded) {
-            return (int) rounded + "";
-        }
-        return rounded + "";
-    }
-
-    @Override
-    public List<String> getAnswers() {
-        return Collections.singletonList(formatAnswer());
-    }
 
     @Override
     public List<String> getOptionCompletions() {

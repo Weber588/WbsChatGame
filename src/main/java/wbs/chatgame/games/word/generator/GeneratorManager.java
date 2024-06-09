@@ -25,6 +25,7 @@ public final class GeneratorManager {
         registerGenerator("monster", new MonsterWordGenerator());
         registerGenerator("potion", new PotionWordGenerator());
         registerGenerator("structure", new StructureWordGenerator());
+        registerGenerator("advancement-name", new AdvancementNameGenerator());
     }
 
     public static void registerGenerator(String id, WordGenerator generator) {

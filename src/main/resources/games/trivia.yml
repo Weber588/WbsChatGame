@@ -6,6 +6,9 @@ trivia:
   # 0 = never use challenges, 100 = always use challenges
   challenge-chance: 20
 
+  # How long should a question go unanswered before a hint will be given (if available)?
+  hint-duration: 60
+
   challenges:
     # Chance that a trivia question will be replaced with
     # "Who is at rank [1-5] in ChatGame?"
@@ -66,6 +69,10 @@ trivia:
       question: 'What is the rarest ore in Minecraft?'
       min-version: 1.17
       use-regex: true
+      # If you think the question might not be answered right away, you can offer a hint that will appear
+      # if the question doesn't get answered fast enough.
+      # The points don't change if you set the hint like this, however.
+      hint: 'The rarest ore changed in Minecraft 1.17 with the addition of this block.'
       answers:
         - 'Deepslate Emerald(\sOre)?'
       points: 1
@@ -194,7 +201,7 @@ trivia:
 
     FletchingTableCategory1_19_4+:
       question: 'In which tab of the Creative Menu does the Fletching Table appear?'
-      min-version: 1.19.4 # Same thing as required-version
+      min-version: 1.19.4
       answers:
         - 'Decoration Blocks'
       points: 1
@@ -317,12 +324,20 @@ trivia:
 
     FastestPlant:
       question: 'Which plant grows the fastest in Minecraft?'
+      # If you think the hint makes the question a lot easier, you can change how many points it's worth
+      # in a section like this.
+      hint: 
+        hint: 'It was added in Minecraft 1.14.'
+        new-points: 1
       answers:
         - 'Bamboo'
       points: 2
 
     BambooOutsideJungles:
       question: 'Outside of jungles, where else can you find bamboo?'
+      hint: 
+        hint: 'It can be found in a water-related structure.'
+        new-points: 1
       answers:
         - 'Shipwreck'
         - 'Shipwrecks'
@@ -345,6 +360,9 @@ trivia:
 
     Version1_4:
       question: 'What was the 1.4 release of Minecraft: Java Edition called?'
+      hint:
+        hint: '"The Pretty _____ Update"'
+        new-points: 1
       answers:
         - 'The Pretty Scary Update'
         - 'Pretty Scary Update'
@@ -361,6 +379,9 @@ trivia:
 
     Version1_6:
       question: 'What was the 1.6 release of Minecraft: Java Edition called?'
+      hint:
+        hint: 'This update was named after the mob that was added in it.'
+        new-points: 1
       answers:
         - 'The Horse Update'
         - 'Horse Update'
@@ -369,6 +390,9 @@ trivia:
 
     Version1_7:
       question: 'What was the 1.7 release of Minecraft: Java Edition called?'
+      hint:
+        hint: '"The Update That Changed ___ _____"'
+        new-points: 1
       answers:
         - 'The Update That Changed The World'
         - 'Update That Changed The World'
@@ -384,6 +408,9 @@ trivia:
 
     Version1_9:
       question: 'What was the 1.9 release of Minecraft: Java Edition called?'
+      hint:
+        hint: 'This update added shields, the off hand, and cooldowns to attacks.'
+        new-points: 1
       answers:
         - 'The Combat Update'
         - 'Combat Update'
@@ -392,6 +419,12 @@ trivia:
 
     Version1_10:
       question: 'What was the 1.10 release of Minecraft: Java Edition called?'
+      hint:
+        # You can list multiple hints, and one will be selected at random!
+        hints: 
+          - '"Frost____"'
+          - '"_____burn"'
+        new-points: 1
       answers:
         - 'The Frostburn Update'
         - 'Frostburn Update'
@@ -408,6 +441,11 @@ trivia:
 
     Version1_12:
       question: 'What was the 1.12 release of Minecraft: Java Edition called?'
+      hint:
+        hints: 
+          - 'World of...'
+          - 'This update updated wool colours, and added concrete and concrete powder.'
+        new-points: 1
       answers:
         - 'The World of Color Update'
         - 'The World of Colour Update'
@@ -419,6 +457,9 @@ trivia:
 
     Version1_13:
       question: 'What was the 1.13 release of Minecraft: Java Edition called?'
+      hint:
+        hint: '"Update _______"'
+        new-points: 1
       answers:
         - 'The Update Aquatic'
         - 'Update Aquatic'
@@ -426,12 +467,19 @@ trivia:
 
     Version1_14:
       question: 'What was the 1.14 release of Minecraft: Java Edition called?'
+      hint:
+        hint: '"_______ and _______"'
+        new-points: 1
       answers:
         - 'Village and Pillage'
+        - 'Village & Pillage'
       points: 2
 
     Version1_15:
       question: 'What was the 1.15 release of Minecraft: Java Edition called?'
+      hint:
+        hint: 'This update added bees.'
+        new-points: 1
       answers:
         - 'Buzzy Bees'
       points: 2
@@ -439,12 +487,17 @@ trivia:
     Version1_16:
       question: 'What was the 1.16 release of Minecraft: Java Edition called?'
       answers:
+        - 'The Nether Update'
         - 'Nether Update'
+        - 'Nether'
       points: 2
 
     Version1_17:
       question: 'What was the 1.17 release of Minecraft: Java Edition called?'
       use-regex: true
+      hint:
+        hint: 'This update had 2 parts - 1.17 and 1.18.'
+        new-points: 1
       answers:
         # Accepts "Caves and Cliffs Part 1", "Caves & Cliffs: Part I", and variations in between!
         - 'Caves (and|&) Cliffs(:? Part (1|I))?'
@@ -453,6 +506,9 @@ trivia:
     Version1_18:
       question: 'What was the 1.18 release of Minecraft: Java Edition called?'
       use-regex: true
+      hint:
+        hint: 'This update had 2 parts - 1.17 and 1.18.'
+        new-points: 1
       answers:
         # Accepts "Caves and Cliffs Part 2", "Caves & Cliffs: Part II", and variations in between!
         - 'Caves (and|&) Cliffs:? Part (2|II)'
@@ -496,9 +552,10 @@ trivia:
       points: 2
 
     LightningWitch:
-      question: 'What will create a witch when it hits a villager?'
+      question: 'When lightning hits a villager, which mob does it turn into?'
       answers:
-        - 'Lightning'
+        - 'Witch'
+        - 'A Witch'
       points: 2
 
     UnobtainablePotion:
@@ -506,6 +563,7 @@ trivia:
       answers:
         - 'Luck'
         - 'Unluck'
+        - 'Bad Luck'
         - 'Health Boost'
       points: 2
 
@@ -571,6 +629,9 @@ trivia:
 
     C418:
       question: 'C418''s skin has what block as a head?'
+      hint:
+        hint: 'C418 composed most of Minecraft''s music.'
+        new-points: 1
       answers:
         - 'Jukebox'
         - 'A Jukebox'
@@ -635,6 +696,9 @@ trivia:
 
     ChainmailCrafting:
       question: 'Prior to Java Edition 1.8, what could you use to craft chainmail armour?'
+      hint:
+        hint: 'This block is no longer obtainable in item form, and was never obtainable in survival.'
+        new-points: 1
       answers:
         - 'Fire'
       points: 2
@@ -692,6 +756,9 @@ trivia:
 
     HalloweenBats:
       question: 'Which mob spawns more frequently between 20 October and 3 November?'
+      hint:
+        hint: 'This is the period around Halloween.'
+        new-points: 1
       answers:
         - 'Bat'
         - 'Bats'
@@ -699,6 +766,11 @@ trivia:
 
     UnusedMob:
       question: 'Name a mob that can only be spawned through commands.'
+      hint:
+        hints:
+          - 'One such mob shares its texture with a zombie.'
+          - 'One such mob turns invisible and creates fake clones of itself.'
+        new-points: 1
       answers:
         - 'Giant'
         - 'Illusioner'
@@ -713,6 +785,9 @@ trivia:
 
     LodestoneFire:
       question: 'Which item can be crafted with a netherite ingot that is NOT immune to lava/fire?'
+      hint:
+        hint: 'This item does not have netherite in the name.'
+        new-points: 1
       answers:
         - 'Lodestone'
       points: 2
@@ -748,6 +823,69 @@ trivia:
       min-version: 1.20
       answers:
         - 'Mourner'
+      points: 2
+
+    CoalBlockFuelTime:
+      question: 'How long does a coal block keep a furnace lit for?'
+      use-regex: true
+      hint:
+        hint: 'A coal block can smelt 80 items.'
+        new-points: 1
+      answers:
+        - '800\s?s(ec(onds)?)?'
+        - '13\.3*\s?m(in(utes)?)?'
+      points: 2
+
+    AprilFoolsBlock:
+      question: 'Name a block that was added in an April Fools'' release (that was not later added to the game).'
+      use-regex: true
+      answers:
+        - 'Locked Chest'
+        - 'Etho Slab'
+        - 'Burnt(-|\s)(out\s)?Torch'
+        - 'Torch\s\(?Burnt(-|\s)out\)?'
+        - 'USB Charger(\sBlock)?'
+        - 'Box of Infinite Books'
+        - 'Funky Portal'
+        - 'Cursor'
+        - 'An Ant'
+        - 'Swaggiest stairs ever'
+        - 'Leftover'
+        - 'Air'
+        - 'Cheese'
+        - 'Copper Sink'
+        - 'Copper Spleaves'
+        - 'Golden Chest'
+        - 'Other Portal'
+        - 'Packed Air'
+        - 'Pickaxe Block'
+        - 'Place Block'
+      points: 2
+
+    AprilFoolsItem:
+      question: 'Name an item that was added in an April Fools'' release (that was not later added to the game).'
+      use-regex: true
+      answers:
+        - 'Obsidian Boat'
+        - 'Reality Vision'
+        - 'Ankle Monitor'
+        - 'Smarter Watch'
+        - 'Red Key'
+        - 'Blue Key'
+        - 'Yellow Key'
+        - '3D'
+        - 'Footprint'
+        - 'A Very Fine Item'
+        - 'How did we get here\?'
+        - 'New Thing( Banner Pattern)?'
+        - 'Bit'
+        - 'Bottle of Entity'
+        - 'Bottle of Void'
+        - 'La Baguette'
+        - 'Le Tricolore'
+        - 'Longer String'
+        - 'Tag'
+        - 'minecraft:dupe_hack'
       points: 2
 
     MobVote:
@@ -814,18 +952,11 @@ trivia:
     NoteBlockStartingNote:
       question: 'When a note block is placed, which note does it start on?'
       use-regex: true
+      hint:
+        hint: 'It''s a sharp note.'
+        new-points: 1
       answers:
         - 'F\s?(♯|#|sharp)\s?3?'
-      points: 3
-
-    CoalBlockFuelTime:
-      question: 'How long can a stack of coal blocks keep a furnace lit for?'
-      use-regex: true
-      answers:
-        - '42\s?days?'
-        - '51200\s?seconds?'
-        - '853(\.3*)?\s?minutes?'
-        - '14(\.2*)?\s?hours?'
       points: 3
 
     Postmortal:
@@ -963,6 +1094,9 @@ trivia:
 
     HoglinBreeding:
       question: 'What is the only naturally spawning hostile mob that can be bred?'
+      hint:
+        hint: 'It spawns in the nether.'
+        new-points: 1
       answers:
         - 'Hoglin'
         - 'Hoglins'
@@ -971,6 +1105,9 @@ trivia:
     Grimstone:
       question: 'What was Deepslate originally called (during development)?'
       min-version: 1.17
+      hint:
+        hint: '"____stone"'
+        new-points: 2
       answers:
         - 'Grimstone'
       points: 3
@@ -1002,6 +1139,9 @@ trivia:
     FewestItemsAdded:
       question: 'Which version of Minecraft added the fewest items/blocks?'
       use-regex: true
+      hint:
+        hint: 'It only added a single music disc.'
+        new-points: 2
       answers:
         - 'Caves (and|&) Cliffs(:? Part (2|II))?'
         - '1\.18'
@@ -1009,6 +1149,14 @@ trivia:
 
     SuperflatPreset:
       question: 'Other than "Classic Flat" and "Desert", name a superflat level generation preset.'
+      hint:
+        hints: 
+          - '"Tunnelers'' _____"'
+          - '"Snowy _______"'
+          - '"Redstone _____"'
+          - '"__________ Pit"'
+          - 'One example shares its name with a dimension.'
+        new-points: 1
       answers:
         - 'Tunnelers'' Dream'
         - 'Water World'
@@ -1022,6 +1170,9 @@ trivia:
     SongwriterPigstep:
       question: 'Who wrote the song "Pigstep" for Minecraft?'
       min-version: 1.16
+      hint:
+        hint: '"____ Reine"'
+        new-points: 2
       answers:
         - 'Lena Reine'
       points: 3
@@ -1029,6 +1180,9 @@ trivia:
     SongwriterOtherside:
       question: 'Who wrote the song "otherside" for Minecraft?'
       min-version: 1.18
+      hint:
+        hint: '"____ Reine"'
+        new-points: 2
       answers:
         - 'Lena Reine'
       points: 3
@@ -1036,6 +1190,9 @@ trivia:
     SongwriterOtherside:
       question: 'Who wrote the song "5" for Minecraft?'
       min-version: 1.19
+      hint:
+        hint: '"______ Åberg" (or Aberg)'
+        new-points: 2
       answers:
         - 'Samuel Åberg'
         - 'Samuel Aberg'
@@ -1044,6 +1201,28 @@ trivia:
     SongwriterRelic:
       question: 'Who wrote the song "Relic" for Minecraft?'
       min-version: 1.20
+      hint:
+        hint: '"_____ Cherof"'
+        new-points: 2
       answers:
         - 'Aaron Cherof'
+      points: 3
+
+    FirstPublicVersion:
+      question: 'What was the first version of Minecraft to be released to the general public?'
+      hint:
+        hint: 'The version number was 0.0.11a.'
+        new-points: 1
+      answers:
+        - 'Classic 0.0.11a'
+      points: 3
+
+    AprilFoolsMob:
+      question: 'Name a mob that was added in an April Fools'' release (that was not later added to the game).'
+      answers:
+        - 'Pink Wither'
+        - 'Diamond Chicken'
+        - 'Redstone Bug'
+        - 'Moon Cow'
+        - 'Ray Tracing'
       points: 3

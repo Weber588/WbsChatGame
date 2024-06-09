@@ -1,24 +1,34 @@
-package wbs.chatgame.games.challenges;
+package wbs.chatgame.games.challenges.math;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.math.MathGame;
+import wbs.chatgame.games.math.MathQuestion;
 import wbs.chatgame.games.math.ViewableEquation;
+import wbs.utils.util.plugin.WbsMessage;
 import wbs.utils.util.string.RomanNumerals;
 
-public class MathRomanNumeralBoth extends MathGame implements Challenge<MathGame> {
-    public MathRomanNumeralBoth(MathGame parent) {
-        super(parent);
+public class MathRomanNumeralBoth extends MathQuestion {
+    private boolean enforceChallenge = true;
+
+    public MathRomanNumeralBoth(@NotNull MathGame parent, @NotNull ViewableEquation equation) {
+        super(parent, equation);
+
+
     }
 
-    private boolean enforceChallenge = true;
-    protected boolean answerInRN = true;
-    protected boolean questionInRN = true;
+    protected boolean questionInRN() {
+        return true;
+    }
+
+    protected boolean answerInRN() {
+        return true;
+    }
 
     @Override
-    public void broadcastEquation(ViewableEquation currentEquation) {
-        if (answerInRN && currentSolution.value() > 3999) {
+    public WbsMessage getDisplay(ViewableEquation currentEquation) {
+        if (answerInRN() && solution.value() > 3999) {
             enforceChallenge = false;
             super.broadcastEquation(currentEquation);
             return;
@@ -89,7 +99,7 @@ public class MathRomanNumeralBoth extends MathGame implements Challenge<MathGame
     @Override
     protected String formatAnswer() {
         if (answerInRN && enforceChallenge) {
-            return RomanNumerals.toRoman(currentSolution.value());
+            return RomanNumerals.toRoman(solution.value());
         } else {
             return super.formatAnswer();
         }

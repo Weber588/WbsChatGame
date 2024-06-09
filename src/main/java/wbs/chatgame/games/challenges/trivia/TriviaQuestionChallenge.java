@@ -1,10 +1,11 @@
-package wbs.chatgame.games.challenges;
+package wbs.chatgame.games.challenges.trivia;
 
 import org.jetbrains.annotations.NotNull;
+import wbs.chatgame.games.challenges.ChallengeGenerator;
 import wbs.chatgame.games.trivia.TriviaGame;
 import wbs.chatgame.games.trivia.TriviaQuestion;
 
-public abstract class TriviaQuestionChallenge extends TriviaGame implements Challenge<TriviaGame> {
+public abstract class TriviaQuestionChallenge extends TriviaGame implements ChallengeGenerator<TriviaGame> {
     public TriviaQuestionChallenge(TriviaGame parent) {
         super(parent);
     }

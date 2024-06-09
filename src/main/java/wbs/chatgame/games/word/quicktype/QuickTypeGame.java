@@ -1,24 +1,33 @@
-package wbs.chatgame.games.word;
+package wbs.chatgame.games.word.quicktype;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import wbs.chatgame.controller.GameController;
 import wbs.chatgame.WordUtil;
-import wbs.chatgame.controller.GameMessenger;
-import wbs.chatgame.games.Game;
+import wbs.chatgame.games.QuestionGenerator;
 import wbs.chatgame.games.challenges.ChallengeManager;
-import wbs.chatgame.games.challenges.QuickTypeBackwards;
-import wbs.chatgame.games.challenges.QuickTypeHover;
-import wbs.utils.util.plugin.WbsMessage;
+import wbs.chatgame.games.challenges.quicktype.QuickTypeBackwards;
+import wbs.chatgame.games.challenges.quicktype.QuickTypeHover;
+import wbs.chatgame.games.word.Word;
+import wbs.chatgame.games.word.WordGame;
+import wbs.chatgame.games.word.WordGameQuestion;
 
-public class QuickTypeGame extends WordGame {
+public class QuickTypeGame extends WordGame<QuickTypeGame> {
     @SuppressWarnings("unused") // Accessed reflectively
     public QuickTypeGame(String gameName, ConfigurationSection section, String directory) {
         super(gameName, section, directory);
 
         scramble = section.getBoolean("scramble", true);
         matchCase = section.getBoolean("match-case", true);
+    }
+
+    @Override
+    protected QuickTypeGame getThis() {
+        return this;
+    }
+
+    @Override
+    protected @NotNull QuestionGenerator<QuickTypeGame> getDefaultGenerator() {
+        return null;
     }
 
     public QuickTypeGame(QuickTypeGame copy) {
@@ -28,41 +37,14 @@ public class QuickTypeGame extends WordGame {
         matchCase = copy.matchCase;
     }
 
-    private final boolean scramble;
-    private final boolean matchCase;
+    final boolean scramble;
+    final boolean matchCase;
 
     @Override
-    @NotNull
-    protected Game startGame(Word wordToGuess) {
-        WbsMessage message = plugin.buildMessage("Quick! Type \"")
-                .appendRaw(wordToGuess.word)
-                    .setFormatting("&h")
-                .append("\" for "
-                        + GameController.pointsDisplay(getPoints()) + "!")
-                .build();
-
-        broadcastQuestion(message);
-        return this;
+    protected @NotNull WordGameQuestion generateQuestion(Word wordToGuess) {
+        return new QuickTypeQuestion(this, wordToGuess, getDuration());
     }
 
-    @Override
-    public void endWinner(Player player, String guess) {
-        GameMessenger.broadcast(player.getName() + " won in " + GameController.getLastRoundStartedString() + "!");
-    }
-
-    @Override
-    public void endNoWinner() {
-        GameMessenger.broadcast("Nobody answered in time!");
-    }
-
-    @Override
-    public boolean checkGuess(String guess, Player guesser) {
-        if (matchCase) {
-            return guess.equals(getCurrentWord().word);
-        } else {
-            return guess.equalsIgnoreCase(getCurrentWord().word);
-        }
-    }
 
     @Override
     protected Word generateWord() {

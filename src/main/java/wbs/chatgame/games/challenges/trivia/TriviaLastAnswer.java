@@ -1,12 +1,10 @@
-package wbs.chatgame.games.challenges;
+package wbs.chatgame.games.challenges.trivia;
 
 import org.bukkit.entity.Player;
 import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.trivia.TriviaGame;
 import wbs.chatgame.games.trivia.TriviaQuestion;
-
-import java.util.List;
 
 public class TriviaLastAnswer extends TriviaQuestionChallenge {
     public TriviaLastAnswer(TriviaGame parent) {
@@ -15,7 +13,7 @@ public class TriviaLastAnswer extends TriviaQuestionChallenge {
 
     @Override
     protected TriviaQuestion nextQuestion() {
-        Game lastGame = GameController.getLastGame();
+        Game lastGame = GameController.getLastQuestion();
         assert lastGame != null;
         return new TriviaQuestion("custom",
                 "What was the answer to the last question?",
@@ -39,7 +37,7 @@ public class TriviaLastAnswer extends TriviaQuestionChallenge {
 
     @Override
     public boolean valid() {
-        Game lastGame = GameController.getLastGame();
+        Game lastGame = GameController.getLastQuestion();
         // Avoid recursion - don't allow TriviaLastAnswer challenges to chain
         return lastGame != null && !(lastGame instanceof TriviaLastAnswer);
     }

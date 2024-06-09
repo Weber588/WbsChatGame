@@ -1,7 +1,8 @@
-package wbs.chatgame.games.challenges;
+package wbs.chatgame.games.challenges.trivia;
 
 import org.bukkit.entity.Player;
 import wbs.chatgame.controller.GameController;
+import wbs.chatgame.games.GameQuestion;
 import wbs.chatgame.games.trivia.TriviaGame;
 import wbs.chatgame.games.trivia.TriviaQuestion;
 
@@ -12,20 +13,25 @@ public class TriviaLastWinner extends TriviaQuestionChallenge {
 
     @Override
     protected TriviaQuestion nextQuestion() {
+        GameQuestion lastQuestion = GameController.getLastQuestion();
+        assert lastQuestion != null;
+        Player lastWinner = lastQuestion.getWinner();
+        assert lastWinner != null;
+
         return new TriviaQuestion("custom",
                 "Who won last round?",
                 2,
                 true,
                 false,
                 false,
-                GameController.getLastWinner().getName()
+                lastWinner.getName()
                 ) {
             @Override
             public boolean checkGuess(String guess, Player player) {
                 if (super.checkGuess(guess, player)) {
                     return true;
                 } else {
-                    if (GameController.getLastWinner().equals(player)) {
+                    if (lastWinner.equals(player)) {
                         return guess.equalsIgnoreCase("me");
                     }
                 }
@@ -36,6 +42,7 @@ public class TriviaLastWinner extends TriviaQuestionChallenge {
 
     @Override
     public boolean valid() {
-        return GameController.getLastWinner() != null;
+        GameQuestion currentQuestion = GameController.getCurrentQuestion();
+        return currentQuestion != null && currentQuestion.getWinner() != null;
     }
 }

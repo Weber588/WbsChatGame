@@ -1,17 +1,18 @@
-package wbs.chatgame.games.challenges;
+package wbs.chatgame.games.challenges.unscramble;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.controller.GameController;
-import wbs.chatgame.games.word.UnscrambleGame;
+import wbs.chatgame.games.challenges.ChallengeGenerator;
+import wbs.chatgame.games.word.unscramble.UnscrambleGame;
 import wbs.chatgame.games.word.Word;
 import wbs.utils.util.WbsCollectionUtil;
 import wbs.utils.util.plugin.WbsMessage;
 
 import java.util.Collection;
 
-public class UnscrambleOnlinePlayer extends UnscrambleGame implements Challenge<UnscrambleGame> {
+public class UnscrambleOnlinePlayer extends UnscrambleGame implements ChallengeGenerator<UnscrambleGame> {
     public UnscrambleOnlinePlayer(UnscrambleGame parent) {
         super(parent);
     }

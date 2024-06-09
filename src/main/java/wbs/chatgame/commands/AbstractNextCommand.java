@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.Game;
 import wbs.chatgame.games.GameManager;
-import wbs.chatgame.games.challenges.Challenge;
+import wbs.chatgame.games.challenges.ChallengeGenerator;
 import wbs.chatgame.games.challenges.ChallengeManager;
 import wbs.utils.util.commands.WbsSubcommand;
 import wbs.utils.util.plugin.WbsPlugin;
@@ -119,14 +119,14 @@ public abstract class AbstractNextCommand extends WbsSubcommand {
     private List<String> getValidChallengeList(Game game) {
         return ChallengeManager.listChallenges(game)
                 .stream()
-                .filter(Challenge::valid)
-                .map(Challenge::getId)
+                .filter(ChallengeGenerator::valid)
+                .map(ChallengeGenerator::getId)
                 .collect(Collectors.toList());
     }
 
     private void suggestChallengeIfAnyValid(Game game, List<String> choices) {
         if (ChallengeManager.listChallenges(game)
-                .stream().anyMatch(Challenge::valid)) {
+                .stream().anyMatch(ChallengeGenerator::valid)) {
             choices.add("-c");
         }
     }

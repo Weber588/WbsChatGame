@@ -7,9 +7,9 @@ import wbs.chatgame.WbsChatGame;
 import wbs.chatgame.games.GameManager;
 import wbs.chatgame.games.math.MathGame;
 import wbs.chatgame.games.trivia.TriviaGame;
-import wbs.chatgame.games.word.QuickTypeGame;
-import wbs.chatgame.games.word.RevealGame;
-import wbs.chatgame.games.word.UnscrambleGame;
+import wbs.chatgame.games.word.quicktype.QuickTypeGame;
+import wbs.chatgame.games.word.reveal.RevealGame;
+import wbs.chatgame.games.word.unscramble.UnscrambleGame;
 
 import java.io.*;
 import java.util.*;
