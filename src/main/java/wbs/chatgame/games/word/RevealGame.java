@@ -1,5 +1,6 @@
 package wbs.chatgame.games.word;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -84,8 +85,7 @@ public class RevealGame extends WordGame {
         currentDisplay = reveal(currentDisplay, answer, firstAmount);
 
         WbsMessage message = plugin.buildMessage("Guess the word! \"")
-                .appendRaw(currentDisplay)
-                    .setFormatting("&h")
+                .append(Component.text(currentDisplay).color(plugin.getTextHighlightColour()))
                 .append("\" ("
                         + GameController.pointsDisplay(currentPoints) + ")")
                 .build();
@@ -133,8 +133,7 @@ public class RevealGame extends WordGame {
                     currentPoints = Math.max(1, (int) Math.round(pointsAsDouble));
 
                     WbsMessage message = plugin.buildMessage(amountDisplay + "! \"")
-                            .appendRaw(currentDisplay)
-                                .setFormatting("&h")
+                            .append(Component.text(currentDisplay).color(plugin.getTextHighlightColour()))
                             .append("\" ("
                                     + GameController.pointsDisplay(currentPoints) + ")")
                             .build();

@@ -9,25 +9,25 @@ public class GeneratedWord extends Word {
     private final String hint;
     private final WordGenerator generator;
 
-    public GeneratedWord(String word, int points, @NotNull WordGenerator generator) {
+    public GeneratedWord(@NotNull String word, int points, @NotNull WordGenerator generator) {
         super(word, points);
         this.generator = generator;
         this.hint = generator.getGenericHint();
     }
 
-    public GeneratedWord(String word, int points, WordGenerator generator, boolean isFormatted) {
+    public GeneratedWord(@NotNull String word, int points, WordGenerator generator, boolean isFormatted) {
         super(word, points, isFormatted);
         this.generator = generator;
         this.hint = generator.getGenericHint();
     }
 
-    public GeneratedWord(String word, int points, @NotNull WordGenerator generator, @Nullable String hint, boolean isFormatted) {
+    public GeneratedWord(@NotNull String word, int points, @NotNull WordGenerator generator, @Nullable String hint, boolean isFormatted) {
         super(word, points, isFormatted);
         this.generator = generator;
         this.hint = hint;
     }
 
-    public GeneratedWord(String word, int points, WordGenerator generator, @Nullable String hint) {
+    public GeneratedWord(@NotNull String word, int points, WordGenerator generator, @Nullable String hint) {
         super(word, points);
         this.generator = generator;
         this.hint = hint;

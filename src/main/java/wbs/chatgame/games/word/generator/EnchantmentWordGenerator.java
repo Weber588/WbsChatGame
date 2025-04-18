@@ -1,28 +1,36 @@
 package wbs.chatgame.games.word.generator;
 
+import io.papermc.paper.registry.RegistryKey;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.enchantments.Enchantment;
-import wbs.utils.util.string.WbsStrings;
+import org.jetbrains.annotations.NotNull;
+import wbs.chatgame.LangUtil;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
-public class EnchantmentWordGenerator extends KeyedWordGenerator {
+public class EnchantmentWordGenerator extends RegistryWordGenerator<Enchantment> {
     @Override
-    protected String getLangPrefix() {
-        return "enchantment.minecraft";
+    protected @NotNull RegistryKey<Enchantment> getRegistryKey() {
+        return RegistryKey.ENCHANTMENT;
     }
 
     @Override
-    protected List<GeneratedWord> getDefault() {
-        return Arrays.stream(Enchantment.values())
-                .map(ench ->
-                        WbsStrings.capitalizeAll(
-                                ench.getKey()
-                                        .getKey()
-                                        .replace('_', ' ')
-                        )
-                ).map(word -> new GeneratedWord(word, 0, this))
-                .collect(Collectors.toList());
+    protected @NotNull String getWord(Enchantment enchantment) {
+        Component name = enchantment.description();
+
+        if (name instanceof TextComponent text) {
+            return text.content();
+        } else if (name instanceof TranslatableComponent translatable) {
+            Map<String, String> lang = LangUtil.getLangConfig();
+
+            String orDefault = lang.getOrDefault(translatable.key(), translatable.fallback());
+            if (orDefault != null) {
+                return orDefault;
+            }
+        }
+
+        return super.getWord(enchantment);
     }
 }

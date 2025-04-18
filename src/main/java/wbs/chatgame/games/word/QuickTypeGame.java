@@ -1,5 +1,6 @@
 package wbs.chatgame.games.word;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -35,8 +36,7 @@ public class QuickTypeGame extends WordGame {
     @NotNull
     protected Game startGame(Word wordToGuess) {
         WbsMessage message = plugin.buildMessage("Quick! Type \"")
-                .appendRaw(wordToGuess.word)
-                    .setFormatting("&h")
+                .append(Component.text(wordToGuess.word).color(plugin.getTextHighlightColour()))
                 .append("\" for "
                         + GameController.pointsDisplay(getPoints()) + "!")
                 .build();

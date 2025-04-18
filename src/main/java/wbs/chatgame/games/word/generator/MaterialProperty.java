@@ -10,7 +10,9 @@ import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Fire;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.Recipe;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -97,9 +99,18 @@ public enum MaterialProperty {
         private static final List<FurnaceRecipe> furnaceRecipes = new LinkedList<>();
 
         static {
-            Bukkit.recipeIterator().forEachRemaining(recipe -> {
-                if (recipe instanceof FurnaceRecipe) furnaceRecipes.add((FurnaceRecipe) recipe);
-            });
+            Iterator<Recipe> iterator = Bukkit.recipeIterator();
+            while (iterator.hasNext()) {
+                Recipe recipe;
+                try {
+                    recipe = iterator.next();
+                } catch (IllegalArgumentException ex) {
+                    continue;
+                }
+                if (recipe instanceof FurnaceRecipe) {
+                    furnaceRecipes.add((FurnaceRecipe) recipe);
+                }
+            }
         }
 
         @Override

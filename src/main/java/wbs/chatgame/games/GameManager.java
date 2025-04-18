@@ -100,7 +100,7 @@ public class GameManager {
         return game;
     }
 
-    public static void addGame(String name, Game game) {
+    public static void addGame(String name, @NotNull Game game) {
         name = WordUtil.stripSyntax(name);
         if (games.containsKey(name))
             throw new IllegalArgumentException("Name \"" + name + "\" already registered to game of type " + game.getClass().getSimpleName());

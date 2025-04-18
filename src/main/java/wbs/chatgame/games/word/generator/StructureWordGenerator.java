@@ -1,19 +1,12 @@
 package wbs.chatgame.games.word.generator;
 
-import org.bukkit.StructureType;
-import wbs.utils.util.string.WbsStrings;
+import io.papermc.paper.registry.RegistryKey;
+import org.bukkit.generator.structure.StructureType;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class StructureWordGenerator extends SimpleWordGenerator {
+public class StructureWordGenerator extends RegistryWordGenerator<StructureType> {
     @Override
-    public List<String> generateStrings() {
-        return StructureType.getStructureTypes()
-                .keySet()
-                .stream()
-                .map(type -> type.replace('_', ' '))
-                .map(WbsStrings::capitalizeAll)
-                .collect(Collectors.toList());
+    protected @NotNull RegistryKey<StructureType> getRegistryKey() {
+        return RegistryKey.STRUCTURE_TYPE;
     }
 }

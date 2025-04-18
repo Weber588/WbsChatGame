@@ -1,5 +1,6 @@
 package wbs.chatgame.games.challenges;
 
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import wbs.chatgame.controller.GameController;
 import wbs.chatgame.games.Game;
@@ -20,7 +21,7 @@ public class QuickTypeBackwards extends QuickTypeGame implements Challenge<Quick
         setCurrentWord(new Word(reverseString(wordToGuess.word), wordToGuess.getPoints() + 1, true));
 
         WbsMessage message = plugin.buildMessage("Quick! Type \"")
-                .appendRaw(wordToGuess.word).setFormatting("&h")
+                .append(Component.text(wordToGuess.word).color(plugin.getTextHighlightColour()))
                 .append("\" &obackwards&r for "
                         + GameController.pointsDisplay(getPoints()) + "!")
                 .build();

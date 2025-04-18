@@ -1,5 +1,6 @@
 package wbs.chatgame.games.challenges;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -39,8 +40,7 @@ public class UnscrambleOnlinePlayer extends UnscrambleGame implements Challenge<
     @Override
     protected void broadcastScramble(String scrambledWord) {
         WbsMessage message = plugin.buildMessage("Unscramble \"")
-                .appendRaw(scrambledWord)
-                    .setFormatting("&h")
+                .append(Component.text(scrambledWord).color(plugin.getTextHighlightColour()))
                 .append("\" for "
                         + GameController.pointsDisplay(getPoints()) + "! This unscramble is an online player's name!")
                 .build();

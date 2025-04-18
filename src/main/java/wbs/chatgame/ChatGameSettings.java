@@ -223,12 +223,14 @@ public class ChatGameSettings extends WbsSettings {
 
             try {
                 Game game = GameManager.createGame(gameName, specs, gameFile.getName());
-                GameManager.addGame(gameName, game);
-                gamesLoaded++;
+                if (game != null) {
+                    GameManager.addGame(gameName, game);
+                    gamesLoaded++;
+                }
             } catch (InvalidConfigurationException ignored) {}
         }
 
-        if (errors.size() != 0) {
+        if (!errors.isEmpty()) {
             logger.warning("The games were loaded with " + errors.size() + " error(s). Do /cg errors to view them.");
         }
 

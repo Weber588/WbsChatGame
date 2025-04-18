@@ -11,20 +11,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PotionWordGenerator extends KeyedWordGenerator {
-
-    private final static Map<PotionEffectType, String> potionNameOverrides = new HashMap<>();
-
-    static {
-        // TODO: Move this to a config?
-        potionNameOverrides.put(PotionEffectType.SLOW, "SLOWNESS");
-        potionNameOverrides.put(PotionEffectType.FAST_DIGGING, "HASTE");
-        potionNameOverrides.put(PotionEffectType.SLOW_DIGGING, "MINING_FATIGUE");
-        potionNameOverrides.put(PotionEffectType.INCREASE_DAMAGE, "STRENGTH");
-        potionNameOverrides.put(PotionEffectType.HEAL, "INSTANT_HEALTH");
-        potionNameOverrides.put(PotionEffectType.HARM, "INSTANT_DAMAGE");
-        potionNameOverrides.put(PotionEffectType.CONFUSION, "NAUSEA");
-    }
-
     @Override
     protected String getLangPrefix() {
         return "effect.minecraft";
@@ -33,7 +19,7 @@ public class PotionWordGenerator extends KeyedWordGenerator {
     @Override
     protected List<GeneratedWord> getDefault() {
         return Arrays.stream(PotionEffectType.values())
-                .map(potion -> potionNameOverrides.getOrDefault(potion, potion.getName()))
+                .map(potion -> potion.translationKey())
                 .map(name -> name.replace("_", " "))
                 .map(WbsStrings::capitalizeAll)
                 .map(word -> new GeneratedWord(word, 0, this))

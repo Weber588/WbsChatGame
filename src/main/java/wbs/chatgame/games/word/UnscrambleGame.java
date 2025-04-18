@@ -1,5 +1,6 @@
 package wbs.chatgame.games.word;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -134,8 +135,7 @@ public class UnscrambleGame extends WordGame {
 
     protected void broadcastScramble(String scrambledWord) {
         WbsMessage message = plugin.buildMessage("Unscramble \"")
-                .appendRaw(scrambledWord)
-                    .setFormatting("&h")
+                .append(Component.text(scrambledWord).color(plugin.getTextHighlightColour()))
                 .append("\" for "
                         + GameController.pointsDisplay(getPoints()) + "!")
                 .build();
@@ -202,8 +202,7 @@ public class UnscrambleGame extends WordGame {
                     String hint = String.join(" ", words);
 
                     WbsMessage message = plugin.buildMessage("Too hard? Here are the words scrambled individually: \"")
-                            .appendRaw(hint)
-                                .setFormatting("&h")
+                            .append(Component.text(hint).color(plugin.getTextHighlightColour()))
                             .append("\" (" + GameController.pointsDisplay(getPoints()) + ")")
                             .build();
 
@@ -213,8 +212,7 @@ public class UnscrambleGame extends WordGame {
                     char firstLetter = Character.toUpperCase(current.charAt(0));
 
                     WbsMessage message = plugin.buildMessage("Too hard? The first letter is " + firstLetter + "! \"")
-                            .appendRaw(originalScramble)
-                                .setFormatting("&h")
+                            .append(Component.text(originalScramble).color(plugin.getTextHighlightColour()))
                             .append("\" (" + GameController.pointsDisplay(getPoints()) + ")")
                             .build();
 
@@ -228,8 +226,7 @@ public class UnscrambleGame extends WordGame {
                     for (int i = 0; i < scrambles; i++) {
                         String rescramble = WordUtil.scrambleString(WbsStrings.capitalize(getCurrentWord().word));
 
-                        message.appendRaw(rescramble)
-                                .setFormatting("&h");
+                        message.append(Component.text(rescramble).color(plugin.getTextHighlightColour()));
 
                         if (i < scrambles - 1) {
                             message.append("\", \"");
@@ -251,12 +248,10 @@ public class UnscrambleGame extends WordGame {
                     String hintString = start + current.substring(amountAtStart, current.length() - 2).replaceAll(".?", "_") + end;
 
                     WbsMessage message = plugin.buildMessage("Unscramble \"")
-                            .appendRaw(originalScramble)
-                            .setFormatting("&h")
+                            .append(Component.text(originalScramble).color(plugin.getTextHighlightColour()))
                             .append("\" for "
                                     + GameController.pointsDisplay(getPoints()) + "! (Hint: \"")
-                            .appendRaw(hintString)
-                                .setFormatting("&h")
+                            .append(Component.text(hintString).color(plugin.getTextHighlightColour()))
                             .append("\")")
                             .build();
 
@@ -273,8 +268,7 @@ public class UnscrambleGame extends WordGame {
                         }
 
                         WbsMessage message = plugin.buildMessage("Hint: " + hint + "! \"")
-                                .appendRaw(originalScramble)
-                                    .setFormatting("&h")
+                                .append(Component.text(originalScramble).color(plugin.getTextHighlightColour()))
                                 .append("\" (" + GameController.pointsDisplay(getPoints()) + ")")
                                 .build();
 

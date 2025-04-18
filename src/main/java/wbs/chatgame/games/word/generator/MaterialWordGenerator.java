@@ -18,7 +18,6 @@ public abstract class MaterialWordGenerator extends WordGenerator {
 
     @Override
     public final List<GeneratedWord> generateWords() {
-        //noinspection deprecation
         return generateMaterials().stream()
                 .filter(Predicate.not(Material::isLegacy))
                 .map(this::toWord)

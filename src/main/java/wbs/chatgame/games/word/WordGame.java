@@ -97,10 +97,7 @@ public abstract class WordGame extends Game {
             generationChance = 0;
         }
 
-        if (generationChance >= 100 && generators.isEmpty()) {
-            settings.logError("Custom list disabled with no generators set. Disabling game " + gameName, directory);
-            throw new InvalidConfigurationException();
-        } else if (generationChance <= 0 && customWords.isEmpty()) {
+        if (generationChance <= 0 && customWords.isEmpty()) {
             settings.logError("Generators disabled with no custom words set. Disabling game " + gameName, directory);
             throw new InvalidConfigurationException();
         } else if (generators.isEmpty() && customWords.isEmpty()) {
@@ -154,13 +151,13 @@ public abstract class WordGame extends Game {
             return start();
         }
 
-        String id = options.get(0);
+        String id = options.getFirst();
 
         WordGenerator generator = GeneratorManager.getGenerator(id);
         if (generator != null) {
             setCurrentWord(getGeneratedWord(generator));
         } else {
-            String lastArg = options.get(options.size() - 1);
+            String lastArg = options.getLast();
             int customPoints = Integer.MIN_VALUE;
             if (options.size() > 1) {
                 try {
@@ -238,7 +235,7 @@ public abstract class WordGame extends Game {
         if (display.length() >= capitalizeAllThreshold) {
             if (word.isFormatted() && display.length() > 1) {
                 // Also splitting on ' for things like "Jack o'Lantern"
-                String[] words = word.word.split("[\s']");
+                String[] words = word.word.split("[\\s']");
 
                 int index = 0;
                 StringBuilder newWord = new StringBuilder();
