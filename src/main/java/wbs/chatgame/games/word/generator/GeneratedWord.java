@@ -1,12 +1,13 @@
 package wbs.chatgame.games.word.generator;
 
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.chatgame.games.word.Word;
 
 public class GeneratedWord extends Word {
     @Nullable
-    private final String hint;
+    private final Component hint;
     private final WordGenerator generator;
 
     public GeneratedWord(@NotNull String word, int points, @NotNull WordGenerator generator) {
@@ -21,13 +22,13 @@ public class GeneratedWord extends Word {
         this.hint = generator.getGenericHint();
     }
 
-    public GeneratedWord(@NotNull String word, int points, @NotNull WordGenerator generator, @Nullable String hint, boolean isFormatted) {
+    public GeneratedWord(@NotNull String word, int points, @NotNull WordGenerator generator, @Nullable Component hint, boolean isFormatted) {
         super(word, points, isFormatted);
         this.generator = generator;
         this.hint = hint;
     }
 
-    public GeneratedWord(@NotNull String word, int points, WordGenerator generator, @Nullable String hint) {
+    public GeneratedWord(@NotNull String word, int points, WordGenerator generator, @Nullable Component hint) {
         super(word, points);
         this.generator = generator;
         this.hint = hint;
@@ -35,7 +36,7 @@ public class GeneratedWord extends Word {
 
 
     @Nullable
-    public String getHint() {
+    public Component getHint() {
         return hint;
     }
 

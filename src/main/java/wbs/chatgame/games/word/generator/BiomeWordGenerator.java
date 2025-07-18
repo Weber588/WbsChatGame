@@ -1,20 +1,29 @@
 package wbs.chatgame.games.word.generator;
 
-import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
+import net.kyori.adventure.text.Component;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
-import wbs.utils.util.WbsEnums;
-import wbs.utils.util.WbsKeyed;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class BiomeWordGenerator extends SimpleWordGenerator {
+public class BiomeWordGenerator extends RegistryWordGenerator<Biome> {
     @Override
-    public List<String> generateStrings() {
-        return RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME).stream()
-                .map(WbsKeyed::toPrettyString)
-                .collect(Collectors.toList());
+    protected @Nullable String getLangPrefix() {
+        return "biome";
+    }
+
+    @Override
+    protected @NotNull RegistryKey<Biome> getRegistryKey() {
+        return RegistryKey.BIOME;
+    }
+
+    @Override
+    protected @Nullable Component getHint(Biome biome) {
+        if (!biome.key().namespace().equals(NamespacedKey.MINECRAFT_NAMESPACE)) {
+            return Component.text("This is a custom biome");
+        }
+
+        return Component.text("This word is a type of biome");
     }
 }

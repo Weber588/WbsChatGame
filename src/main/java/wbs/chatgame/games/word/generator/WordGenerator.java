@@ -1,5 +1,6 @@
 package wbs.chatgame.games.word.generator;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import wbs.utils.util.WbsCollectionUtil;
@@ -89,8 +90,8 @@ public abstract class WordGenerator {
     }
 
     @NotNull
-    public String getGenericHint() {
-        return "This word is a type of " + GeneratorManager.getRegisteredId(this);
+    public Component getGenericHint() {
+        return Component.text("This word is a type of " + GeneratorManager.getRegisteredId(this));
     }
 
     public Set<GeneratedWord> getAll() {

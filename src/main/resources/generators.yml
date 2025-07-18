@@ -100,6 +100,7 @@ block:
     - 'Door'
     - 'Pressure Plate'
     - 'Sign'
+    - 'Hanging Sign'
     - 'Stairs'
     - 'Trapdoor'
     - 'Wall'
@@ -120,6 +121,7 @@ item:
     - 'Banner Pattern'
     - 'Sherd'
     - 'Smithing Template'
+    - 'Bundle'
 
   include:
     - 'Dye'
@@ -128,6 +130,7 @@ item:
     - 'Banner Pattern'
     - 'Sherd'
     - 'Smithing Template'
+    - 'Bundle'
 
 monster: {}
 potion: {}

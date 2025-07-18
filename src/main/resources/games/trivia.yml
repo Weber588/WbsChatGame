@@ -150,13 +150,6 @@ trivia:
         - 'Sixteen'
       points: 1
 
-    BannerPatterns:
-      question: 'How many banner patterns are there?'
-      answers:
-        - '6'
-        - 'Six'
-      points: 1
-
     FishingRodDurability:
       question: 'What is the maximum durability of a fishing rod?'
       answers:
@@ -307,6 +300,17 @@ trivia:
         - 'otherside'
         - 'Pigstep'
         - 'Relic'
+        - 'Creator'
+        - 'Creator (Music Box)'
+        - 'Precipice'
+        - '5'
+      points: 1
+
+    BlackCats:
+      question: 'Where do black cats spawn?'
+      answers:
+        - 'Witch Hut'
+        - 'Witch Huts'
       points: 1
 
     ShulkerSlots:
@@ -473,8 +477,50 @@ trivia:
         - 'Trails\s?(and|&)\s?Tales'
       points: 2
 
+    Version1_20_3:
+      question: 'What was the 1.20.3 release of Minecraft: Java Edition called?'
+      use-regex: false
+      answers:
+        - 'Bats and Pots'
+      points: 2
+
+    Version1_20_5:
+      question: 'What was the 1.20.5 release of Minecraft: Java Edition called?'
+      use-regex: false
+      answers:
+        - 'Armored Paws'
+      points: 2
+
+    Version1_21:
+      question: 'What was the 1.21 release of Minecraft: Java Edition called?'
+      use-regex: false
+      answers:
+        - 'Tricky Trials'
+      points: 2
+
+    Version1_21_2:
+      question: 'What was the 1.21.2 release of Minecraft: Java Edition called?'
+      use-regex: false
+      answers:
+        - 'Bundles of Bravery'
+      points: 2
+
+    Version1_21_4:
+      question: 'What was the 1.21.4 release of Minecraft: Java Edition called?'
+      use-regex: false
+      answers:
+        - 'The Garden Awakens'
+      points: 2
+
+    Version1_21_5:
+      question: 'What was the 1.21.5 release of Minecraft: Java Edition called?'
+      use-regex: false
+      answers:
+        - 'Spring to Life'
+      points: 2
+
     NoReleaseYear:
-      question: 'What is the only year since the release of Minecraft that had no major deployment?'
+      question: 'What is the only year since the release of Minecraft that had no major version?'
       answers:
         - '2015'
         - '''15'
@@ -496,9 +542,9 @@ trivia:
       points: 2
 
     LightningWitch:
-      question: 'What will create a witch when it hits a villager?'
+      question: 'What is created when lightning strikes a Villager?'
       answers:
-        - 'Lightning'
+        - 'Witch'
       points: 2
 
     UnobtainablePotion:
@@ -758,6 +804,90 @@ trivia:
         - 'Glow Squid'
         - 'Allay'
         - 'Sniffer'
+      points: 2
+
+    HighestPatchNumber:
+      question: 'Which release (after 1.0.0) has the most patch releases (1.x.x)?'
+      answers:
+        - '1.7'
+      points: 2
+
+    LongestPotionName:
+      question: 'Which potion effect has the longest name?'
+      answers:
+        - 'Hero of the Village'
+      points: 2
+
+    ShortestPotionName:
+      question: 'Which potion effect has the shortest name?'
+      answers:
+        - 'Luck'
+      points: 2
+
+    AprilFoolsUpdate:
+      question: 'Name an April Fools'' update.'
+      use-regex: true
+      answers:
+        - '(Minecraft|Java Edition) 2\.0'
+        - '(Java Edition )?15w14a'
+        - 'Love and Hugs( Update)?'
+        - '(The )?Trendy( Update)?'
+        - '3D Shareware( v1\.34)?'
+        - 'Minecraft 3D'
+        - '(Java Edition )?20w14∞'
+        - '(Java Edition )?22w13oneBlockAtATime'
+        - 'One Block at a Time'
+        - '(Java Edition )?22w13a_or_b'
+        - '(The )?Vote( Update)?'
+        - '(Java Edition )?24w14potato'
+        - '(The )?Poisonous Potato( Update)?'
+        - '(Java Edition )?25w14craftmine'
+        - 'Craft\s?Mine'
+      points: 2
+
+    ChiseledSandstoneMob:
+      question: 'Chiseled Sandstone blocks show which mob''s face?'
+      answers:
+        - 'Creeper'
+      points: 2
+
+    RedChiseledSandstoneMob:
+      question: 'Red Chiseled Sandstone blocks show which mob?'
+      answers:
+        - 'Wither'
+      points: 2
+
+    ChiseledNetherBricksMob:
+      question: 'Chiseled Nether Bricks show which mob''s face?'
+      answers:
+        - 'Wither Skeleton'
+      points: 2
+
+    ChiseledResinBricksMob:
+      question: 'Chiseled Resin Bricks show which mob''s face?'
+      answers:
+        - 'Creaking'
+      points: 2
+
+    DinnerboneImmune:
+      question: 'Name a mob that is not affected by being named "Dinnerbone" or "Grumm".'
+      answers:
+        - 'Ender Dragon'
+        - 'Squid'
+        - 'Glow Squid'
+      points: 2
+
+    QuakePro:
+      question: 'Which value of FOV displays as "Quake Pro"?'
+      answers:
+        - '110'
+      points: 2
+
+    EnchantingSymbols:
+      question: 'The enchanting symbols shown in enchanting tables uses which fictional alphabet?'
+      answers:
+        - 'Standard Galactic Alphabet'
+        - 'Standard Galactic'
       points: 2
 
     MobVoteLoss:
@@ -1033,7 +1163,7 @@ trivia:
         - 'Lena Reine'
       points: 3
 
-    SongwriterOtherside:
+    Songwriter5:
       question: 'Who wrote the song "5" for Minecraft?'
       min-version: 1.19
       answers:
@@ -1046,4 +1176,28 @@ trivia:
       min-version: 1.20
       answers:
         - 'Aaron Cherof'
+      points: 3
+
+    BedrockExclusivePotion:
+      question: 'Which potion effect exists in Bedrock Edition, but not in Java Edition?'
+      answers:
+        - 'Fatal Poison'
+      points: 3
+
+    JavaExclusivePotion:
+      question: 'Name a potion effect that exists in Java Edition, but not in Bedrock Edition.'
+      answers:
+        - 'Glowing'
+        - 'Luck'
+        - 'Bad Luck'
+      points: 3
+
+    RemovedStructure:
+      question: 'Name a structure that has been removed from Java Edition.'
+      answers:
+        - 'Brick Pyramid'
+        - 'Glass Pillar'
+        - 'Starting House'
+        - 'Monolith'
+        - 'Obsidian Wall'
       points: 3

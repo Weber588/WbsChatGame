@@ -56,7 +56,7 @@ public class Leaderboard implements Iterable<LeaderboardEntry> {
 
         int position = -1;
         int sharedPosition = 1;
-        int currentPoints = Integer.MIN_VALUE;
+        long currentPoints = Long.MIN_VALUE;
         for (LeaderboardEntry entry : entries) {
             if (entry.points() != currentPoints) {
                 position += sharedPosition;

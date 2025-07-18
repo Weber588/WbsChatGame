@@ -1,7 +1,7 @@
 main: wbs.chatgame.WbsChatGame
 name: WbsChatGame
-version: 0.0.1
-api-version: 1.16
+version: ${project.version}
+api-version: 1.21.4
 author: Weber588
 description: Various chat-based games
 depend:

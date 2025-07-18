@@ -16,7 +16,7 @@ public final class LeaderboardEntry {
 
     private final UUID uuid;
     private final String name;
-    private int points;
+    private long points;
     private final TrackedPeriod period;
     private final long createdTime;
     @Nullable
@@ -38,7 +38,11 @@ public final class LeaderboardEntry {
     public LeaderboardEntry(WbsRecord record, TrackedPeriod period, @Nullable Game game) {
         uuid = UUID.fromString(record.getValue(ChatGameDB.uuidField, String.class));
         name = record.getValue(ChatGameDB.nameField, String.class);
-        points = (Integer) record.getAnonymousField(StatsManager.TOTAL_POINTS_NAME);
+        if (record.getAnonymousField(StatsManager.TOTAL_POINTS_NAME) instanceof Number number) {
+            this.points = number.longValue();
+        } else {
+            throw new IllegalStateException("Points summary field was not numeric. This is a bug -- please report it.");
+        }
         this.period = period;
         this.game = game;
         createdTime = Instant.now().getEpochSecond();
@@ -52,7 +56,7 @@ public final class LeaderboardEntry {
         return name;
     }
 
-    public int points() {
+    public long points() {
         return points;
     }
 

@@ -13,7 +13,7 @@ unscramble:
     # You can disable hints entirely here.
     enabled: true
     # How many points does a question need to be worth to do hints?
-    point-threshold: 2
+    point-threshold: 0
     # How long should the game wait before showing a hint?
     delay: 120
 
@@ -82,7 +82,7 @@ unscramble:
     capitalize-first: 7
 
     # How many letters should a word have before the first letter of ALL words is capitalized?
-    capitalize-all: 18
+    capitalize-all: 10
 
   # Word generators that use words from the game itself, so you don't need to
   # add a large amount of minecraft themed words.
@@ -98,6 +98,7 @@ unscramble:
     monster: 5
     potion: 2
     structure: 1
+    song: 1
 
   # Use the format word:points
   custom:

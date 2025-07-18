@@ -259,7 +259,7 @@ public class UnscrambleGame extends WordGame {
                 }
                 case GENERATOR_HINTS -> {
                     if (word instanceof GeneratedWord generatedWord) {
-                        String hint = generatedWord.getHint();
+                        Component hint = generatedWord.getHint();
 
                         if (hint == null) {
                             possibleTypes.remove(HintType.GENERATOR_HINTS);
@@ -267,7 +267,9 @@ public class UnscrambleGame extends WordGame {
                             return;
                         }
 
-                        WbsMessage message = plugin.buildMessage("Hint: " + hint + "! \"")
+                        WbsMessage message = plugin.buildMessage("Hint: ")
+                                .append(hint.color(plugin.getTextColour()))
+                                .append("! \"")
                                 .append(Component.text(originalScramble).color(plugin.getTextHighlightColour()))
                                 .append("\" (" + GameController.pointsDisplay(getPoints()) + ")")
                                 .build();
