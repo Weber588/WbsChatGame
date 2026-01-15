@@ -345,6 +345,7 @@ trivia:
       answers:
         - '1.25\s?blocks?'
         - '1 1/4\s?blocks?'
+        - '5/4\s?blocks?'
       points: 2
 
     Version1_4:

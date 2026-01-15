@@ -19,6 +19,27 @@ quicktype:
   # 0 = never use challenges, 100 = always use challenges
   challenge-chance: 5
 
+  # The chance to generate a word instead of using one from the
+  # 'custom' list at the bottom of the file.
+  # 100 = always generate, 0 = always use custom
+  generation-chance: 0
+
+  # Word generators that use words from the game itself, so you don't need to
+  # add a large amount of minecraft themed words.
+  generators:
+    # generator_type: chance
+    animal: 5
+    # While there are many biomes, it's recommended to keep this number low, due to biome names
+    # that are overly challenging or uncommon, such as "Old Growth Spruce Taiga"
+    biome: 1
+    block: 40
+    enchantment: 3
+    item: 40 # Excludes blocks, even though they're items too.
+    monster: 5
+    potion: 2
+    structure: 1
+    song: 1
+
   challenges:
     # Chance that users will be told to type the quicktype in reverse
     backwards: 5

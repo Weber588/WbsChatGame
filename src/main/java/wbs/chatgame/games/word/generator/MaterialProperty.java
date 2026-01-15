@@ -109,6 +109,9 @@ public interface MaterialProperty {
     );
     MaterialProperty ROTATABLE = new SimpleProperty(
             material -> {
+                if (!material.isBlock()) {
+                    return false;
+                }
                 Class<? extends @NotNull BlockData> dataClass = material.createBlockData().getClass();
                 return material.isBlock() && (
                         Orientable.class.isAssignableFrom(dataClass) ||

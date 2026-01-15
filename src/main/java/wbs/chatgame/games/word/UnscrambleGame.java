@@ -245,7 +245,7 @@ public class UnscrambleGame extends WordGame {
 
                     String start = current.substring(0, amountAtStart);
                     String end = current.substring(current.length() - 2);
-                    String hintString = start + current.substring(amountAtStart, current.length() - 2).replaceAll(".?", "_") + end;
+                    String hintString = start + current.substring(amountAtStart, current.length() - 3).replaceAll(".?", "_") + end;
 
                     WbsMessage message = plugin.buildMessage("Unscramble \"")
                             .append(Component.text(originalScramble).color(plugin.getTextHighlightColour()))
@@ -276,7 +276,7 @@ public class UnscrambleGame extends WordGame {
 
                         broadcastQuestion(message);
                     } else {
-                        plugin.logger.severe("Internal error. Generator hints was chosen as a hint type for a non-generated word.");
+                        plugin.getLogger().severe("Internal error. Generator hints was chosen as a hint type for a non-generated word.");
                         possibleTypes.remove(HintType.GENERATOR_HINTS);
                         showHint(possibleTypes);
                     }

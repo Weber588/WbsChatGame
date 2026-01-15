@@ -25,7 +25,7 @@ public class PlaceholderManager {
         if (PlaceholderAPIWrapper.isActive()) {
             PlaceholderAPIWrapper.registerSimplePlaceholder(WbsChatGame.getInstance(), "Weber588", PlaceholderManager::parseParams);
         } else {
-            WbsChatGame.getInstance().logger.info("PlaceholderAPI not found; placeholders will not be used.");
+            WbsChatGame.getInstance().getLogger().info("PlaceholderAPI not found; placeholders will not be used.");
         }
     }
 
