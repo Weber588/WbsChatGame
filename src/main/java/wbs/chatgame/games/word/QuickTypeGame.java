@@ -36,7 +36,7 @@ public class QuickTypeGame extends WordGame {
     @NotNull
     protected Game startGame(Word wordToGuess) {
         WbsMessage message = plugin.buildMessage("Quick! Type \"")
-                .append(Component.text(wordToGuess.word).color(plugin.getTextHighlightColour()))
+                .append(Component.text(wordToGuess.word).style(plugin.getHighlightStyle()))
                 .append("\" for "
                         + GameController.pointsDisplay(getPoints()) + "!")
                 .build();

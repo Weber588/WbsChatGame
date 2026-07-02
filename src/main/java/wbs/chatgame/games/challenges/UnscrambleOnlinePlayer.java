@@ -22,7 +22,7 @@ public class UnscrambleOnlinePlayer extends UnscrambleGame implements Challenge<
         Collection<? extends Player> online = Bukkit.getOnlinePlayers();
 
         if (online.isEmpty()) {
-            plugin.logger.info("No online players found - skipping online player challenge!");
+            plugin.getLogger().info("No online players found - skipping online player challenge!");
             return super.getWord();
         }
 
@@ -40,7 +40,7 @@ public class UnscrambleOnlinePlayer extends UnscrambleGame implements Challenge<
     @Override
     protected void broadcastScramble(String scrambledWord) {
         WbsMessage message = plugin.buildMessage("Unscramble \"")
-                .append(Component.text(scrambledWord).color(plugin.getTextHighlightColour()))
+                .append(Component.text(scrambledWord).style(plugin.getHighlightStyle()))
                 .append("\" for "
                         + GameController.pointsDisplay(getPoints()) + "! This unscramble is an online player's name!")
                 .build();

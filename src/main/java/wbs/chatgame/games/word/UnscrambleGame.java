@@ -135,7 +135,7 @@ public class UnscrambleGame extends WordGame {
 
     protected void broadcastScramble(String scrambledWord) {
         WbsMessage message = plugin.buildMessage("Unscramble \"")
-                .append(Component.text(scrambledWord).color(plugin.getTextHighlightColour()))
+                .append(Component.text(scrambledWord).style(plugin.getHighlightStyle()))
                 .append("\" for "
                         + GameController.pointsDisplay(getPoints()) + "!")
                 .build();
@@ -186,7 +186,7 @@ public class UnscrambleGame extends WordGame {
         String current = word.word;
 
         if (possibleTypes.isEmpty()) {
-            plugin.logger.warning("No valid hint types! Skipping hints for " + gameName);
+            plugin.getLogger().warning("No valid hint types! Skipping hints for " + gameName);
         } else {
             if (currentPoints > 1) {
                 // int divide rounding up
@@ -202,7 +202,7 @@ public class UnscrambleGame extends WordGame {
                     String hint = String.join(" ", words);
 
                     WbsMessage message = plugin.buildMessage("Too hard? Here are the words scrambled individually: \"")
-                            .append(Component.text(hint).color(plugin.getTextHighlightColour()))
+                            .append(Component.text(hint).style(plugin.getHighlightStyle()))
                             .append("\" (" + GameController.pointsDisplay(getPoints()) + ")")
                             .build();
 
@@ -212,7 +212,7 @@ public class UnscrambleGame extends WordGame {
                     char firstLetter = Character.toUpperCase(current.charAt(0));
 
                     WbsMessage message = plugin.buildMessage("Too hard? The first letter is " + firstLetter + "! \"")
-                            .append(Component.text(originalScramble).color(plugin.getTextHighlightColour()))
+                            .append(Component.text(originalScramble).style(plugin.getHighlightStyle()))
                             .append("\" (" + GameController.pointsDisplay(getPoints()) + ")")
                             .build();
 
@@ -226,7 +226,7 @@ public class UnscrambleGame extends WordGame {
                     for (int i = 0; i < scrambles; i++) {
                         String rescramble = WordUtil.scrambleString(WbsStrings.capitalize(getCurrentWord().word));
 
-                        message.append(Component.text(rescramble).color(plugin.getTextHighlightColour()));
+                        message.append(Component.text(rescramble).style(plugin.getHighlightStyle()));
 
                         if (i < scrambles - 1) {
                             message.append("\", \"");
@@ -248,10 +248,10 @@ public class UnscrambleGame extends WordGame {
                     String hintString = start + current.substring(amountAtStart, current.length() - 3).replaceAll(".?", "_") + end;
 
                     WbsMessage message = plugin.buildMessage("Unscramble \"")
-                            .append(Component.text(originalScramble).color(plugin.getTextHighlightColour()))
+                            .append(Component.text(originalScramble).style(plugin.getHighlightStyle()))
                             .append("\" for "
                                     + GameController.pointsDisplay(getPoints()) + "! (Hint: \"")
-                            .append(Component.text(hintString).color(plugin.getTextHighlightColour()))
+                            .append(Component.text(hintString).style(plugin.getHighlightStyle()))
                             .append("\")")
                             .build();
 
@@ -268,9 +268,9 @@ public class UnscrambleGame extends WordGame {
                         }
 
                         WbsMessage message = plugin.buildMessage("Hint: ")
-                                .append(hint.color(plugin.getTextColour()))
+                                .append(hint.style(plugin.getDefaultStyle()))
                                 .append("! \"")
-                                .append(Component.text(originalScramble).color(plugin.getTextHighlightColour()))
+                                .append(Component.text(originalScramble).style(plugin.getHighlightStyle()))
                                 .append("\" (" + GameController.pointsDisplay(getPoints()) + ")")
                                 .build();
 

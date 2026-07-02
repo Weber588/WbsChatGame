@@ -21,7 +21,7 @@ public class QuickTypeBackwards extends QuickTypeGame implements Challenge<Quick
         setCurrentWord(new Word(reverseString(wordToGuess.word), wordToGuess.getPoints() + 1, true));
 
         WbsMessage message = plugin.buildMessage("Quick! Type \"")
-                .append(Component.text(wordToGuess.word).color(plugin.getTextHighlightColour()))
+                .append(Component.text(wordToGuess.word).style(plugin.getHighlightStyle()))
                 .append("\" &obackwards&r for "
                         + GameController.pointsDisplay(getPoints()) + "!")
                 .build();

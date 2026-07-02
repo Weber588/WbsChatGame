@@ -85,7 +85,7 @@ public class RevealGame extends WordGame {
         currentDisplay = reveal(currentDisplay, answer, firstAmount);
 
         WbsMessage message = plugin.buildMessage("Guess the word! \"")
-                .append(Component.text(currentDisplay).color(plugin.getTextHighlightColour()))
+                .append(Component.text(currentDisplay).style(plugin.getHighlightStyle()))
                 .append("\" ("
                         + GameController.pointsDisplay(currentPoints) + ")")
                 .build();
@@ -133,7 +133,7 @@ public class RevealGame extends WordGame {
                     currentPoints = Math.max(1, (int) Math.round(pointsAsDouble));
 
                     WbsMessage message = plugin.buildMessage(amountDisplay + "! \"")
-                            .append(Component.text(currentDisplay).color(plugin.getTextHighlightColour()))
+                            .append(Component.text(currentDisplay).style(plugin.getHighlightStyle()))
                             .append("\" ("
                                     + GameController.pointsDisplay(currentPoints) + ")")
                             .build();
